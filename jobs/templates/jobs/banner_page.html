@@ -1,0 +1,198 @@
+{% extends 'jobs/base.html' %}
+{% load static %}
+{% load compress %}
+
+{% block title %}სარეკლამო ბანერი - HRCP{% endblock %}
+
+{% block twitter_title %}{% block og_title %}{% block page_title %}
+    პროდუქტები და ფასები - HRCP {# Changed from 'სარეკლამო ბანერი' to match H1 #}
+{% endblock %}{% endblock %}{% endblock %}
+
+{% block og_description %}{% block twitter_description %}{% block meta_description %}
+    HRCP-ის პროდუქტები და ფასები: VIP და სტანდარტული განცხადებები, ვაკანსიები, ტრენინგები, ტენდერები. იხილეთ ფასები და განთავსების პირობები.
+{% endblock %}{% endblock %}{% endblock %}
+
+{% block og_url %}{% endblock %}
+
+{% block canonical_path %}/reklama/{% endblock %}
+{# og_type defaults to 'website' from base.html, which is suitable here #}
+
+<meta property="og:image" content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'HRCP.png' %}{% endblock %}" />
+    <meta name="twitter:image" content="{% block twitter_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'HRCP.png' %}{% endblock %}">
+
+{% block twitter_image_alt %}{% block og_image_alt %}
+    {# Inherit the default site logo alt text from base.html #}
+    {{ block.super }}
+{% endblock %}{% endblock %}
+
+{% block head_extra %}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    {% compress css %}<link rel="stylesheet" href="{% static 'banner_page.css' %}">{% endcompress %}
+
+    {# Added LD+JSON for Product/Service Offers #}
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org/",
+      "@type": "OfferCatalog",
+      "name": "HRCP პროდუქტები და ფასები", {# Name for the catalog #}
+      "description": "{% filter striptags %}{% block meta_description_ld %}{# Reuse meta description block content #}HRCP-ის პროდუქტები და ფასები: VIP და სტანდარტული განცხადებები, ტრენინგები, ტენდერები. იხილეთ ფასები და განთავსების პირობები.{% endblock %}{% endfilter %}",
+      "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'banner_page' %}", {# URL of this pricing page #}
+      "provider": { {# The organization providing the offers #}
+        "@type": "Organization",
+        "name": "HRCP", {# Assuming the company name is HRCP #}
+        {# Add the main website URL if different from the banner page #}
+        {# "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'home' %}", #}
+        {# Add logo URL if available globally, e.g., from settings or context #}
+        {# "logo": "{{ request.scheme }}://{{ request.get_host }}{{ STATIC_URL }}path/to/your/logo.png", #}
+        "contactPoint": [ {# Adding contact info from the page #}
+           {
+             "@type": "ContactPoint",
+             "telephone": "+995-595-44-22-77",
+             "contactType": "Customer Support", {# Or Sales, etc. #}
+             "email": "info@HRCP.ge",
+             "areaServed": "GE" {# Assuming service area is Georgia based on context #}
+           }
+         ]
+      },
+      "itemListElement": [ {# Array of offers listed on the page #}
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service", {# Assuming these are services #}
+            "name": "VIP განცხადება"
+            {# Add description if you have more details for this specific service #}
+            {# "description": "Detailed description of VIP Posting service" #}
+          },
+          "priceSpecification": {
+            "@type": "PriceSpecification",
+            "price": "100.00", {# Use string format for price #}
+            "priceCurrency": "GEL",
+            "valueAddedTaxIncluded": false, {# Specify if VAT is included, assume false if not stated #}
+            {# Duration "30 დღე" translated to ISO 8601 duration format P30D #}
+            "validFor": "P30D"
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "სტანდარტული განცხადება"
+          },
+          "priceSpecification": {
+            "@type": "PriceSpecification",
+            "price": "30.00",
+            "priceCurrency": "GEL",
+            "valueAddedTaxIncluded": false,
+            "validFor": "P30D"
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "ტრენინგი/განათლება"
+          },
+          "priceSpecification": {
+            "@type": "PriceSpecification",
+            "price": "30.00",
+            "priceCurrency": "GEL",
+            "valueAddedTaxIncluded": false,
+            "validFor": "P30D"
+          }
+        },
+        {
+          "@type": "Offer",
+          "itemOffered": {
+            "@type": "Service",
+            "name": "ტენდერი"
+          },
+          "priceSpecification": {
+            "@type": "PriceSpecification",
+            "price": "30.00",
+            "priceCurrency": "GEL",
+            "valueAddedTaxIncluded": false,
+            "validFor": "P30D"
+          }
+        }
+      ]
+    }
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div class="banner-container">
+        <div class="banner-header">
+            <h1 class="banner-title" style="font-size: 24px;color: #1F3664;">პროდუქტები და ფასები</h1>
+{#            <p class="banner-description">Reach a wider audience and enhance your brand visibility with our banner#}
+{#                advertisement options.</p>#}
+        </div>
+
+        <div class="banner-pricing">
+{#            <h2>Pricing Options</h2>#}
+            <div class="table-wrapper"> <table class="pricing-table">
+                    <thead>
+                        <tr>
+                            <th><h2 style="font-size: unset;text-decoration: unset;font-weight: unset;">პროდუქტი</h2></th>
+                            <th><h2 style="font-size: unset;text-decoration: unset;font-weight: unset;">განთავსების პერიოდი</h2></th>
+                            <th><h2 style="font-size: unset;text-decoration: unset;font-weight: unset;">ფასი (ლარი)</h2></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td data-label="პროდუქტი">VIP განცხადება</td>
+                            <td data-label="განთავსების პერიოდი">30 დღე</td>
+                            <td data-label="ფასი (ლარი)">100</td>
+                        </tr>
+                        <tr>
+                            <td data-label="პროდუქტი">სტანდარტული განცხადება</td>
+                            <td data-label="განთავსების პერიოდი">30 დღე</td>
+                            <td data-label="ფასი (ლარი)">30</td>
+                        </tr>
+                        <tr>
+                            <td data-label="პროდუქტი">ტრენინგი/განათლება</td>
+                            <td data-label="განთავსების პერიოდი">30 დღე</td>
+                            <td data-label="ფასი (ლარი)">30</td>
+                        </tr>
+                        <tr>
+                            <td data-label="პროდუქტი">ტენდერი</td>
+                            <td data-label="განთავსების პერიოდი">30 დღე</td>
+                            <td data-label="ფასი (ლარი)">30</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="banner-details">
+{#            <h2>Banner Details</h2>#}
+            <p>განცხადების ლოგოსთან ერთად განთავსების შემთხვევაში, პროდუქტის ფასს ემატება 20 ლარი თითო განცხადებაზე. <br>
+                ტრენინგები/განათლება და ტენდერები თავსდება მხოლოდ სტანდარტული განცხადებების ველში.<br><br>
+
+                განცხადების გამოქვეყნება შესაძლებელია ვებ-საიტიდან (აქ დავამატოთ ,,განცხადების დამატება“ ლინკი ამავე დასახელევით) ან გამოგვიგზავნოთ განცხადებები ელ-ფოსტაზე: <a href="mailto:info@HRCP.ge">info@HRCP.ge</a>.<br><br>
+
+                რეკვიზიტები:<br>
+                მიმღები: შპს ,,კონსალტინგ პორტი“<br>
+                ს/ნ: 404476919<br>
+                ბანკი: სს ,,საქართველოს ბანკი“<br>
+                ანგარიშის ნომერი: GE54BG0000000607455839 GEL<br><br>
+
+                დეტალური ინფორმაციისთვის დაგვიკავშირდით: <a href="tel:+995595442277">(+995) 595 44 22 77</a> ან <a href="mailto:info@HRCP.ge">info@HRCP.ge</a></p><br><br>
+{#            <ul>#}
+{#                <li>All banners must be provided in JPG, PNG, or GIF format.</li>#}
+{#                <li>Banners must adhere to specified size requirements.</li>#}
+{#                <li>We offer design services for an additional fee.</li>#}
+{#                <li>Placement availability is subject to change.</li>#}
+{#                <li>Contact us for customized banner packages and long-term deals.</li>#}
+{#            </ul>#}
+        </div>
+
+{#        <div class="banner-contact">#}
+{#            <a href="{% url 'contact_page' %}" class="contact-button">Contact Us for More Information</a>#}
+{#        </div>#}
+    </div>
+{% endblock %}
+
+{% block scripts_extra %}
+  {% compress js %}<script src="{% static 'banner_page.js' %}"></script>{% endcompress %}
+{% endblock %}

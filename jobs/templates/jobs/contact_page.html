@@ -1,0 +1,172 @@
+{% extends 'jobs/base.html' %}
+{% load static %}
+{% load compress %}
+
+{% block title %}კონტაქტი: ვაკანსიები & დასაქმება | HRCP{% endblock %}
+
+{% block twitter_title %}{% block og_title %}{% block page_title %}
+    კონტაქტი: ვაკანსიები & დასაქმება | HRCP
+{% endblock %}{% endblock %}{% endblock %}
+
+{% block og_description %}{% block twitter_description %}{% block meta_description %}გაქვთ შეკითხვები? დაგვიკავშირდით და
+    მიიღეთ დახმარება ვაკანსიებთან, დასაქმებასთან, ტენდერებთან, ონლაინ სამსახურებთან ან სხვა საკითხებთან დაკავშირებით.
+{% endblock %}{% endblock %}{% endblock %}
+
+{% block og_url %}{% endblock %}
+
+{% block canonical_path %}/kontakti/{% endblock %}
+
+{# og_type defaults to 'website' from base.html, which is suitable here #}
+<meta property="og:image"
+      content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'HRCP.png' %}{% endblock %}"/>
+<meta name="twitter:image" content="
+        {% block twitter_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'HRCP.png' %}{% endblock %}">
+
+
+{% block twitter_image_alt %}{% block og_image_alt %}
+    {# Inherit the default site logo alt text from base.html #}
+    {{ block.super }}
+{% endblock %}{% endblock %}
+
+{% block head_extra %}
+    {% compress css %}<link rel="stylesheet" href="{% static 'contact_page.css' %}">{% endcompress %}
+
+    {# Added LD+JSON for Contact Page #}
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "ContactPage",
+          "name": "კონტაქტი: ვაკანსიები & დასაქმება | HRCP",
+          "description": "გაქვთ შეკითხვები? დაგვიკავშირდით და მიიღეთ დახმარება ვაკანსიებთან, დასაქმებასთან, ტენდერებთან, ონლაინ სამსახურებთან ან სხვა საკითხებთან დაკავშირებით.",
+          "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'contact_page' %}",
+  "mainEntity": {
+    "@type": "LocalBusiness",
+    "name": "HRCP",
+    "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'home' %}",
+    "email": ["info@HRCP.ge"],
+    "telephone": ["+995595442277"],
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "თბილისი, სოლოლაკი, ამაღლების 12",
+      "addressLocality": "თბილისი",
+      "postalCode": "0108",
+      "addressCountry": "GE"
+    },
+    "sameAs": [
+      "https://www.facebook.com/people/HRCPge/61575518013356/",
+      "https://www.linkedin.com/company/hr-cp/"
+    ],
+    "openingHoursSpecification": [{
+      "@type": "OpeningHoursSpecification",
+      "dayOfWeek": [
+        "Monday",
+        "Tuesday",
+        "Wednesday",
+        "Thursday",
+        "Friday"
+      ],
+      "opens": "10:00",
+      "closes": "19:00"
+    }]
+  }
+}
+    </script>
+{% endblock %}
+
+{% block content %}
+
+
+    <section id="contact-cards" class="contact-cards-container">
+        <div class="container">
+            <div class="section-header">
+                <h1>დაგვიკავშირდით</h1>
+                <p>აირჩიეთ თქვენთვის სასურველი საკონტაქტო მეთოდი</p>
+            </div>
+
+            <div class="contact-cards">
+                <div class="contact-card floating">
+                    <div class="contact-icon">
+                        <i class="fas fa-envelope"></i>
+                    </div>
+                    <h3>ელ-ფოსტა</h3>
+                    <p>მოგვწერეთ ნებისმიერ დროს</p>
+                    <p style="margin-top: 1.5rem;"><a href="mailto:info@HRCP.ge">info@HRCP.ge</a></p>
+                </div>
+
+                <div class="contact-card" style="animation-delay: 0.5s;">
+                    <div class="contact-icon">
+                        <i class="fas fa-phone-alt"></i>
+                    </div>
+                    <h3>ტელეფონი</h3>
+                    <p>დაგვირეკეთ სამუშაო საათებში</p>
+                    <p style="margin-top: 1.5rem;"><a href="tel:++995595442277">+995 595 442 277</a></p>
+                </div>
+
+                <div class="contact-card floating" style="animation-delay: 1s;">
+                    <div class="contact-icon">
+                        <i class="fas fa-share-alt"></i>
+                    </div>
+                    <h3>სოციალური ქსელები</h3>
+                    <p>გამოგვყევით სოციალურ ქსელებში</p>
+                    <div class="social-links">
+                        <a href="https://www.facebook.com/people/HRCPge/61575518013356/" class="social-link"><i
+                                class="fab fa-facebook-f"></i></a>
+                        <a href="https://www.linkedin.com/company/hr-cp/" class="social-link"><i
+                                class="fab fa-linkedin-in"></i></a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="map-section">
+        <div class="container">
+            <div class="section-header">
+                <h2>ჩვენი მდებარეობა</h2>
+                <p>გვეწვიეთ ჩვენს ოფისში</p>
+            </div>
+
+            <div class="map-container">
+                <div class="map-overlay">
+                    <h3>ჩვენი ოფისი</h3>
+                    <p><i class="fas fa-map-marker-alt" style="color: #1F3664; margin-right: 10px;"></i> საქართველო,
+                        თბილისი, სოლოლაკი, ამაღლების 12</p>
+                    <p><i class="fas fa-phone-alt" style="color: #1F3664; margin-right: 10px;"></i> +995 595 442 277</p>
+                    <p><i class="fas fa-envelope" style="color: #1F3664; margin-right: 10px;"></i> info@hrcp.ge</p>
+
+                    <div class="hours">
+                        <h4 style="color: #2a3b4c; margin-bottom: 10px;">სამუშაო საათები:</h4>
+                        <p><span>ორშაბათი - პარასკევი:</span> 10:00 - 19:00</p>
+                        <p><span>შაბათი:</span> დასვენების დღე</p>
+                        <p><span>კვირა:</span> დასვენების დღე</p>
+                    </div>
+                </div>
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d2979.4275891702855!2d44.79026209555595!3d41.689704197167345!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x40440ced6b64e8fd%3A0x388287d01c5cceef!2s12%20Amaghleba%20St%2C%20T&#39;bilisi!5e0!3m2!1sen!2sge!4v1745330042547!5m2!1sen!2sge"
+                        width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"></iframe>
+            </div>
+
+        </div>
+    </section>
+
+
+    <section class="cta-section">
+        <div class="container">
+            <div class="cta-content">
+                <h2>მზად ხართ დაიწყოთ?</h2>
+                <h3 style="font-size: 1.1rem;opacity: 0.9;margin-bottom: 2rem;max-width: 600px;margin-left: auto;margin-right: auto;">
+                    HRCP გთავაზობთ საუკეთესო გადაწყვეტილებებს თქვენი კარიერული განვითარებისთვის. დაგვიკავშირდით
+                    დღესვე და დაიწყეთ თქვენი წარმატებული კარიერა.</h3>
+                <div class="cta-buttons">
+                    <a href="{% url 'home' %}" class="cta-btn primary">მთავარი გვერდი</a>
+                    <a href="{% url 'post_job_ad' %}" class="cta-btn secondary">გამოაქვეყნე ვაკანსია</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+{% endblock %}
+
+{% block scripts_extra %}
+    {% compress js %}<script src="{% static 'contact_page.js' %}"></script>{% endcompress %}
+{% endblock %}

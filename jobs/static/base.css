@@ -1,0 +1,595 @@
+/* ==== Base Styles (Needed Everywhere) ==== */
+:root {
+  /* ... CSS variables remain the same ... */
+  --primary: #1F3664;
+  --primary-light: #4895ef;
+  --secondary: #1F3664;
+  --success: #4cc9f0;
+  --danger: #f72585;
+  --warning: #f8961e;
+  --info: #90e0ef;
+  --dark: #212529;
+  --light: #f8f9fa;
+  --gray: #6c757d;
+  --gray-light: #e9ecef;
+  --border-radius: 12px;
+  --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+  --transition: all 0.3s ease;
+  --navbar-height: 74px; /* Estimate based on padding/content, adjust if needed */
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Poppins', sans-serif;
+  background-color: #f5f7fa; /* Base background */
+  color: var(--dark);
+  line-height: 1.6;
+  /* Add padding-top to prevent content from hiding under sticky navbar */
+  padding-top: var(--navbar-height);
+}
+
+/* Global container, likely used on many pages */
+.base-container {
+  /*max-width: 1440px;*/ /* Consider uncommenting if you want a max width */
+  max-width: 100%;
+  margin: 0 auto;
+  padding-left: 20px;  /* Use container for padding */
+  padding-right: 20px; /* Use container for padding */
+}
+
+
+/* ==== Prefixed Navbar Styles ==== */
+.base-navbar { /* Renamed */
+  background-color: white;
+  box-shadow: 0 2px 15px rgba(0, 0, 0, 0.05);
+  position: fixed; /* Changed from sticky to fixed for simpler top positioning */
+  top: 0;
+  left: 0; /* Ensure it spans full width */
+  width: 100%; /* Ensure it spans full width */
+  z-index: 1000;
+  /* Padding removed, handled by container */
+}
+
+.base-navbar-container { /* Renamed */
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  min-height: var(--navbar-height); /* Ensure consistent height */
+  padding-top: 15px; /* Keep vertical padding */
+  padding-bottom: 15px;
+  /* Use the global .base-container for width/padding */
+}
+
+.base-logo { /* Renamed */
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  text-decoration: none;
+  color: var(--dark);
+}
+
+.base-logo-icon { /* Renamed */
+  color: var(--primary);
+  font-size: 24px;
+}
+
+.base-logo-text { /* Renamed */
+  font-weight: 700;
+  font-size: 22px;
+  font-family: 'Poppins', sans-serif !important;
+}
+
+.base-logo-text span { /* Renamed */
+  color: var(--primary);
+}
+
+/* Desktop Navigation Menu */
+.base-nav-menu { /* Renamed */
+  display: flex;
+  gap: 30px;
+  list-style: none;
+  margin: 0; /* Reset margin */
+  padding: 0; /* Reset padding */
+}
+
+.base-nav-link { /* Renamed */
+  text-decoration: none;
+  color: var(--dark);
+  font-weight: 500;
+  transition: var(--transition);
+  position: relative;
+  padding-bottom: 5px;
+  font-size: 16px;
+}
+
+.base-nav-link:hover { /* Renamed */
+  color: var(--primary);
+}
+
+.base-nav-link.active { /* Renamed */
+  color: var(--primary);
+  font-weight: 600;
+}
+
+.base-nav-link.active::after { /* Renamed */
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background-color: var(--primary);
+  border-radius: 2px;
+}
+
+/* Mobile Menu Button (Hamburger Icon) */
+.base-mobile-menu-btn { /* Renamed */
+  display: none; /* Hidden by default */
+  background: none;
+  border: none;
+  font-size: 24px;
+  color: var(--dark);
+  cursor: pointer;
+  padding: 5px; /* Add padding for easier clicking */
+  line-height: 1; /* Prevent extra spacing */
+}
+
+/* Mobile Menu Panel (Initially hidden, now INSIDE .base-navbar) */
+.base-mobile-menu {
+  display: none; /* Hidden by default, toggled by JS */
+  position: absolute; /* Position relative to the .base-navbar */
+  top: 100%; /* Position it right below the navbar */
+  left: 0;
+  width: 100%;
+  background-color: white;
+  box-shadow: 0 10px 15px rgba(0, 0, 0, 0.1);
+  padding: 15px 20px 20px; /* Add padding */
+  z-index: 999; /* Below navbar but above content */
+  max-height: calc(100vh - var(--navbar-height)); /* Prevent overflow */
+  overflow-y: auto; /* Allow scrolling if content exceeds height */
+  border-top: 1px solid var(--gray-light); /* Add visual separator */
+}
+
+/* Style the list *inside* the mobile menu */
+.base-mobile-menu .base-nav-menu {
+    display: flex; /* Use flex for the list itself */
+    flex-direction: column;
+    gap: 10px; /* Adjust gap */
+    list-style: none; /* Ensure list style is none */
+    padding-left: 0; /* Ensure no padding */
+    margin: 0; /* Reset margin */
+}
+
+/* Style the links *inside* the mobile menu */
+.base-mobile-menu .base-nav-link {
+    display: block; /* Make links take full width */
+    padding: 12px 5px; /* Add padding for touch targets */
+    font-size: 17px; /* Slightly larger for mobile */
+    border-bottom: 1px solid var(--gray-light); /* Separator lines */
+}
+.base-mobile-menu .base-nav-menu li:last-child .base-nav-link {
+    border-bottom: none; /* Remove border from last item */
+}
+
+.base-mobile-menu .base-nav-link.active::after {
+   display: none; /* Hide underline in mobile menu */
+}
+
+/* Class added by JS to show the menu */
+.base-mobile-menu.is-open {
+    display: block;
+}
+
+
+/* ==== Prefixed Responsive Navbar Styles ==== */
+@media (max-width: 768px) {
+  /* Hide the desktop menu items */
+  .base-navbar-container > .base-nav-menu {
+    display: none;
+  }
+
+  /* Show the mobile menu button */
+  .base-mobile-menu-btn {
+    display: block;
+  }
+
+  /* --- No need for specific .base-mobile-menu rules here anymore --- */
+  /* The base styles and the .is-open class handle visibility */
+
+}
+
+
+/* ==== Footer Styles ==== */
+/* Footer CSS remains largely the same, but let's fix the bottom alignment */
+
+/* ... (Keep existing footer styles: .base-footer, .base-footer-waves, .wave*, animations, .base-footer-content, .base-footer-section, h3, links, icons etc.) ... */
+
+.base-footer { /* Renamed */
+  position: relative;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  color: #fff;
+  padding: 0; /* Padding is handled by inner elements or waves */
+  margin-top: 4rem; /* Space above footer */
+  overflow: hidden; /* Prevent wave overflow issues */
+}
+
+.base-footer-waves { /* Renamed */
+  position: absolute;
+  top: 0; /* Position at the very top of the footer */
+  left: 0;
+  width: 100%;
+  height: 80px; /* Height of the wave area */
+  transform: translateY(-100%); /* Move the wave container above the footer */
+  pointer-events: none; /* Allow clicks through the wave area */
+}
+
+.base-wave { /* Renamed */
+  position: absolute;
+  bottom: 0; /* Align waves to the bottom of their container */
+  left: 0;
+  width: 100%;
+  height: 100px; /* Height of individual wave SVG */
+  background-size: 1000px 100px; /* Control tiling */
+}
+
+/* SVG Waves embedded as data URIs */
+.base-wave.wave1 { /* Kept wave1 etc for animation targeting */
+  animation: animate 30s linear infinite;
+  z-index: 10; /* Lower z-index for waves */
+  opacity: 0.6;
+  animation-delay: 0s;
+  bottom: 0;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z' opacity='.25' fill='%23ffffff'%3E%3C/path%3E%3C/svg%3E");
+}
+
+.base-wave.wave2 { /* Kept wave1 etc for animation targeting */
+  animation: animate2 15s linear infinite;
+  z-index: 9;
+  opacity: 0.4;
+  animation-delay: -5s;
+  bottom: 10px; /* Slightly offset */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z' opacity='.25' fill='%23ffffff'%3E%3C/path%3E%3C/svg%3E");
+}
+
+.base-wave.wave3 { /* Kept wave1 etc for animation targeting */
+  animation: animate 30s linear infinite; /* Can reuse animate */
+  z-index: 8;
+  opacity: 0.2;
+  animation-delay: -2s;
+  bottom: 15px; /* Further offset */
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 1200 120' preserveAspectRatio='none'%3E%3Cpath d='M0,0V46.29c47.79,22.2,103.59,32.17,158,28,70.36-5.37,136.33-33.31,206.8-37.5C438.64,32.43,512.34,53.67,583,72.05c69.27,18,138.3,24.88,209.4,13.08,36.15-6,69.85-17.84,104.45-29.34C989.49,25,1113-14.29,1200,52.47V0Z' opacity='.25' fill='%23ffffff'%3E%3C/path%3E%3C/svg%3E");
+}
+
+/* Wave animations */
+@keyframes animate {
+  0% { background-position-x: 0; }
+  100% { background-position-x: 1000px; }
+}
+@keyframes animate2 {
+  0% { background-position-x: 0; }
+  100% { background-position-x: -1000px; } /* Reverse direction */
+}
+
+.base-footer-content { /* Renamed */
+  position: relative; /* Ensure content is above waves visually */
+  z-index: 15; /* Higher than waves */
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 3rem; /* Increased gap slightly */
+  padding: 4rem 5rem 2rem; /* Original large padding */
+  /* Use the global .container for width/max-width indirectly */
+  max-width: 1440px; /* Give the content a max width */
+  margin-left: auto; /* Center the content grid */
+  margin-right: auto;
+}
+
+.base-footer-section { /* Renamed */
+  margin-bottom: 1.5rem;
+}
+
+.base-footer-section h2 { /* Renamed */
+  color: #fff;
+  font-size: 16px;
+  margin-bottom: 1.2rem;
+  position: relative;
+  font-weight: 600;
+  padding-bottom: 0.5rem;
+  text-transform: uppercase; /* Added for style */
+  letter-spacing: 0.5px;   /* Added for style */
+}
+
+.base-footer-section h2::after { /* Renamed */
+  content: '';
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  width: 50px;
+  height: 2px;
+  background: linear-gradient(90deg, var(--success), var(--primary-light)); /* Use theme colors */
+}
+
+/* Using nested renamed classes */
+.base-footer-section.brand .base-logo { margin-bottom: 1rem; color: white;}
+.base-footer-section.brand .base-logo-icon { /* Style specifically for footer logo icon */
+  color: var(--primary-light); /* Match highlight color */
+  font-size: 28px; /* Slightly larger in footer */
+}
+.base-footer-section.brand .base-logo-text { font-size: 1.8rem; color: white; } /* Slightly larger */
+.base-footer-section.brand .base-logo-text span { color: var(--primary-light); } /* Match highlight */
+.base-footer-tagline { color: #ccc; margin-bottom: 1.5rem;font-size: 15px; } /* Renamed & adjusted font size */
+
+.base-social-icons { /* Renamed */
+  display: flex;
+  gap: 1rem;
+}
+
+.base-social-icon { /* Renamed */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.base-social-icon:hover { /* Renamed */
+  background: var(--primary-light); /* Use theme color on hover */
+  transform: translateY(-3px);
+  color: var(--primary); /* Darker icon on hover */
+}
+
+.base-footer-section ul { /* Scoped within footer section */
+  list-style: none;
+  padding: 0;
+  margin: 0; /* Add margin reset */
+}
+
+.base-footer-section ul li { /* Scoped */
+  margin-bottom: 0.8rem;
+}
+
+.base-footer-section ul li a { /* Scoped */
+  color: #ccc;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  display: inline-block; /* Needed for transform */
+  font-size: 14px;
+}
+
+.base-footer-section ul li a:hover { /* Scoped */
+  color: var(--primary-light); /* Use theme color on hover */
+  transform: translateX(5px); /* Keep subtle hover effect */
+}
+
+/* Newsletter styles (currently commented out in HTML) */
+.base-newsletter-form { /* Renamed */
+  display: flex;
+  margin-top: 1rem;
+}
+
+.base-newsletter-form input { /* Scoped */
+  flex: 1;
+  padding: 0.8rem;
+  border: none;
+  border-radius: 4px 0 0 4px;
+  outline: none;
+  font-family: 'Poppins', sans-serif;
+  background-color: rgba(255, 255, 255, 0.9);
+  color: var(--dark);
+}
+.base-newsletter-form input::placeholder {
+    color: var(--gray);
+}
+
+.base-subscribe-btn { /* Renamed */
+  background: var(--primary-light); /* Use theme color */
+  color: white;
+  border: none;
+  padding: 0 1.5rem;
+  border-radius: 0 4px 4px 0;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+}
+
+.base-subscribe-btn:hover { /* Renamed */
+  background: var(--success); /* Use another theme color on hover */
+}
+
+.base-footer-bottom { /* Renamed */
+  background: rgba(0, 0, 0, 0.1); /* Slightly darker bottom bar */
+  padding: 1.5rem 0;
+  text-align: center;
+  position: relative; /* Ensure it's above waves */
+  z-index: 15;
+}
+
+/* Adjust the container inside footer bottom for better flex alignment */
+.base-footer-bottom > .base-container {
+  display: flex;
+  justify-content: space-between; /* Space out items */
+  align-items: center; /* Vertically align items */
+  flex-wrap: wrap; /* Allow wrapping on small screens */
+  gap: 1rem; /* Spacing between items */
+  /* max-width and padding inherited from .base-container */
+}
+
+.base-footer-bottom p { /* Scoped */
+  margin: 0; /* Reset margin */
+  color: #ccc; /* Slightly brighter than original aaa */
+  font-size: 13px; /* Slightly larger */
+  flex-basis: 100%; /* Default: take full width on small screens */
+  text-align: center; /* Center text */
+}
+.base-footer-bottom p.developer-credit {
+    color: #aaa; /* Keep developer credit subtle */
+    font-size: 12px;
+    flex-basis: 100%; /* Allow it to wrap separately if needed */
+    margin-top: 0.5rem; /* Add some space when wrapped */
+}
+
+
+.base-footer-bottom-links { /* Renamed */
+  /*display: flex;*/
+  display: none;
+  gap: 1.5rem;
+  justify-content: center; /* Center links horizontally */
+  flex-basis: 100%; /* Default: take full width on small screens */
+  order: -1; /* Move links before copyright on small screens if wrapped */
+}
+
+.base-footer-bottom-links a { /* Scoped */
+  color: #ccc; /* Match copyright color */
+  text-decoration: none;
+  font-size: 13px; /* Match copyright font size */
+  transition: color 0.3s ease;
+}
+
+.base-footer-bottom-links a:hover { /* Scoped */
+  color: var(--primary-light); /* Use theme color on hover */
+}
+
+/* Medium screens: Adjust footer bottom layout */
+@media (min-width: 768px) {
+    .base-footer-bottom > .base-container {
+        justify-content: space-between; /* Ensure space-between on larger screens */
+    }
+    .base-footer-bottom p {
+        flex-basis: auto; /* Allow copyright to shrink */
+        text-align: left;
+    }
+    .base-footer-bottom-links {
+        flex-basis: auto; /* Allow links to shrink */
+        order: 0; /* Reset order */
+    }
+     .base-footer-bottom p.developer-credit {
+        flex-basis: auto; /* Allow credit to shrink */
+        text-align: right;
+        margin-top: 0; /* Reset margin */
+    }
+}
+
+
+/* ==== INTEGRATED RESPONSIVE ADJUSTMENTS ==== */
+
+@media (max-width: 992px) {
+    .base-footer-content {
+        padding-left: 3rem; /* Reduce padding earlier */
+        padding-right: 3rem;
+    }
+}
+
+
+@media (max-width: 768px) {
+  /* Navbar responsive rules already handled above */
+
+  /* --- Footer Responsive Rules --- */
+  .base-footer-content {
+    grid-template-columns: 1fr; /* Stack columns */
+    padding-left: 2rem;  /* Reduced horizontal padding */
+    padding-right: 2rem;
+    padding-top: 3rem;
+    padding-bottom: 1rem;
+    gap: 2.5rem; /* Adjust gap for stacked layout */
+  }
+
+  /* Center the brand/logo section content when stacked */
+  .base-footer-section.brand {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Center logo, tagline, social icons */
+    text-align: center; /* Center the tagline text */
+  }
+   .base-footer-section.brand .base-logo {
+      justify-content: center; /* Ensure logo elements are centered if flex */
+   }
+
+  /* Ensure social icons remain centered */
+  .base-social-icons {
+    justify-content: center; /* Center icons horizontally */
+  }
+
+  /* Center text in other sections and adjust underline */
+  .base-footer-section.links,
+  .base-footer-section.resources {
+      text-align: center; /* Center headings and list items */
+  }
+  .base-footer-section h2::after {
+     left: 50%;
+     transform: translateX(-50%); /* Center the underline */
+  }
+   .base-footer-section ul li a:hover {
+       transform: none; /* Remove horizontal shift on hover for centered text */
+   }
+
+  /* Footer Bottom Adjustments (already handled by flex-wrap and flex-basis) */
+   .base-footer-bottom > .base-container {
+      justify-content: center; /* Center items when wrapped */
+      gap: 0.8rem; /* Reduce gap slightly */
+   }
+   .base-footer-bottom-links {
+       gap: 1rem; /* Adjust gap */
+   }
+
+}
+
+
+/* Optional: Further adjustments for very small screens */
+@media (max-width: 480px) {
+  body {
+      padding-top: 65px; /* Adjust body padding if navbar height changes */
+      /* Update --navbar-height if needed */
+  }
+  .base-navbar-container {
+      min-height: 65px; /* Adjust navbar height */
+  }
+
+  .base-logo-text {
+      font-size: 20px; /* Smaller logo text */
+  }
+   .base-logo-icon {
+      font-size: 22px; /* Smaller logo icon */
+   }
+
+
+  .base-footer-content {
+    padding-left: 1.5rem;  /* Further reduce padding */
+    padding-right: 1.5rem;
+    gap: 2rem; /* Further adjust gap */
+  }
+
+  .base-footer-section h2 {
+    font-size: 15px;
+  }
+
+  .base-footer-section ul li a,
+  .base-footer-tagline,
+  .base-footer-bottom p,
+  .base-footer-bottom-links a {
+    font-size: 13px;
+  }
+
+  .base-social-icon {
+    width: 36px; /* Slightly adjust size */
+    height: 36px;
+    font-size: 0.9rem;
+  }
+
+   .base-footer-bottom > .base-container {
+      gap: 0.8rem; /* Fine-tune gap */
+   }
+   .base-footer-bottom-links {
+        gap: 0.8rem 1rem; /* Adjust vertical and horizontal gap when wrapped */
+   }
+}

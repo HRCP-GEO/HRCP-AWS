@@ -1,0 +1,224 @@
+{# templates/jobs/post_job.html #}
+
+{% extends 'jobs/base.html' %} {# Use the base template #}
+{% load static %} {# Load static files tag library #}
+{% load compress %}
+
+{# Set the specific title for this page #}
+{% block title %}გამოაქვეყნე - {{ block.super }}{% endblock %}
+
+{% block twitter_title %}{% block og_title %}{% block page_title %}
+    გამოაქვეყნეთ თქვენი ვაკანსია - HRCP {# More specific title #}
+{% endblock %}{% endblock %}{% endblock %}
+
+{% block og_description %}{% block twitter_description %}{% block meta_description %}
+    გამოაქვეყნეთ თქვენი ვაკანსია, ტრენინგი ან ტენდერი HRCP-ზე. შეავსეთ ფორმა და აირჩიეთ სასურველი განცხადების ტიპი მარტივად.
+{% endblock %}{% endblock %}{% endblock %}
+
+{% block og_url %}{% endblock %}
+
+{% block canonical_path %}/gancxadeba/{% endblock %}
+
+{# og_type defaults to 'website' from base.html, which is suitable here #}
+
+<meta property="og:image" content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'HRCP.png' %}{% endblock %}" />
+    <meta name="twitter:image" content="{% block twitter_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'HRCP.png' %}{% endblock %}">
+
+
+{% block twitter_image_alt %}{% block og_image_alt %}
+    {# Inherit the default site logo alt text from base.html #}
+    {{ block.super }}
+{% endblock %}{% endblock %}
+
+{# Add CSS/Fonts specific to this page #}
+{% block head_extra %}
+  {% compress css %}<link rel="stylesheet" href="{% static 'job_post_form.css' %}">{% endcompress %}
+  {# Keep Inter font here if ONLY used on this page, otherwise move to base.html #}
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+  {# Font Awesome for icons if not already in base.html #}
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+
+    {# Added LD+JSON for the Form Page #}
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebPage",
+    "name": "{% filter escapejs %}{% block page_title_ld %}გამოაქვეყნეთ თქვენი ვაკანსია - HRCP{% endblock %}{% endfilter %}",
+    "description": "{% filter escapejs %}{% block meta_description_ld %}გამოაქვეყნეთ თქვენი ვაკანსია, ტრენინგი ან ტენდერი HRCP-ზე. შეავსეთ ფორმა და აირჩიეთ სასურველი განცხადების ტიპი მარტივად.{% endblock %}{% endfilter %}",
+    "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'post_job_ad' %}",
+    {# Indicate the provider of the service (posting ads) offered on this page #}
+    "provider": {
+      "@type": "Organization",
+      "name": "HRCP",
+       {# Assuming 'home' URL name exists for the homepage #}
+      "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'home' %}"
+      {# You could add logo here too if desired #}
+      {# ,"logo": "{{ request.scheme }}://{{ request.get_host }}{{ STATIC_URL }}path/to/logo.png" #}
+    },
+    {# Optional: Define the primary purpose #}
+    "mainContentOfPage": {
+        "@type": "WebPageElement",
+        "cssSelector": "#job-post-form" {# Point to the form itself #}
+     }
+    {# Optional: Keywords relevant to the page's function #}
+    {# ,"keywords": "post job ad, submit vacancy, post training ad, post tender notice, job posting form, HRCP" #}
+  }
+  </script>
+{% endblock %}
+
+{# Main content for the Post Ad page #}
+{% block content %}
+<div class="container post-ad-container" style="padding-top: 30px; padding-bottom: 30px;"> {# Added class and some padding #}
+  <h1 style="text-align: center; margin-bottom: 30px;">გამოაქვეყნე განცხადება HRCP-ზე</h1> {# Adjusted title to match site name maybe? #}
+
+  {# Add novalidate to prevent default browser validation if relying heavily on JS #}
+  <form method="post" enctype="multipart/form-data" autocomplete="off" class="post-ad-form" id="job-post-form" novalidate>
+    {% csrf_token %}
+
+    {# --- Add a hidden container for final product data --- #}
+    <div id="hidden-product-data-container" style="display: none;"></div>
+
+    <div class="form-section">ინფორმაცია კომპანიის შესახებ</div>
+
+    {# --- Company Info Fields (Keep as before) --- #}
+    <div class="mb-3">
+      <label for="{{ form.company_name.id_for_label }}" class="required">კომპანიის სახელი</label>
+      {{ form.company_name }}
+      {% if form.company_name.errors %}<ul class="errorlist">{% for error in form.company_name.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+    </div>
+    <div class="mb-3">
+      <label for="{{ form.identification_code.id_for_label }}" class="required">საიდენტიფიკაციო კოდი</label>
+      {{ form.identification_code }}
+      {% if form.identification_code.errors %}<ul class="errorlist">{% for error in form.identification_code.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+    </div>
+    <div class="mb-3">
+      <label for="{{ form.company_email.id_for_label }}" class="required">ელ-ფოსტა</label>
+      {{ form.company_email }}
+      {% if form.company_email.errors %}<ul class="errorlist">{% for error in form.company_email.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+    </div>
+    <div class="mb-3">
+      <label for="{{ form.phone.id_for_label }}" class="required">ტელეფონი</label>
+      {{ form.phone }}
+      {% if form.phone.errors %}<ul class="errorlist">{% for error in form.phone.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+    </div>
+    <div class="mb-3">
+      <label for="{{ form.additional_email.id_for_label }}">დამატებითი ელ-ფოსტა</label>
+      {{ form.additional_email }}
+      {% if form.additional_email.errors %}<ul class="errorlist">{% for error in form.additional_email.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+    </div>
+
+    <div class="form-section">განცხადების დეტალები</div>
+
+    {# --- Advertisement Details Fields (Keep as before) --- #}
+    <div class="mb-3 tablet-full">
+      <label for="{{ form.advertisement_type.id_for_label }}" class="required">განცხადების ტიპი</label>
+      {{ form.advertisement_type }}
+      {% if form.advertisement_type.errors %}<ul class="errorlist">{% for error in form.advertisement_type.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+    </div>
+    <div class="mb-3 tablet-full">
+      <label for="{{ form.advertisement_name.id_for_label }}" class="required">განცხადების დასახელება</label>
+      {{ form.advertisement_name }}
+      {% if form.advertisement_name.errors %}<ul class="errorlist">{% for error in form.advertisement_name.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+    </div>
+    <div class="mb-3 full-width">
+      <label for="{{ form.vacancy_description.id_for_label }}">ვაკანსიის აღწერა</label>
+      {{ form.vacancy_description }} {# Assuming this is a textarea or rich text editor field #}
+      {% if form.vacancy_description.errors %}<ul class="errorlist">{% for error in form.vacancy_description.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+    </div>
+    <div class="mb-3 full-width">
+      <label for="{{ form.comment.id_for_label }}">დამატებითი კომენტარი</label>
+      {{ form.comment }}
+      {% if form.comment.errors %}<ul class="errorlist">{% for error in form.comment.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+    </div>
+
+    <div class="form-section">ასატვირთი მასალა</div>
+
+    {# --- File Upload Fields (Keep as before) --- #}
+    <div class="mb-3 tablet-full">
+      <label for="{{ form.document.id_for_label }}">დოკუმენტაციის მიმაგრება</label>
+      <div class="custom-file-input">
+        <label class="custom-file-label" for="{{ form.document.id_for_label }}">
+          <i class="fas fa-upload"></i> ამოირჩიეთ ფაილი
+        </label>
+        {{ form.document }} {# Render the file input widget #}
+        <div class="file-name" id="document_filename">ფაილი არ არის არჩეული</div>
+      </div>
+      {% if form.document.errors %}<ul class="errorlist">{% for error in form.document.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+    </div>
+    <div class="mb-3 tablet-full">
+      <label for="{{ form.company_logo.id_for_label }}">კომპანიის ლოგო</label>
+      <div class="custom-file-input">
+        <label class="custom-file-label" for="{{ form.company_logo.id_for_label }}">
+          <i class="fas fa-upload"></i> ამოირჩიეთ ფაილი
+        </label>
+        {{ form.company_logo }} {# Render the file input widget #}
+        <div class="file-name" id="logo_filename">ფაილი არ არის არჩეული</div>
+      </div>
+      {% if form.company_logo.errors %}<ul class="errorlist">{% for error in form.company_logo.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+    </div>
+
+    {# --- MODIFIED Product Selection Section --- #}
+    <div class="mb-3 full-width product-multi-section">
+        <label>პროდუქტი</label>
+        <div class="tooltip" style="display: inline-block; margin-left: 10px; vertical-align: middle;">
+            <i class="fas fa-question-circle"></i>
+            <span class="tooltip-text">ამოირჩიეთ სერვისი და რაოდენობა. დააჭირეთ '+' მეტი სერვისის დასამატებლად.</span>
+        </div>
+
+        <div id="product-container">
+            {# The initial product group - includes quantity selector #}
+            <div class="product-group">
+                 {# Use 'products_select' temporarily to avoid name conflict before JS processing #}
+                <select name="products_select" class="form-control product-select">
+                    <option value="standard">სტანდარტული განცხადება - 30 ლარი</option>
+                    <option value="standard_logo">სტანდარტული განცხადება + ლოგო - 50 ლარი</option>
+                    <option value="vip_ad">VIP განცხადება - 100 ლარი</option>
+                    <option value="vip_logo">VIP განცხადება + ლოგო - 120 ლარი</option>
+                    <option value="training">ტრენინგი/განათლება - 30 ლარი</option>
+                    <option value="training_logo">ტრენინგი/განათლება + ლოგო - 50 ლარი</option>
+                    <option value="tender">ტენდერი - 30 ლარი</option>
+                    <option value="tender_logo">ტენდერი + ლოგო - 50 ლარი</option>
+                </select>
+                <div class="quantity-selector">
+                  <button type="button" class="btn btn-quantity minus" aria-label="Decrease quantity">-</button>
+                  {# Use 'product_quantity_input' temporarily #}
+                  <input type="number" name="product_quantity_input" class="quantity-input" value="1" min="1" aria-label="Product quantity">
+                  <button type="button" class="btn btn-quantity plus" aria-label="Increase quantity">+</button>
+                </div>
+                <button type="button" class="btn btn-danger remove-product" style="display:none;" aria-label="Remove product">−</button>
+            </div>
+            {# More product groups will be added here by JS #}
+        </div>
+        <button type="button" id="add-product" class="btn btn-success add-product-btn">+</button> {# Changed class slightly #}
+
+        {# Display potential errors related to product selection if needed from Django form #}
+        {% if form.products.errors %}<ul class="errorlist">{% for error in form.products.errors %}<li>{{ error }}</li>{% endfor %}</ul>{% endif %}
+    </div>
+    {# --- End MODIFIED Product Selection Section --- #}
+
+    <div class="mb-3 full-width total-price-display"> {# Use class from previous example #}
+        <label>საბოლოო ფასი:</label>
+        <span id="total-price" style="font-weight: bold; font-size: 1.2em;">₾0</span> {# Will be updated by JS #}
+    </div>
+
+    <div class="submit-container full-width">
+      <button type="submit" class="btn btn-primary">
+        <i class="fas fa-paper-plane"></i> გაგზავნა
+      </button>
+    </div>
+  </form> {# End of form #}
+
+    <p class="mailp" style="display: flex;justify-content: center;padding-top: 20px;">განცხადების გამოქვეყნება შესაძლებელია ვებ-საიტიდან ან გამოგვიგზავნოთ განცხადებები ელ-ფოსტაზე: &nbsp;<a href="mailto:info@HRCP.ge"> info@HRCP.ge</a>-ზე</p>
+</div> {# End of container #}
+{% endblock %} {# End of content block #}
+
+
+{# Add JavaScript specific to this page #}
+{% block scripts_extra %}
+  {# Make sure PRODUCT_PRICES is available to JS #}
+  <script>
+    // Pass product prices from Django view context
+    const PRODUCT_PRICES = JSON.parse('{{ product_prices_json|escapejs }}');
+  </script>
+  {% compress js %}<script src="{% static 'job_post_form.js' %}"></script>{% endcompress %}
+{% endblock %}

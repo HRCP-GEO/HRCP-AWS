@@ -1,0 +1,194 @@
+{% extends 'jobs/base.html' %}
+{% load static %}
+{% load compress %}
+
+{% block title %}ხშირად დასმული კითხვები - HRCP{% endblock %}
+
+{% block twitter_title %}{% block og_title %}{% block page_title %}
+    ხშირად დასმული კითხვები - HRCP
+{% endblock %}{% endblock %}{% endblock %}
+
+{% block og_description %}{% block twitter_description %}{% block meta_description %}იპოვეთ პასუხები ხშირად დასმულ კითხვებზე: ვაკანსიის განთავსება, ფასები, ანგარიში, ვაკანსიების ძებნა და სხვა. დაგვიკავშირდით დამატებითი კითხვებისთვის.{% endblock %}{% endblock %}{% endblock %}
+
+{% block og_url %}{% endblock %}
+
+{% block canonical_path %}/faq/{% endblock %}
+{# og_type defaults to 'website' from base.html, which is suitable here #}
+
+<meta property="og:image" content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'HRCP.png' %}{% endblock %}" />
+    <meta name="twitter:image" content="{% block twitter_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'HRCP.png' %}{% endblock %}">
+
+
+{% block twitter_image_alt %}{% block og_image_alt %}
+    {# Inherit the default site logo alt text from base.html #}
+    {{ block.super }}
+{% endblock %}{% endblock %}
+
+{% block head_extra %}
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"> <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    {% compress css %}<link rel="stylesheet" href="{% static 'faq_page.css' %}">{% endcompress %}
+    {# Added LD+JSON for FAQ Page #}
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "name": "ხშირად დასმული კითხვები - HRCP",
+      "description": "{% filter striptags %}{% block meta_description_ld %}იპოვეთ პასუხები ხშირად დასმულ კითხვებზე: ვაკანსიის განთავსება, ფასები, ანგარიში, ვაკანსიების ძებნა და სხვა. დაგვიკავშირდით დამატებითი კითხვებისთვის.{% endblock %}{% endfilter %}",
+      "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'faq_page' %}",
+      "mainEntity": [ {# Array of Question/Answer pairs from the page #}
+        {
+          "@type": "Question",
+          "name": "{{ "როგორ განვათავსო ვაკანსია თქვენს საიტზე?"|escapejs }}",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            {# Extract text content from the corresponding answer paragraph #}
+            "text": "{{ "ვაკანსიის განსათავსებლად, გთხოვთ დააჭიროთ განცხადების დამატების ღილაკს. შეავსეთ მოთხოვნილი ინფორმაცია (ინფორმაცია კომპანიის შესახებ, განცხადების დეტალები, განცხადების აღწერა ან ატვირთოთ ფაილი), აირჩიოთ სასურველი პროდუქტი და დააჭირეთ გაგზავნა."|escapejs }}"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "{{ "რა ღირს ვაკანსიის განთავსება?"|escapejs }}",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "{{ "HRCP გთავაზობთ სხვადასხვა პაკეტს. ფასების შესახებ დეტალური ინფორმაციისთვის გთხოვთ ეწვიოთ ჩვენი ვებ-გვერდის პროდუქტები და ფასები განყოფილებას."|escapejs }}"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "{{ "როგორ გადავიხადო ვაკანსიის/განცხადების გამოქვეყნების საფასური?"|escapejs }}",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "{{ "ვაკანსიის/განცხადების ვებ-გვერდიდან ატვირთვის ან ელ-ფოსტაზე გამოგზავნის შემდეგ, გამოგეგზავნებათ ინვოისი. ინვოისში მითითებული საფასურის გადახდის შემდგომ მოხდება ვაკანსიის/განცხადების გამოქვეყნება."|escapejs }}"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "{{ "რამდენი ხნით რჩება ვაკანსია აქტიური?"|escapejs }}",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "{{ "ვაკანსია აქტიურია 30 დღის განმავლობაში."|escapejs }}"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "{{ "როგორ მოვძებნო შესაფერისი ვაკანსიები?"|escapejs }}",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "{{ "საიტზე გვაქვს მოსახერხებელი საძიებო სისტემა. შეგიძლიათ გაფილტროთ ვაკანსიები პოზიციის, ინდუსტრიის, მდებარეობის და სხვა პარამეტრების მიხედვით."|escapejs }}"
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "{{ "რა უპირატესობა აქვს HRCP-ის საიტს სხვა ვაკანსიების პორტალებთან შედარებით?"|escapejs }}",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "{{ "HRCP გამოირჩევა მომხმარებელზე ორიენტირებული ინტერფეისით, ვაკანსიების ფართო არჩევანით და დახვეწილი საძიებო სისტემით, რომელიც ეხმარება კანდიდატებს სწრაფად იპოვონ სასურველი ვაკანსია."|escapejs }}"
+          }
+        }
+        {# IMPORTANT: If you add more FAQs to the HTML page, #}
+        {# make sure to add a corresponding Question/Answer object here in the mainEntity array. #}
+      ]
+    }
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div class="cphr-faq-container">
+        <div class="cphr-faq-header">
+            <h1 class="cphr-faq-title">ხშირად დასმული კითხვები</h1>
+            <p class="cphr-faq-subtitle">გაეცანით პასუხებს ყველაზე ხშირად დასმულ კითხვებზე. თუ ვერ იპოვეთ თქვენთვის
+                საინტერესო კითხვა, დაგვიკავშირდით.</p>
+        </div>
+
+
+        <div class="cphr-faq-list">
+            <div class="cphr-faq-item" data-category="general">
+                <div class="cphr-faq-question">
+                    <h2 style="font-size: unset;text-decoration: unset;font-weight: unset;"><span class="cphr-faq-question-text">როგორ განვათავსო ვაკანსია თქვენს საიტზე?</span></h2>
+                    <div class="cphr-faq-toggle-icon">
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+                <div class="cphr-faq-answer">
+                    <h3 style="font-size: unset;text-decoration: unset;font-weight: unset;"><p>ვაკანსიის განსათავსებლად, გთხოვთ დააჭიროთ "განცხადების დამატება" ღილაკს. შეავსეთ მოთხოვნილი
+                        ინფორმაცია (ინფორმაცია კომპანიის შესახებ, განცხადების დეტალები, განცხადების აღწერა ან ატვირთოთ
+                        ფაილი), აირჩიოთ სასურველი პროდუქტი და დააჭირეთ "გაგზავნა".</p></h3>
+                </div>
+            </div>
+
+            <div class="cphr-faq-item" data-category="general">
+                <div class="cphr-faq-question">
+                    <h2 style="font-size: unset;text-decoration: unset;font-weight: unset;"><span class="cphr-faq-question-text">რა ღირს ვაკანსიის განთავსება?</span></h2>
+                    <div class="cphr-faq-toggle-icon">
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+                <div class="cphr-faq-answer">
+                    <h3 style="font-size: unset;text-decoration: unset;font-weight: unset;"><p>HRCP გთავაზობთ სხვადასხვა პაკეტს. ფასების შესახებ დეტალური ინფორმაციისთვის გთხოვთ ეწვიოთ ჩვენი
+                        ვებ-გვერდის "პროდუქტები და ფასები" განყოფილებას.</p></h3>
+                </div>
+            </div>
+
+            <div class="cphr-faq-item" data-category="general">
+                <div class="cphr-faq-question">
+                    <h2 style="font-size: unset;text-decoration: unset;font-weight: unset;"><span class="cphr-faq-question-text">როგორ გადავიხადო ვაკანსიის/განცხადების გამოქვეყნების საფასური?</span></h2>
+                    <div class="cphr-faq-toggle-icon">
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+                <div class="cphr-faq-answer">
+                    <h3 style="font-size: unset;text-decoration: unset;font-weight: unset;"><p>ვაკანსიის/განცხადების ვებ-გვერდიდან ატვირთვის ან ელ-ფოსტაზე გამოგზავნის შემდეგ, გამოგეგზავნებათ
+                        ინვოისი. ინვოისში მითითებული საფასურის გადახდის შემდგომ მოხდება ვაკანსიის/განცხადების
+                        გამოქვეყნება.</p></h3>
+                </div>
+            </div>
+
+            <div class="cphr-faq-item" data-category="account"> <div class="cphr-faq-question">
+                <h2 style="font-size: unset;text-decoration: unset;font-weight: unset;"><span class="cphr-faq-question-text">რამდენი ხნით რჩება ვაკანსია აქტიური?</span></h2>
+                    <div class="cphr-faq-toggle-icon">
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+                <div class="cphr-faq-answer">
+                    <h3 style="font-size: unset;text-decoration: unset;font-weight: unset;"><p>ვაკანსია აქტიურია 30 დღის განმავლობაში.</p></h3>
+                </div>
+            </div>
+
+            <div class="cphr-faq-item" data-category="jobs"> <div class="cphr-faq-question">
+                <h2 style="font-size: unset;text-decoration: unset;font-weight: unset;"><span class="cphr-faq-question-text">როგორ მოვძებნო შესაფერისი ვაკანსიები?</span></h2>
+                    <div class="cphr-faq-toggle-icon">
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+                <div class="cphr-faq-answer">
+                    <h3 style="font-size: unset;text-decoration: unset;font-weight: unset;"><p>საიტზე გვაქვს მოსახერხებელი საძიებო სისტემა. შეგიძლიათ გაფილტროთ ვაკანსიები პოზიციის, ინდუსტრიის,
+                        მდებარეობის და სხვა პარამეტრების მიხედვით.</p></h3>
+                </div>
+            </div>
+
+             <div class="cphr-faq-item" data-category="general">
+                 <div class="cphr-faq-question">
+                     <h2 style="font-size: unset;text-decoration: unset;font-weight: unset;"><span class="cphr-faq-question-text">რა უპირატესობა აქვს HRCP-ის საიტს სხვა ვაკანსიების პორტალებთან შედარებით?</span></h2>
+                    <div class="cphr-faq-toggle-icon">
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                </div>
+                <div class="cphr-faq-answer">
+                    <h3 style="font-size: unset;text-decoration: unset;font-weight: unset;"><p>HRCP გამოირჩევა მომხმარებელზე ორიენტირებული ინტერფეისით, ვაკანსიების ფართო არჩევანით და
+                        დახვეწილი საძიებო სისტემით, რომელიც ეხმარება კანდიდატებს სწრაფად იპოვონ სასურველი ვაკანსია.</p></h3>
+                </div>
+            </div>
+
+            <div class="cphr-faq-no-results" style="display: none;"> <i class="fas fa-exclamation-triangle cphr-faq-no-results-icon"></i>
+                <p class="cphr-faq-no-results-text">ვერაფერი მოიძებნა</p>
+                <p class="cphr-faq-no-results-subtext">სცადეთ სხვა საკვანძო სიტყვა ან დაგვიკავშირდით დახმარებისთვის.</p>
+            </div>
+        </div>
+
+    </div> {% endblock %}
+
+{% block scripts_extra %}
+    {# Add Font Awesome if you haven't already in base template #}
+    {# <script src="https://kit.fontawesome.com/your-fontawesome-kit.js" crossorigin="anonymous"></script> #}
+    {% compress js %}<script src="{% static 'faq_page.js' %}"></script>{% endcompress %}
+{% endblock %}

@@ -1,0 +1,8 @@
+User-agent: *
+Disallow: /admin/
+Disallow: /ckeditor5/
+Disallow: /success/
+Disallow: /jet/
+Disallow: /jet/dashboard/
+
+Sitemap: https://hrcp.ge/sitemap.xml

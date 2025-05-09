@@ -1,0 +1,172 @@
+{% extends 'jobs/base.html' %}
+{% load static %}
+{% load compress %}
+{% load i18n %} {# Or use default Django template filters if i18n isn't set up #}
+{% load tz %} {# For timezone handling if needed #}
+{% spaceless %}{% block twitter_title %}{% block og_title %}{% block page_title %}ვაკანსია-{{ job.title }} კომპანია {{ job.company.name }}-ში | HRCP{% endblock %}{% endblock %}{% endblock %}{% endspaceless %}
+
+{% spaceless %}{% block og_description %}{% block twitter_description %}{% block meta_description %}გააგზავნეთ CV {{ job.title }} პოზიციაზე {{ job.company.name }}-ში. ადგილმდებარეობა:{% for loc in job.locations.all %}{{ loc.name }}{% if not forloop.last %}, {% endif %}{% endfor %}.{% endblock %}{% endblock %}{% endblock %}{% endspaceless %}
+
+{% block og_url %}{% endblock %}
+
+{% block canonical_path %}{{ request.path }}{% endblock %}
+
+{# og_type needs its own block as it doesn't follow the nested pattern #}
+{% block og_type %}website{% endblock %}
+
+<meta property="og:image" content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'HRCP.png' %}{% endblock %}" />
+<meta name="twitter:image" content="{% block twitter_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'HRCP.png' %}{% endblock %}">
+
+
+{% block twitter_image_alt %}{% block og_image_alt %}
+    {# Alt text logic placed inside the innermost block #}
+    {% if job.company.logo %}Logo for {{ job.company.name }}{% else %}{{ block.super }}{% endif %}
+{% endblock %}{% endblock %}
+
+{% block head_extra %}
+    {# Assuming job_page.css contains the styles below #}
+    {% compress css %}<link rel="stylesheet" href="{% static 'job_page.css' %}">{% endcompress %}
+    <script>
+        function printIntro() {
+            window.print();
+        }
+    </script>
+
+    <script type="application/ld+json">
+        {
+          "@context" : "https://schema.org/",
+          "@type" : "JobPosting",
+          "title" : "{{ job.title|escapejs }}",
+      "description" : "{{ job.description|striptags|escapejs }}",
+      "identifier": {
+        "@type": "PropertyValue",
+        "name": "HRCP Job ID",
+        "value": "{{ job.id }}"
+      },
+      "datePosted" : "{{ job.created_at|date:"c" }}", {# ISO 8601 format #}
+        "validThrough" : "{{ job.expired_jobs|date:"c" }}", {# ISO 8601 format #}
+        "employmentType" : [
+        {% for jtt in job.job_time_types.all %}"{{ jtt.name|upper|escapejs }}"{% if not forloop.last %},
+        {% endif %}{% endfor %}
+        {# Map your JobTimeType names (e.g., "Full-time", "Part-time") to Schema.org standards like FULL_TIME, PART_TIME, CONTRACTOR, TEMPORARY, INTERN, VOLUNTEER, PER_DIEM, OTHER #}
+        {# Example mapping (needs adjustment based on your actual JobTimeType names): #}
+        {# {% for jtt in job.job_time_types.all %}{% if jtt.name == 'სრული განაკვეთი' %}"FULL_TIME"{% elif jtt.name == 'ნახევარი განაკვეთი' %}"PART_TIME"{% else %}"OTHER"{% endif %}{% if not forloop.last %}, {% endif %}{% endfor %} #}
+        ],
+        "hiringOrganization" : {
+          "@type" : "Organization",
+          "name" : "{{ job.company.name|escapejs }}",
+        "sameAs" : "{{ request.scheme }}://{{ request.get_host }}{% url 'jobs_by_company' job.company.slug %}" {# Use LinkedIn if available, else company page #}
+        {% if job.company.logo %}
+        ,"logo": "{{ request.scheme }}://{{ request.get_host }}{{ job.company.logo.url }}"
+    {% endif %}
+        },
+        "jobLocation": {
+          "@type": "Place",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "{% if job.exact_cities %}{{ job.exact_cities|escapejs }}{% else %}
+        {% for loc in job.locations.all %}{{ loc.name|escapejs }}{% if not forloop.last %}, {% endif %}
+        {% endfor %}{% endif %}",
+        {# "addressRegion": "Region if applicable", #}
+        "addressCountry": "GE" {# Assuming Georgia #}
+        }
+      }
+        {% if job.has_salary and job.salary_amount and job.salary_currency %}
+            ,"baseSalary": {
+              "@type": "MonetaryAmount",
+              "currency": "{{ job.salary_currency|escapejs }}",
+        "value": {
+          "@type": "QuantitativeValue",
+          "value": "{{ job.salary_amount }}",
+          "unitText": "MONTH" {# Or YEAR, HOUR - adjust based on how salary is specified #}
+            },
+  "applicantLocationRequirements": {
+    "@type": "Country",
+    "name": "Georgia"
+  },
+  "applicationContact": {
+    "@type": "ContactPoint",
+    "email": "{{ job.company.email }}",
+    "contactType": "HR"}
+          }
+        {% endif %}
+      {# Add directApply if you have an internal application system, otherwise omit or set to false #}
+      {# ,"directApply": false #}
+        }
+    </script>
+{% endblock %}
+
+{% block content %}
+
+    <div class="container job-detail-layout"> {# Changed: main-content -> job-detail-layout #}
+        <main class="job-detail-main-panel"> {# Added class #}
+            <section class="job-detail-header"> {# Changed: intro -> job-detail-header #}
+                <h1>{{ job.title }}</h1>
+                <div class="job-detail-meta"> {# Changed: meta-info -> job-detail-meta #}
+                    <h2 style="font-size: inherit;font-weight: inherit;">კომპანია: <a href="{% url 'jobs_by_company' job.company.slug %}">{{ job.company.name }}</a></h2>
+                    <div class="dates-together" style="display: flex;gap: 30px;"><p>გამოქვეყნების თარიღი:
+                        <span>{{ job.created_at|date:"M d" }}</span></p>
+                        {% if is_last_day %}
+                            <p class="job-detail-deadline-urgent"><span>It's the last day of this job!</span></p>
+                            {# Changed: last-day-message -> job-detail-deadline-urgent #}
+                        {% else %}
+                            <p>დასრულების ვადა: <span>{{ job.expired_jobs|date:"M d" }}</span></p>
+                        {% endif %}</div>
+
+                    {% if job.salary_amount and job.salary_currency %}
+                        <p>
+                            ხელფასი:
+                            <span> {% if job.salary_currency == "USD" %}<span>$</span>{{ job.salary_amount }}
+                            {% elif job.salary_currency == "GEL" %}<span>₾</span>{{ job.salary_amount }}
+                            {% elif job.salary_currency == "EUR" %}<span>€</span>{{ job.salary_amount }}
+                            {% else %}<span>{{ job.salary_amount }} {{ job.salary_currency }}</span>
+                            {% endif %}</span>
+                        </p>
+                    {% endif %}
+
+
+                    <h2 style="font-size: inherit;font-weight: inherit;">ადგილმდებარეობა:
+                        {% if job.exact_cities %}
+                            <span>{{ job.exact_cities }}</span>
+                        {% endif %}
+                    </h2>
+                </div>
+
+                <div class="job-detail-content-wrapper"> {# Changed: content-block -> job-detail-content-wrapper #}
+                    <div class="ck-content"> {# Kept ck-content as it's likely tied to the editor #}
+                        {{ job.description | safe }}
+                    </div>
+
+                    <div class="job-detail-apply-section"> {# Changed: job-actions -> job-detail-apply-section #}
+                        <p>დაინტერესდით? გაუგზავნეთ CV დამსაქმებელს</p>
+                        <a href="mailto:{{ job.company.email }}?subject={{ job.title|urlencode }}">
+                            <button class="job-detail-apply-button">გაგზავნა</button>
+                            {# Changed: send-cv-btn -> job-detail-apply-button #}
+                        </a>
+                    </div>
+                </div>
+            </section>
+
+            <footer class="job-detail-actions-footer"> {# Changed: document-footer -> job-detail-actions-footer #}
+                <button class="job-detail-print-button" onclick="printIntro()">ბეჭდვა</button>
+                {# Changed: print-btn -> job-detail-print-button #}
+            </footer>
+        </main>
+
+        <aside class="job-detail-sidebar"> {# Changed: sidebar -> job-detail-sidebar #}
+            {% for company in companies %}
+                {% if company.publish_on_job_page %}
+                    <div class="job-detail-sponsor-card"> {# Changed: sponsor-box -> job-detail-sponsor-card #}
+                        {% if company.logo %}
+                            <img src="{{ company.logo.url }}" alt="{{ company.name }} logo"
+                                 class="job-detail-sponsor-logo">
+                        {% endif %}
+                        {# Changed: sponsor-logo -> job-detail-sponsor-logo #}
+                        <p><a href="{% url 'jobs_by_company' company.slug %}">ყველა ვაკანსიის ნახვა</a></p>
+                    </div>
+                {% endif %}
+            {% endfor %}
+        </aside>
+    </div>
+
+{% endblock %}

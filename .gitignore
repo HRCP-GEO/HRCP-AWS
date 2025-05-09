@@ -1,0 +1,46 @@
+# Python bytecode
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environment
+.env/
+venv/
+ENV/
+env/
+
+# Environment variables
+*.env
+*.env.*
+
+# Django stuff
+*.log
+db.sqlite3
+!media/
+staticfiles/  # if using collectstatic locally
+local_settings.py
+
+# Celery beat schedule file
+celerybeat-schedule
+celerybeat.pid
+
+# Redis dump (if stored locally, just in case)
+dump.rdb
+
+# VSCode/IDE settings
+.vscode/
+.idea/
+*.swp
+*~
+
+# Git & system
+.DS_Store
+Thumbs.db
+.idea
+
+# Coverage / testing
+htmlcov/
+.coverage
+.tox/
+.nox/
+.pytest_cache/

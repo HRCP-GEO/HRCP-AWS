@@ -1,0 +1,145 @@
+{% load static %}
+{% load compress %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block page_title %}HRCP - Your Career Partner{% endblock %}</title>
+    <meta name="description" content="{% block meta_description %}Find your next career opportunity in Georgia. HRCP connects talented professionals with top companies. Search jobs, vacancies, and trainings.{% endblock %}">
+    <link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{% block canonical_path %}{% endblock %}">
+
+    <link rel="icon" href="{% static 'HRCP.png' %}" type="image/png" sizes="32x32">
+
+    {# --- Open Graph Tags --- #}
+    <meta property="og:site_name" content="HRCP" />
+    <meta property="og:type" content="{% block og_type %}website{% endblock %}" />
+    <meta property="og:title" content="{% block og_title %}HRCP - Your Career Partner{% endblock %}" /> {# Default to page_title #}
+    <meta property="og:description" content="{% block og_description %}Find your next career opportunity...{% endblock %}" /> {# Default to meta_description #}
+    <meta property="og:url" content="{{ request.build_absolute_uri }}{% block og_url %}{% endblock %}" /> {# Default to canonical #}
+    <meta property="og:image" content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'HRCP.png' %}{% endblock %}" />
+    <meta property="og:image:alt" content="{% block og_image_alt %}HRCP Logo{% endblock %}" />
+
+    {# --- Optional: Twitter Card Tags (often fallback to OG, but good to include) --- #}
+    <meta name="twitter:card" content="summary_large_image"> {# Or "summary" if images aren't prominent #}
+    <meta name="twitter:site" content="@hrcp">
+    <meta name="twitter:title" content="{% block twitter_title %}HRCP - Your Career Partner{% endblock %}">
+    <meta name="twitter:description" content="{% block twitter_description %}Find your next career opportunity...{% endblock %}">
+    <meta name="twitter:image" content="{% block twitter_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'HRCP.png' %}{% endblock %}">
+    <meta name="twitter:image:alt" content="{% block twitter_image_alt %}HRCP Logo{% endblock %}">
+
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    {% compress css %}<link rel="stylesheet" href="{% static 'base.css' %}">{% endcompress %}
+    {% block head_extra %}{% endblock %}
+</head>
+<body>
+<nav class="base-navbar"> {# Renamed #}
+    <div class="base-container base-navbar-container"> {# Renamed #}
+        <a href="{% url 'home' %}" class="base-logo"> {# Renamed #}
+{#            <div class="base-logo-icon"> {# Renamed #}
+{#            </div>#}
+            <div class="base-logo-text" style="color: #396ecb;">HR<span style="color: #083076">CP</span></div> {# Renamed #}
+        </a>
+        <ul class="base-nav-menu"> {# Renamed - This is the DESKTOP menu #}
+            <li><a href="{% url 'home' %}" class="base-nav-link {% if active_nav == 'home' %}active{% endif %}">მთავარი</a></li> {# Renamed #}
+            <li><a href="{% url 'post_job_ad' %}" class="base-nav-link {% if active_nav == 'post_job_ad' %}active{% endif %}">განცხადების დამატება</a></li> {# Renamed #}
+            <li><a href="{% url 'banner_page' %}" class="base-nav-link {% if active_nav == 'advertise' %}active{% endif %}">პროდუქტები და ფასები</a></li> {# Renamed #}
+            <li><a href="{% url 'faq_page' %}" class="base-nav-link {% if active_nav == 'faq' %}active{% endif %}">FAQ</a></li> {# Renamed #}
+            <li><a href="{% url 'contact_page' %}" class="base-nav-link {% if active_nav == 'contact' %}active{% endif %}">კონტაქტი</a></li> {# Renamed #}
+        </ul>
+        <button class="base-mobile-menu-btn"> {# Renamed #}
+            <i class="fas fa-bars"></i>
+        </button>
+    </div>
+
+    <div class="base-mobile-menu"> {# Renamed #}
+        <ul class="base-nav-menu"> {# Renamed - This is the MOBILE menu list #}
+            <li><a href="{% url 'home' %}" class="base-nav-link {% if active_nav == 'home' %}active{% endif %}">მთავარი</a></li> {# Renamed #}
+            <li><a href="{% url 'post_job_ad' %}" class="base-nav-link {% if active_nav == 'post_job_ad' %}active{% endif %}">განცხადების დამატება</a></li> {# Renamed #}
+            <li><a href="{% url 'banner_page' %}" class="base-nav-link {% if active_nav == 'advertise' %}active{% endif %}">პროდუქტები და ფასები</a></li> {# Renamed #}
+            <li><a href="{% url 'faq_page' %}" class="base-nav-link {% if active_nav == 'faq' %}active{% endif %}">FAQ</a></li> {# Renamed #}
+            <li><a href="{% url 'contact_page' %}" class="base-nav-link {% if active_nav == 'contact' %}active{% endif %}">კონტაქტი</a></li> {# Renamed #}
+        </ul>
+    </div>
+    </nav>
+
+<main class="base-container main-content" style="max-width: 100% !important;">
+    {% block content %}
+    {% endblock %}
+</main>
+
+<div class="toast-container"></div>
+
+{# --- Footer remains the same --- #}
+<footer class="base-footer"> {# Renamed #}
+    <div class="base-footer-waves"> {# Renamed #}
+        <div class="base-wave wave1"></div> {# Renamed #}
+        <div class="base-wave wave2"></div> {# Renamed #}
+        <div class="base-wave wave3"></div> {# Renamed #}
+    </div>
+    <div class="base-container base-footer-content"> {# Renamed #}
+        <div class="base-footer-section brand"> {# Renamed #}
+            <div class="base-logo"> {# Renamed #}
+{#                <div class="base-logo-icon"> {# Renamed #}
+{#                </div>#}
+                <div class="base-logo-text" style="color: white;">HR<span style="color: white">CP</span></div> {# Renamed #}
+            </div>
+            <p class="base-footer-tagline">თქვენი კარიერული პარტნიორი</p> {# Renamed #}
+            <div class="base-social-icons"> {# Renamed #}
+                <a href="https://www.facebook.com/people/HRCPge/61575518013356/" class="base-social-icon"><i class="fab fa-facebook-f"></i></a> {# Renamed #}
+                <a href="https://www.linkedin.com/company/hr-cp/" class="base-social-icon"><i class="fab fa-linkedin-in"></i></a> {# Renamed #}
+            </div>
+        </div>
+        <div class="base-footer-section links"> {# Renamed #}
+            <h2 style="font-size: unset;font-weight: unset;text-decoration: unset;">სწრაფი ბმულები</h2>
+            <ul> {# Lists/links scoped by parent class in CSS #}
+                <li><a href="{% url 'home' %}"><h3 style="font-size: unset;font-weight: unset;text-decoration: unset;">მთავარი</h3></a></li>
+                <li><a href="{% url 'post_job_ad' %}"><h3 style="font-size: unset;font-weight: unset;text-decoration: unset;">განცხადების დამატება</h3></a></li>
+                <li><a href="{% url 'banner_page' %}"><h3 style="font-size: unset;font-weight: unset;text-decoration: unset;">პროდუქტები და ფასები</h3></a></li>
+                <li><a href="{% url 'faq_page' %}"><h3 style="font-size: unset;font-weight: unset;text-decoration: unset;">FAQ</h3></a></li>
+                <li><a href="{% url 'contact_page' %}"><h3 style="font-size: unset;font-weight: unset;text-decoration: unset;">კონტაქტი</h3></a></li>
+            </ul>
+        </div>
+        <div class="base-footer-section resources"> {# Renamed #}
+            <h2 style="font-size: unset;font-weight: unset;text-decoration: unset;">კონტაქტი</h2>
+            <ul> {# Lists/links scoped by parent class in CSS #}
+                <li><a href="tel:+995 595 442 277">+995 595 442 277</a></li>
+                <li><a href="mailto:info@hrcp.ge">info@hrcp.ge</a></li>
+                <li><a href="#">თბილისი, სოლოლაკი, ამაღლების 12.</a></li>
+                <li><a href="#">შპს "კონსალტინგ პორტ" - 404476919</a></li>
+            </ul>
+        </div>
+{#        <div class="base-footer-section newsletter">#}
+{#            <h3>გამოიწერეთ სიახლეები</h3>#}
+{#            <p>...</p>#}
+{#            <form class="base-newsletter-form" method="POST" action="...">#}
+{#                {% csrf_token %}#}
+{#                <input type="email" name="email" placeholder="..." required>#}
+{#                <button type="submit" class="base-subscribe-btn">გამოწერა</button>#}
+{#            </form>#}
+{#        </div>#}
+    </div>
+    <div class="base-footer-bottom"> {# Renamed #}
+         <div class="base-container">
+            <p>&copy; {% now "Y" %} HRCP. ყველა უფლება დაცულია.</p>
+            <div class="base-footer-bottom-links"> {# Renamed #}
+                <a href="#">კონფიდენციალურობის პოლიტიკა</a>
+                <a href="#">წესები და პირობები</a>
+                <a href="#">Cookie პოლიტიკა</a>
+            </div>
+            {# Removed the extra div around developer credit for simpler flex #}
+             <p class="developer-credit">Powered by <a href="https://mozaikko.com" style="text-decoration: none;color:inherit;">Mozaikko</a></p>
+        </div>
+    </div>
+</footer>
+
+{# Ensure base.js is loaded #}
+{% compress js %}<script src="{% static 'base.js' %}"></script>{% endcompress %}
+{% block scripts_extra %}{% endblock %}
+</body>
+</html>

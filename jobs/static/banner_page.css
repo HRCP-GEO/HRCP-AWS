@@ -1,0 +1,235 @@
+/* --- Existing Styles (Mostly Unchanged) --- */
+.banner-container {
+    max-width: 1200px;
+    margin: 40px auto;
+    padding: 20px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-radius: 8px;
+}
+
+.banner-header {
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+.banner-title {
+    /* Using the inline style from HTML: font-size: 24px; color: #1F3664; */
+    /* Consider moving inline style here if preferred */
+    margin-bottom: 10px;
+}
+
+.banner-description {
+    font-size: 1.1em;
+    color: #666;
+    margin-bottom: 20px;
+}
+
+.banner-pricing {
+    margin-bottom: 30px;
+}
+
+/* Optional wrapper for horizontal scroll fallback */
+.table-wrapper {
+    width: 100%;
+    /* overflow-x: auto; */ /* Uncomment this for horizontal scroll instead of card layout */
+}
+
+.pricing-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.pricing-table th,
+.pricing-table td {
+    border: 1px solid #ddd;
+    padding: 12px 15px;
+    text-align: left;
+    vertical-align: middle; /* Align vertically */
+}
+
+.pricing-table th {
+    background-color: #f2f2f2;
+    font-weight: 600;
+    white-space: nowrap; /* Prevent headers from wrapping */
+}
+
+.pricing-table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* Clear floats if needed, although not used here */
+/* .pricing-table tr::after {
+    content: "";
+    display: table;
+    clear: both;
+} */
+
+.banner-details {
+    margin-bottom: 30px;
+}
+
+.banner-details h2 { /* Style for commented H2 */
+    color: #4361ee; /* Example color if uncommented */
+    margin-bottom: 15px;
+}
+
+.banner-details p {
+    line-height: 1.6; /* Improve paragraph readability */
+    color: #555;
+}
+
+.banner-details a {
+    color: #4361ee; /* Ensure links have a distinct color */
+    text-decoration: none;
+}
+.banner-details a:hover {
+    text-decoration: underline;
+}
+
+
+.banner-details ul { /* Style for commented UL */
+    list-style-type: disc;
+    margin-left: 20px;
+    padding-left: 10px; /* Add some padding */
+}
+
+.banner-details li { /* Style for commented LI */
+    font-size: 1em;
+    color: #555;
+    margin-bottom: 8px;
+    line-height: 1.5;
+}
+
+.banner-contact { /* Style for commented contact section */
+    text-align: center;
+    margin-top: 30px; /* Add margin if uncommented */
+}
+
+.contact-button { /* Style for commented button */
+    background-color: #4361ee;
+    color: white;
+    padding: 12px 25px; /* Slightly adjusted padding */
+    border: none;
+    border-radius: 50px;
+    font-size: 1em;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    display: inline-block; /* Make it behave like a button */
+}
+
+.contact-button:hover {
+    background-color: #3a4fd7;
+}
+
+/* --- Responsive Styles --- */
+
+/* Medium screens and down (Tablets and Phones) */
+@media (max-width: 768px) {
+    .banner-container {
+        margin: 20px auto;
+        padding: 15px;
+    }
+
+    .banner-header {
+        margin-bottom: 20px;
+    }
+
+    .banner-title {
+         /*font-size: 2em; /* Example adjustment if needed */
+    }
+
+    .banner-description {
+        /* font-size: 1em; /* Example adjustment if needed */
+    }
+
+    .banner-pricing,
+    .banner-details {
+        margin-bottom: 20px;
+    }
+
+    /* Responsive Table: Card Layout */
+    .pricing-table thead {
+        /* Hide the table header visually, but keep for screen readers */
+        border: none;
+        clip: rect(0 0 0 0);
+        height: 1px;
+        margin: -1px;
+        overflow: hidden;
+        padding: 0;
+        position: absolute;
+        width: 1px;
+    }
+
+    .pricing-table tr {
+        display: block; /* Stack rows vertically */
+        margin-bottom: 15px; /* Space between "cards" */
+        border: 1px solid #ddd; /* Border around each "card" */
+        border-radius: 4px; /* Slightly rounded corners */
+        background-color: #fff; /* Ensure background for each card */
+        box-shadow: 0 2px 4px rgba(0,0,0,0.05); /* Optional subtle shadow */
+    }
+     /* Reset zebra striping for card layout */
+    .pricing-table tr:nth-child(even) {
+       background-color: #fff;
+    }
+
+
+    .pricing-table td {
+        display: block; /* Make cells stack within the row */
+        text-align: right; /* Align cell content (value) to the right */
+        padding-left: 50%; /* Make space for the label on the left */
+        position: relative; /* Needed for absolute positioning of the ::before pseudo-element */
+        border: none; /* Remove default cell borders */
+        border-bottom: 1px dotted #eee; /* Add a subtle separator between "fields" */
+        padding-top: 10px; /* Add padding top/bottom */
+        padding-bottom: 10px;
+        min-height: 1.5em; /* Ensure cells aren't too short */
+    }
+
+    .pricing-table td:last-child {
+        border-bottom: 0; /* Remove border from the last cell in a card */
+    }
+
+    .pricing-table td::before {
+        /* Use the content from the data-label attribute */
+        content: attr(data-label);
+        position: absolute;
+        left: 10px; /* Padding from the left edge of the cell */
+        top: 10px; /* Align with top padding */
+        width: calc(50% - 20px); /* Calculate width based on padding-left and left position */
+        padding-right: 10px; /* Space between label and value */
+        white-space: nowrap; /* Prevent label from wrapping */
+        text-align: left; /* Align label text to the left */
+        font-weight: bold; /* Make the label stand out */
+        color: #333; /* Label color */
+    }
+}
+
+/* Smaller screens (Optional - Phones) */
+@media (max-width: 480px) {
+    .banner-title {
+        /* Further reduce font size if needed */
+        /* font-size: 1.8em; */
+    }
+
+    .banner-container {
+        margin: 15px auto;
+        padding: 10px;
+    }
+
+    .pricing-table td {
+        padding-left: 45%; /* Adjust label space if needed */
+        font-size: 15px;
+    }
+
+    .pricing-table td::before {
+        width: calc(45% - 15px); /* Adjust label width */
+        left: 5px;
+        top: 8px; /* Adjust vertical alignment */
+        padding-right: 5px;
+        font-size: 0.9em; /* Slightly smaller label */
+    }
+}

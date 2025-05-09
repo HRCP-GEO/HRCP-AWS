@@ -1,0 +1,651 @@
+{% extends 'jobs/base.html' %}
+{% load static %}
+{% load compress %}
+{% load query_params %}
+
+{% block twitter_title %}{% block og_title %}{% block page_title %}
+    {% spaceless %}
+        {% if selected_category_obj or selected_location_obj %}ვაკანსია -
+            {% if category and category != 'all' %}{{ selected_category_obj.name }} {% endif %}
+            {% if selected_location and selected_location != 'all' %}{{ selected_location_obj.name }}-ში{% endif %} |
+            HRCP
+        {% else %}
+            ახალი ვაკანსიები, ტენდერები, დასაქმება | HRCP
+        {% endif %}
+    {% endspaceless %}
+{% endblock %}{% endblock %}{% endblock %}
+{% block og_description %}{% block twitter_description %}{% block meta_description %}
+    {% spaceless %} {# Optional: removes extra whitespace between tags #}
+        {% if selected_category_obj or selected_location_obj %}
+            მოიძიეთ{% if selected_category_obj %} {{ selected_category_obj.name }}{% endif %} ვაკანსია
+            {% if selected_location_obj %} {{ selected_location_obj.name }}-ში{% endif %}. ვაკანსიები, ტენდერები,
+            სტაჟირება,
+            ტრენინგები, რეალური დასაქმება ჩვენთან – HRCP-ში!.
+        {% else %}
+            {# Default Description (No Filters Active) #}
+            ახალი და დღევანდელი ვაკანსიები თბილისში, ბათუმში, ქუთაისში,ონლაინ
+            სამსახურები, ტენდერები, სტაჟირება, ტრენინგები, დასაქმება ჩვენთან – HRCP-ში!
+        {% endif %}
+    {% endspaceless %}
+{% endblock %}{% endblock %}{% endblock %}
+
+{% block og_url %}{% endblock %}
+
+{% block canonical_path %}/{% endblock %}
+
+{% block head_extra %}
+    {% compress css %}<link rel="stylesheet" href="{% static 'home.css' %}">{% endcompress %}
+
+    {# Your existing styles are fine #}
+    <style>
+        .salary-filter-box {
+            margin-bottom: 10px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+            display: inline-block; /* Aligns with other filters */
+        }
+
+        .salary-filter-box.active {
+            background-color: #f0f0f0;
+        }
+
+        .filter-buttons .filter-btn {
+            margin: 0 5px 5px 0;
+        }
+
+
+        /* --- Style for the VIP Label --- */
+        .vip-label {
+            position: absolute;
+            left: 10px; /* Adjust as needed */
+            background-color: rgba(0, 0, 0, 0.6); /* Optional: Dark semi-transparent background for better contrast */
+            color: #FFD700; /* Gold color */
+            padding: 3px 8px;
+            font-size: 10px;
+            font-weight: bold;
+            border-radius: 4px;
+            z-index: 2; /* Ensure it's above other content */
+            text-transform: uppercase;
+        }
+
+        .search-box .search-icon {
+            cursor: pointer;
+        }
+
+        /* --- End VIP Label Style --- */
+
+    </style>
+
+    {# Added LD+JSON for Job Search Results Page #}
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "SearchResultsPage",
+        {# Name matches the logic in page_title block #}
+        "name": "{% filter escapejs %}{% spaceless %}{% block page_title_ld %}
+          {% if selected_category_obj or selected_location_obj %}
+        ვაკანსია -{% if selected_category_obj %} {{ selected_category_obj.name }}{% endif %}
+    {% if selected_location_obj %} {{ selected_location_obj.name }}-ში{% endif %} | HRCP
+    {% else %}
+        მოიძიე ვაკანსიები | HRCP
+    {% endif %}
+      {% endblock %}{% endspaceless %}{% endfilter %}",
+        {# Description matches the logic in meta_description block #}
+        "description": "{% filter escapejs %}{% spaceless %}{% block meta_description_ld %}
+          {% if selected_category_obj or selected_location_obj %}
+        მოიძიეთ{% if selected_category_obj %} {{ selected_category_obj.name }}{% endif %} ვაკანსია
+        {% if selected_location_obj %} {{ selected_location_obj.name }}-ში{% endif %}
+        . ვაკანსიები, ტენდერები, სტაჟირება, ტრენინგები, რეალური დასაქმება ჩვენთან – HRCP-ში!.
+    {% else %}
+        ახალი და დღევანდელი ვაკანსიები თბილისში, ბათუმში, ქუთაისში,ონლაინ სამსახურები, ტენდერები, სტაჟირება, ტრენინგები, დასაქმება ჩვენთან – HRCP-ში!
+    {% endif %}
+      {% endblock %}{% endspaceless %}{% endfilter %}",
+        {# URL of the current page including filters #}
+        "url": "{{ request.build_absolute_uri|escapejs }}",
+      "mainEntity": {
+        "@type": "ItemList",
+        {# Optionally add numberOfItems if you pass the total count from the view #}
+        {# "numberOfItems": total_job_count, #}
+        "itemListElement": [
+        {# Loop through VIP jobs first #}
+          {% for job in vip_jobs %}
+        {
+          "@type": "ListItem",
+          "position": {{ forloop.counter }}, {# Position starts from 1 #}
+        "item": {
+          "@type": "JobPosting",
+        {# Use absolute URL for the specific job posting #}
+        "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'job_detail' id=job.id job_slug=job.slug %}",
+              "title": "{{ job.title|escapejs }}",
+        {# Provide a concise description, e.g., first 30 words #}
+        "description": "{{ job.description|striptags|truncatewords:30|escapejs }}",
+              "identifier": {
+                "@type": "PropertyValue",
+                "name": "HRCP Job ID",
+                "value": "{{ job.id }}"
+              },
+              "datePosted": "{{ job.created_at|date:"c" }}", {# ISO 8601 format #}
+        "validThrough": "{{ job.expired_jobs|date:"c" }}", {# ISO 8601 format #}
+        "employmentType": [
+        {# Map your JobTimeType names to Schema.org standards #}
+                {% for jtt in job.job_time_types.all %}
+                  {% if jtt.name == 'სრული განაკვეთი' %}"FULL_TIME"{% elif jtt.name == 'ნახევარი განაკვეთი' %}
+            "PART_TIME"{% else %}"OTHER"{% endif %}{% if not forloop.last %}, {% endif %}
+                {% empty %}"OTHER"{% endfor %} {# Default if none specified #}
+        ],
+        "hiringOrganization": {
+          "@type": "Organization",
+          "name": "{{ job.company.name|escapejs }}",
+        {# Link to company page on your site #}
+        "sameAs": "{{ request.scheme }}://{{ request.get_host }}{% url 'jobs_by_company' job.company.slug %}"
+        {% if job.company.logo %}
+            ,"logo": "{{ request.scheme }}://{{ request.get_host }}{{ job.company.logo.url }}"
+        {% endif %}
+        },
+        "jobLocation": {
+          "@type": "Place",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "
+        {% if job.exact_cities %}{{ job.exact_cities|escapejs }}{% else %}{% for loc in job.locations.all %}
+            {{ loc.name|escapejs }}{% if not forloop.last %}, {% endif %}{% endfor %}{% endif %}",
+                  "addressCountry": "GE"
+                }
+              }
+        {% if job.has_salary and job.salary_amount and job.salary_currency %}
+            ,"baseSalary": {
+              "@type": "MonetaryAmount",
+              "currency": "{{ job.salary_currency|escapejs }}",
+                  "value": {
+                    "@type": "QuantitativeValue",
+                    "value": "{{ job.salary_amount }}",
+            {# Adjust unitText based on your salary period #}
+            "unitText": "MONTH"
+          }
+        }
+        {% endif %}
+              {# Add directApply if applicable #}
+              {# ,"directApply": false #}
+        }
+      }{% if not forloop.last or regular_jobs %},{% endif %} {# Comma if not last VIP OR if regular jobs exist #}
+          {% endfor %}
+
+          {# Loop through Regular jobs shown on the current page #}
+          {% for job in regular_jobs %}
+        {
+          "@type": "ListItem",
+        {# Continue numbering from VIP jobs #}
+        "position": {{ forloop.counter|add:vip_jobs|length }},
+            "item": {
+              "@type": "JobPosting",
+              "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'job_detail' id=job.id job_slug=job.slug %}",
+              "title": "{{ job.title|escapejs }}",
+              "description": "{{ job.description|striptags|truncatewords:30|escapejs }}",
+              "identifier": {
+                "@type": "PropertyValue",
+                "name": "HRCP Job ID",
+                "value": "{{ job.id }}"
+              },
+              "datePosted": "{{ job.created_at|date:"c" }}",
+              "validThrough": "{{ job.expired_jobs|date:"c" }}",
+              "employmentType": [
+        {% for jtt in job.job_time_types.all %}
+                  {% if jtt.name == 'Full-Time' %}"FULL_TIME"{% elif jtt.name == 'Part-Time' %}"PART_TIME"
+        {% elif jtt.name == 'Hybrid' %}"Hybrid"{% elif jtt.name == 'On-Site' %}"Hybrid"{% else %}"OTHER"{% endif %}
+        {% if not forloop.last %}, {% endif %}
+                {% empty %}"OTHER"{% endfor %}
+        ],
+        "hiringOrganization": {
+          "@type": "Organization",
+          "name": "{{ job.company.name|escapejs }}",
+                "sameAs": "{{ request.scheme }}://{{ request.get_host }}{% url 'jobs_by_company' job.company.slug %}"
+        {% if job.company.logo %}
+            ,"logo": "{{ request.scheme }}://{{ request.get_host }}{{ job.company.logo.url }}"
+        {% endif %}
+        },
+        "jobLocation": {
+          "@type": "Place",
+          "address": {
+            "@type": "PostalAddress",
+            "addressLocality": "
+        {% if job.exact_cities %}{{ job.exact_cities|escapejs }}{% else %}{% for loc in job.locations.all %}
+            {{ loc.name|escapejs }}{% if not forloop.last %}, {% endif %}{% endfor %}{% endif %}",
+                  "addressCountry": "GE"
+                }
+              }
+        {% if job.has_salary and job.salary_amount and job.salary_currency %}
+            ,"baseSalary": {
+              "@type": "MonetaryAmount",
+              "currency": "{{ job.salary_currency|escapejs }}",
+                  "value": {
+                    "@type": "QuantitativeValue",
+                    "value": "{{ job.salary_amount }}",
+                    "unitText": "MONTH"
+                  }
+                }
+        {% endif %}
+              {# ,"directApply": false #}
+        }
+      }{% if not forloop.last %},{% endif %} {# Comma between regular job items #}
+          {% endfor %}
+        ]
+      }
+    }
+    </script>
+
+    {# === LD+JSON Schema for the Organization (HRCP) === #}
+    {# !!! IMPORTANT: Update placeholder values below (url, logo, sameAs, telephone) !!! #}
+    <script type="application/ld+json">
+        {
+          "@context": "https://schema.org",
+          "@type": "Organization",
+          "name": "HRCP",
+          "url": "{{ request.build_absolute_uri|escapejs }}", {# <<< UPDATE THIS #}
+        "sameAs": [
+           "https://www.facebook.com/profile.php?id=61575518013356", {# <<< UPDATE or REMOVE #}
+        "https://www.linkedin.com/company/hr-cp/" {# <<< UPDATE or REMOVE #}
+        ],
+       "contactPoint": {
+         "@type": "ContactPoint",
+         "telephone": "+995 595 442 277", {# <<< UPDATE THIS #}
+        "contactType": "Customer Service"
+      }
+    }
+    </script>
+{% endblock %}
+
+{% block content %}
+    {# ... (rest of your header and filters remain the same) ... #}
+    <div class="header">
+        <div class="section-title">
+            <div class="job-filters">
+                {# Search Form - Remains the same #}
+                <form action="." method="get" class="search-box">
+                    <i class="fas fa-search search-icon" id="search-submit-icon"></i>
+                    <input type="text" name="q" placeholder="მოძებნე..." value="{{ query }}">
+
+                    {# Hidden fields to retain other filters on search submit #}
+                    {% if selected_location and selected_location != 'all' %}
+                        <input type="hidden" name="location" value="{{ selected_location }}">{% endif %}
+                    {% if job_type and job_type != 'all' %}
+                        <input type="hidden" name="job_type" value="{{ job_type }}">{% endif %}
+                    {% if category and category != 'all' %}
+                        <input type="hidden" name="category" value="{{ category }}">{% endif %}
+                    {% if has_salary == 'true' %}<input type="hidden" name="has_salary" value="true">{% endif %}
+                    {% if is_foreign_language == 'true' %}<input type="hidden" name="is_foreign_language" value="true">{% endif %}
+                    {% for jtt_name in selected_job_time_types %}{% if jtt_name != 'all' %}
+                        <input type="hidden" name="job_time_types" value="{{ jtt_name }}">{% endif %}{% endfor %}
+                    {% if selected_min_salary and selected_min_salary != 'all' %}
+                        <input type="hidden" name="min_salary" value="{{ selected_min_salary }}">
+                    {% endif %}
+                </form>
+
+                <div class="filter-group">  {# Start group JUST for dropdowns #}
+
+
+                    {# Job Type Dropdown #}
+                    <div class="filter-dropdown" id="job-type-dropdown">
+                        <div class="dropdown-select">
+                            <span>
+  {% if selected_job_type_label %}
+      {{ selected_job_type_label }}
+  {% else %}
+      ნებისმიერი
+  {% endif %}
+</span>
+
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="dropdown-menu">
+                            {% load query_params %} {# Ensure query_params is loaded #}
+                            {% url_params exclude='job_type' as current_params %}
+                            <a href="?{{ current_params }}&job_type=all"
+                               class="dropdown-item {% if not job_type or job_type == 'all' %}selected{% endif %}"
+                               data-value="all">ყველა</a>
+                            {% for geo_label, slug in job_type_slug_map.items %}
+                                <a href="?{{ current_params }}&job_type={{ slug }}"
+                                   class="dropdown-item {% if job_type == slug %}selected{% endif %}"
+                                   data-value="{{ slug }}">{{ geo_label }}</a>
+                            {% endfor %}
+
+                        </div>
+                    </div>
+
+
+                    {# Location Dropdown #}
+                    <div class="filter-dropdown" id="location-dropdown">
+                        <div class="dropdown-select">
+                            <span>
+  {% if selected_location_obj %}
+      {{ selected_location_obj.name }}
+  {% else %}
+      ადგილმდებარეობა
+  {% endif %}
+</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="dropdown-menu">
+                            {% url_params exclude='location' as current_params %}
+                            <a href="?{{ current_params }}&location=all"
+                               class="dropdown-item {% if not selected_location or selected_location == 'all' %}selected{% endif %}"
+                               data-value="all">ყველა</a>
+                            {% for each_location in locations %}
+                                <a href="?{{ current_params }}&location={{ each_location.slug }}"
+                                   class="dropdown-item {% if selected_location == each_location.slug %}selected{% endif %}"
+                                   data-value="{{ each_location.name }}">
+                                    {{ each_location.name }}
+                                </a>
+                            {% endfor %}
+                        </div>
+                    </div>
+
+                    {# Category Dropdown #}
+                    <div class="filter-dropdown" id="category-dropdown">
+                        <div class="dropdown-select">
+                            <span>
+  {% if selected_category_obj %}
+      {{ selected_category_obj.name }}
+  {% else %}
+      კატეგორია
+  {% endif %}
+</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="dropdown-menu">
+                            {% url_params exclude='category' as current_params %}
+                            <a href="?{{ current_params }}&category=all"
+                               class="dropdown-item {% if not category or category == 'all' %}selected{% endif %}"
+                               data-value="all">ყველა</a>
+                            {% for each_category in categories %}
+                                <a href="?{{ current_params }}&category={{ each_category.slug }}"
+                                   class="dropdown-item {% if category == each_category.slug %}selected{% endif %}"
+                                   data-value="{{ each_category.name }}">
+                                    {{ each_category.name }}
+                                </a>
+                            {% endfor %}
+
+                        </div>
+                    </div>
+
+                <div class="filter-dropdown" id="salary-range-dropdown">
+                        <div class="dropdown-select">
+                            <span>
+                                {{ selected_min_salary_label }}
+                            </span>
+                            <i class="fas fa-chevron-down"></i>
+                        </div>
+                        <div class="dropdown-menu">
+                            {# === This is where the links are generated === #}
+                            {% url_params exclude='min_salary,page' as current_params_no_salary %}
+                            {% for key, label in salary_options.items %}
+    {# Use the NEW tag name with 'as' #}
+    {% url_params_excluded_only exclude='min_salary,page' as current_params_no_salary %}
+    {# Append the parameter manually #}
+    <a href="?{{ current_params_no_salary }}&min_salary={{ key }}"
+       class="dropdown-item {% if selected_min_salary == key %}selected{% endif %}"
+       data-value="{{ key }}">
+        {{ label }}
+    </a>
+{% endfor %}
+                            {# === End link generation section === #}
+                        </div>
+                    </div>
+                </div>
+                {# End filter-group JUST for dropdowns #}
+
+                {# Salary Filter - Back OUTSIDE the dropdown group #}
+            <div class="checkboxes-together" style="display: flex;gap:20px;">
+                <div class="salary-filter-container">
+                    {% url_params exclude='has_salary' as current_params %}
+                    <input type="checkbox"
+                           id="salary-filter-checkbox"
+                           class="salary-filter-checkbox"
+                           {% if has_salary == 'true' %}checked{% endif %}
+                           onchange="location = '?{{ current_params }}&has_salary=' + (this.checked ? 'true' : 'all');">
+                    <label for="salary-filter-checkbox">მხოლოდ ხელფასიანი</label>
+                </div>
+
+            <div class="salary-filter-container">
+                    {% url_params exclude='is_foreign_language' as current_params %}
+                    <input type="checkbox"
+                           id="salary-filter-checkbox"
+                           class="salary-filter-checkbox"
+                           {% if is_foreign_language == 'true' %}checked{% endif %}
+                           onchange="location = '?{{ current_params }}&is_foreign_language=' + (this.checked ? 'true' : 'all');">
+                    <label for="salary-filter-checkbox">მხოლოდ უცხოენოვანი</label>
+                </div>
+            </div>
+
+                {# Job Time Type Filter Buttons - Back OUTSIDE the dropdown group #}
+                <div class="filter-buttons">
+                    <a href="#"
+                       class="filter-btn {% if not selected_job_time_types or 'all' in selected_job_time_types %}active{% endif %}"
+                       data-filter="all"
+                       onclick="updateJobTimeTypeFilter('all'); return false;">
+                        ყველა
+                    </a>
+                    {% for time_type in job_time_types %}
+                        <a href="#"
+                           class="filter-btn {% if time_type.slug in selected_job_time_types and 'all' not in selected_job_time_types %}active{% endif %}"
+                           data-filter="{{ time_type.slug }}"
+                           onclick="updateJobTimeTypeFilter('{{ time_type.slug }}'); return false;">
+                            {{ time_type.name }}
+                        </a>
+                    {% endfor %}
+                </div>
+
+            </div>
+            {# End job-filters #}
+        </div>
+        {# End section-title #}
+    </div> {# End header #}
+
+    {# VIP Job Listings - Update display #}
+    {% if vip_jobs %}
+        <div class="job-list vip-jobs">
+            <h2>VIP განცხადებები</h2>
+            {% for job in vip_jobs %}
+                <div class="job-card" data-category="{{ job.category.name|default:'' }}">
+                    <span class="vip-label">VIP</span>
+
+                    <div class="job-primary-info">
+                        {# ... job title, location, etc. ... #}
+                        <a href="{% url 'job_detail' id=job.id job_slug=job.slug %}"
+                           class="job-title"><h3
+                                style="text-decoration: none;font-size: unset;font-weight: unset;">{{ job.title }}</h3>
+                        </a>
+                        <div class="job-secondary-info">
+                            <span class="job-location">
+                                {% if job.exact_cities %}
+                                    <span>{{ job.exact_cities }}</span>
+                                {% endif %}
+                            </span>
+                        </div>
+                    </div>
+
+                    {# MODIFIED Company Details #}
+                    <div class="company-details"
+                         {% if not job.company.has_logo or not job.post_with_logo %}style="padding-left: 100px !important;"{% endif %}>
+                        <div class="company-logo">
+                            {% if job.company.has_logo and job.post_with_logo %}
+                                <img src="{{ job.company.logo.url }}" alt="{{ job.company.name }} logo">
+                            {% endif %}
+                        </div>
+                        <div class="company-name">
+                            <a href="{% url 'jobs_by_company' job.company.slug %}">{{ job.company.name }}</a>
+                        </div>
+                    </div>
+                    {# END MODIFIED Company Details #}
+
+                    <div class="job-time-type">
+                        {# ... job time types ... #}
+                        {% for jtt in job.job_time_types.all %}
+                            <span>{{ jtt.name }}</span>{% if not forloop.last %}, {% endif %}
+                        {% empty %}
+                            <span>N/A</span>
+                        {% endfor %}
+                    </div>
+
+                    <div class="job-dates">
+                        {# ... job dates ... #}
+                        <div>{{ job.created_at|date:"j M" }}</div>
+                        <div>{{ job.expired_jobs|date:"j M" }}</div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% include "jobs/company_boxes.html" %}
+
+    {# Regular Job Listings - Update display #}
+    <div class="job-list regular-jobs" id="regular-jobs-container">
+        {% if vip_jobs %} {# Only show heading if there were VIP jobs #}
+            <h2>განცხადებები</h2>
+        {% endif %}
+
+        {% for job in regular_jobs %}
+            <div class="job-card" data-category="{{ job.category.name|default:'' }}">
+                <div class="job-title-location">
+                    <a href="{% url 'job_detail' id=job.id job_slug=job.slug %}" class="job-title"><h3
+                            style="text-decoration: none;font-size: unset;font-weight: unset;">{{ job.title }}</h3></a>
+                    <div class="job-location-time">
+                        <span class="job-location">
+                            {% if job.exact_cities %}
+                                <span>{{ job.exact_cities }}</span>
+                            {% endif %}
+                        </span>
+                    </div>
+                </div>
+                <div class="company-details"
+                     {% if not job.company.has_logo or not job.post_with_logo %}style="padding-left: 100px !important;"{% endif %}>
+                    <div class="company-logo">
+                        {% if job.company.has_logo and job.post_with_logo %}
+                            <img src="{{ job.company.logo.url }}" alt="{{ job.company.name }} logo">
+                        {% endif %}
+                    </div>
+                    <div class="company-name">
+                        <a href="{% url 'jobs_by_company' job.company.slug %}">{{ job.company.name }}</a>
+                    </div>
+                </div>
+
+                <div class="job-time-type">
+                    {% for jtt in job.job_time_types.all %}
+                        <span>{{ jtt.name }}</span>{% if not forloop.last %}, {% endif %}
+                    {% empty %}
+                        <span>N/A</span>
+                    {% endfor %}
+                </div>
+
+                <div class="job-dates">
+                    <div>{{ job.created_at|date:"j M" }}</div>
+                    <div>{{ job.expired_jobs|date:"j M" }}</div>
+                </div>
+            </div>
+        {% empty %}
+            {% if not vip_jobs %} {# Only show if no jobs match at all #}
+                <p>არცერთი ვაკანსია არ მოიძებნა.</p>
+            {% else %} {# Show if filters excluded regular jobs but VIP jobs were shown #}
+                <p>არცერთი რეგულარული ვაკანსია არ შეესაბამება თქვენს ამჟამინდელ ფილტრს.</p>
+            {% endif %}
+        {% endfor %}
+    </div>
+
+    {% if has_more %}
+        <div id="loading-indicator" style="text-align: center; padding: 20px; display: none;">
+            <div class="spinner"
+                 style="display: inline-block; width: 30px; height: 30px; border: 3px solid rgba(0,0,0,.3); border-radius: 50%; border-top-color: #000; animation: spin 1s ease-in-out infinite;"></div>
+        </div>
+    {% endif %}
+
+    <style>
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+{% endblock %}
+
+{% block scripts_extra %}
+    {% compress js %}<script src="{% static 'home.js' %}"></script>{% endcompress %}
+    {% if has_more %}
+        {% compress js %}<script>
+            document.addEventListener('DOMContentLoaded', function () {
+                let currentPage = {{ current_page }};
+                let loading = false;
+                const container = document.getElementById('regular-jobs-container');
+                const loadingIndicator = document.getElementById('loading-indicator');
+                let hasMore = {{ has_more|lower }};
+
+                // Build the base URL with all current filters
+                function getLoadMoreUrl(page) {
+                    // Start with current URL parameters
+                    const urlParams = new URLSearchParams(window.location.search);
+                    // Update or add the page parameter
+                    urlParams.set('page', page);
+                    // Return the URL
+                    return `${window.location.pathname}?${urlParams.toString()}`;
+                }
+
+                function loadMoreJobs() {
+                    if (loading || !hasMore) return;
+
+                    loading = true;
+                    loadingIndicator.style.display = 'block';
+
+                    // Increment the page number
+                    currentPage++;
+
+                    fetch(getLoadMoreUrl(currentPage), {
+                        headers: {
+                            'X-Requested-With': 'XMLHttpRequest'
+                        }
+                    })
+                        .then(response => response.json())
+                        .then(data => {
+                            // Append the new job cards
+                            container.insertAdjacentHTML('beforeend', data.html);
+
+                            // Update hasMore flag
+                            hasMore = data.has_more;
+
+                            // Hide loading indicator
+                            loadingIndicator.style.display = 'none';
+                            loading = false;
+                        })
+                        .catch(error => {
+                            console.error('Error loading more jobs:', error);
+                            loadingIndicator.style.display = 'none';
+                            loading = false;
+                        });
+                }
+
+                // Intersection Observer to detect when user scrolls near the bottom
+                const observer = new IntersectionObserver((entries) => {
+                    if (entries[0].isIntersecting && hasMore) {
+                        loadMoreJobs();
+                    }
+                }, {rootMargin: '200px'}); // Start loading when within 200px of the indicator
+
+                if (loadingIndicator) {
+                    observer.observe(loadingIndicator);
+                }
+
+                // Also handle scroll event as a fallback
+                window.addEventListener('scroll', () => {
+                    if (loading || !hasMore) return;
+
+                    const scrollHeight = document.documentElement.scrollHeight;
+                    const scrollTop = window.scrollY || document.documentElement.scrollTop;
+                    const clientHeight = window.innerHeight || document.documentElement.clientHeight;
+
+                    if (scrollTop + clientHeight >= scrollHeight - 200) {
+                        loadMoreJobs();
+                    }
+                });
+            });
+        </script>{% endcompress %}
+    {% endif %}
+{% endblock %}

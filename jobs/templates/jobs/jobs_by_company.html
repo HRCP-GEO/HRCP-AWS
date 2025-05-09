@@ -1,0 +1,234 @@
+{% extends 'jobs/base.html' %}
+{% load static %}
+{% load compress %}
+
+{% block page_title %}იპოვეთ ახალი ვაკანსიები {{ company.name }} - ში | HRCP{% endblock %}
+
+{% block twitter_title %}{% block og_title %}
+    იპოვეთ ახალი ვაკანსიები {{ company.name }}-ში | HRCP
+{% endblock %}{% endblock %}
+
+{% block og_description %}{% block twitter_description %}{% block meta_description %}
+    გაეცანით დღევანდელ და ახალ ვაკანსიებს, ტენდერებს, სტაჟირებებსა და ტრენინგებს, კომპანია {{ company.name }}-სგან | HRCP. {% if company.description %}{{ company.description|striptags|truncatewords:20 }}{% else %}{% endif %}
+{% endblock %}{% endblock %}{% endblock %}
+
+{% block og_url %}{% endblock %}
+
+{% block canonical_path %}{{ request.path }}{% endblock %}
+
+{# Set OG type to 'profile' for a company page #}
+{% block og_type %}profile{% endblock %}
+
+{% block twitter_image %}{% block og_image %}
+    {# Use company logo if available, else default #}
+    {% if company.logo %}
+        {{ request.scheme }}://{{ request.get_host }}{{ company.logo.url }}
+    {% else %}
+        {{ block.super }}
+    {% endif %}
+{% endblock %}{% endblock %}
+
+{% block twitter_image_alt %}{% block og_image_alt %}
+    {# Dynamic alt text #}
+    {% if company.logo %}Logo for {{ company.name }}{% else %}{{ block.super }}{% endif %}
+{% endblock %}{% endblock %}
+
+{% block head_extra %}
+    {% compress css %}<link rel="stylesheet" href="{% static 'home.css' %}">{% endcompress %}
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+          rel="stylesheet">
+
+    {# --- Styles (Keep as provided) --- #}
+    <style>
+        /* Styles as provided before */
+        .company-info-section { background-color: white; padding: 40px 20px; margin-bottom: 30px; margin-top: 30px; border-radius: var(--border-radius, 8px); display: flex; flex-direction: column; align-items: center; text-align: center; border: 1px solid var(--border-color, #e0e0e0); }
+        .company-info-logo { width: 100px; height: 100px; border-radius: 50%; object-fit: contain; margin-bottom: 20px; background-color: white; padding: 5px; box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); }
+        .company-info-section h2 { margin-bottom: 10px; font-size: 2rem; color: var(--dark, #333); }
+        .company-info-description { max-width: 700px; margin-bottom: 20px; color: var(--text-color, #555); line-height: 1.6; }
+        .company-contact-info { display: flex; flex-wrap: wrap; justify-content: center; gap: 20px; margin-top: 15px; color: var(--gray, #666); }
+        .company-contact-info p { margin: 0; display: flex; align-items: center; gap: 8px; }
+        .company-contact-info i { color: var(--primary, #4361ee); width: 16px; text-align: center; }
+        .company-job-listings h2.section-heading { text-align: center; margin-bottom: 20px; font-size: 1.8rem; color: var(--dark, #333); }
+        .company-search-container { display: flex; justify-content: center; margin-bottom: 30px; padding: 0 20px; }
+        .company-search-container .search-box { max-width: 500px; width: 100%; position: relative; }
+        .company-search-container .search-box input { width: 100%; padding-right: 50px; }
+        .company-search-container .search-box i { position: absolute; left: 15px; top: 50%; transform: translateY(-50%); color: var(--gray); z-index: 2; }
+        .company-search-container .search-box button { position: absolute; right: 5px; top: 5px; bottom: 5px; width: 40px; border: none; background: var(--primary, #4361ee); color: white; border-radius: var(--border-radius, 8px); cursor: pointer; display: none; }
+        .job-list { display: grid; grid-template-columns: 1fr; gap: 2px; max-width: 100%; margin: 0 auto; }
+        .no-jobs { grid-column: 1 / -1; text-align: center; padding: 40px; background-color: #fff; border-radius: var(--border-radius); margin-top: 20px; }
+        .no-jobs i { font-size: 4rem; color: #e0e0e0; margin-bottom: 1rem; display: block; }
+        .job-title-location { margin: 0px !important; }
+    </style>
+    {# --- End Styles --- #}
+
+    {# CORRECTED LD+JSON (removed |trim) #}
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "ProfilePage",
+      "name": "{% filter escapejs %}{% block page_title_ld_corrected_v2_nocomments %}იპოვეთ ახალი ვაკანსიები {{ company.name }}-ში | HRCP{% endblock %}{% endfilter %}",
+      "description": "{% filter escapejs %}{% block meta_description_ld_corrected_v2_nocomments %}გაეცანით დღევანდელ და ახალ ვაკანსიებს, ტენდერებს, სტაჟირებებსა და ტრენინგებს, კომპანია {{ company.name }}-სგან | HRCP. {% if company.description %}{{ company.description|striptags|truncatewords:20 }}{% else %}{% endif %}
+{% if company.description %}{{ company.description|striptags|truncatewords:20 }}{% else %}{% endif %}{% endblock %}{% endfilter %}",
+      "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'jobs_by_company' company.slug %}",
+      "mainEntity": {
+        "@type": "Organization",
+        "name": "{{ company.name|escapejs }}",
+        "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'jobs_by_company' company.slug %}"
+        {% if company.description %}
+        ,"description": "{{ company.description|striptags|escapejs }}"
+        {% endif %}
+        {% if company.logo %}
+        ,"logo": "{{ request.scheme }}://{{ request.get_host }}{{ company.logo.url }}"
+        {% endif %}
+      },
+      "about": {
+         "@type": "ItemList",
+         "name": "ვაკანსიები კომპანია {{ company.name|escapejs }}-ში",
+         "itemListElement": [
+            {% for job in jobs %}
+            {
+              "@type": "ListItem",
+              "position": {{ forloop.counter }},
+              "item": {
+                "@type": "JobPosting",
+                "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'job_detail' id=job.id job_slug=job.slug %}",
+                "title": "{{ job.title|escapejs }}",
+                "description": "{{ job.description|striptags|truncatewords:30|escapejs }}",
+                "identifier": {
+                  "@type": "PropertyValue",
+                  "name": "HRCP Job ID",
+                  "value": "{{ job.id }}"
+                },
+                "datePosted": "{{ job.created_at|date:"c" }}",
+                "validThrough": "{{ job.expired_jobs|date:"c" }}",
+                "employmentType": [
+                  {% for jtt in job.job_time_types.all %}
+                    {% if jtt.name == 'სრული განაკვეთი' %}"FULL_TIME"{% elif jtt.name == 'ნახევარი განაკვეთი' %}"PART_TIME"{% else %}"OTHER"{% endif %}
+                    {% if not forloop.last %},{% endif %}
+                  {% empty %}
+                    "OTHER"
+                  {% endfor %}
+                ],
+                "hiringOrganization": {
+                  "@type": "Organization",
+                  "name": "{{ company.name|escapejs }}",
+                  "sameAs": "{{ request.scheme }}://{{ request.get_host }}{% url 'jobs_by_company' company.slug %}"
+                   {% if company.logo %}
+                   ,"logo": "{{ request.scheme }}://{{ request.get_host }}{{ company.logo.url }}"
+                   {% endif %}
+                },
+                "jobLocation": {
+                  "@type": "Place",
+                  "address": {
+                    "@type": "PostalAddress",
+                    "addressLocality": "{% if job.exact_cities %}{{ job.exact_cities|escapejs }}{% else %}{% for loc in job.locations.all %}{{ loc.name|escapejs }}{% if not forloop.last %}, {% endif %}{% endfor %}{% endif %}",
+                    "addressCountry": "GE"
+                  }
+                }
+                {% if job.has_salary and job.salary_amount and job.salary_currency %}
+                ,"baseSalary": {
+                  "@type": "MonetaryAmount",
+                  "currency": "{{ job.salary_currency|escapejs }}",
+                  "value": {
+                    "@type": "QuantitativeValue",
+                    "value": "{{ job.salary_amount }}",
+                    "unitText": "MONTH"
+                  }
+                }
+                {% endif %}
+              }
+            }
+            {% if not forloop.last %},{% endif %}
+            {% endfor %}
+         ]
+       }
+    }
+    </script>
+{% endblock %}
+
+{% block content %}
+    <div class="container">
+
+        {# Company Info Section (Keep from previous version) #}
+        <section class="company-info-section">
+            {% if company.logo %}
+                <img src="{{ company.logo.url }}" alt="{{ company.name }} Logo" class="company-info-logo">
+            {% endif %}
+            <h1 style="font-size: 32px;">{{ company.name }}</h1>
+            {% if company.description %}
+                <div class="company-info-description">
+                    {{ company.description|safe|linebreaksbr }}
+                </div>
+            {% endif %}
+        </section>
+
+        {# Job Listings Section #}
+        <section class="company-job-listings">
+            <h2 class="section-heading">გამოცხადებული ვაკანსიები</h2> {# Added class for styling #}
+
+            {# Step 1: Add the Search Filter Form #}
+            <div class="company-search-container">
+                <form action="." method="get" class="search-box"> {# Use styles from home.css #}
+                    <i class="fas fa-search"></i> {# Icon from home.css #}
+                    {# Use 'q' for name, pass current query value #}
+                    <input type="text" name="q" placeholder="მოძებნე პოზიცია..." value="{{ query }}">
+                    {# No hidden fields needed here #}
+                    {# Optional: Add a submit button if desired #}
+                    {# <button type="submit"><i class="fas fa-arrow-right"></i></button> #}
+                </form>
+            </div>
+
+            {# Job List (Keep from previous version) #}
+            <div class="job-list">
+                {% for job in jobs %}
+                    {# Job Card structure using home.css styles (Keep from previous version) #}
+                    <div class="job-card" data-category="{{ job.category.name|default:'' }}">
+                        <div class="job-title-location">
+                            <a href="{% url 'job_detail' id=job.id job_slug=job.slug %}" class="job-title"><h3 style="font-size: inherit;font-weight: unset;">{{ job.title }}</h3></a>
+                            <div class="job-location-time">
+                      <span class="job-location">
+                        {% if job.exact_cities %}
+                            <span>{{ job.exact_cities }}</span>
+                        {% endif %}
+                    </span>
+
+                            </div>
+                        </div>
+                        <div class="company-details">
+                            <div class="company-logo">
+                                {% if company.logo %}
+                                    <img src="{{ company.logo.url }}" alt="{{ company.name }} logo">
+                                {% endif %}
+                            </div>
+                            <div class="company-name">
+                                <span>{{ company.name }}</span>
+                            </div>
+                        </div>
+
+                        <span class="job-time-type">
+                          {% for jtt in job.job_time_types.all %}
+                              <span>{{ jtt.name }}</span>{% if not forloop.last %}, {% endif %}
+                          {% empty %}<span>Time Type N/A</span>{% endfor %}
+                      </span>
+
+                        <div class="job-dates">
+                            <div>{{ job.created_at|date:"j M" }}</div>
+                            <div>{{ job.expired_jobs|date:"j M" }}</div>
+                        </div>
+                    </div>
+                {% empty %}
+                    <div class="no-jobs">
+                        <i class="fas fa-briefcase empty-icon"></i>
+                        {% if query %}
+                            <p>No positions match your search term "{{ query }}" at {{ company.name }}.</p>
+                        {% else %}
+                            <p>There are currently no open positions listed for {{ company.name }}.</p>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+            {# End job-list #}
+        </section>
+
+    </div> {# End container #}
+{% endblock %}

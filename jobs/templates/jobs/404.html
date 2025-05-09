@@ -1,0 +1,58 @@
+{% load compress %}
+<!DOCTYPE html>
+<html lang="ka"> <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>შეცდომა! - გვერდი არ მოიძებნა</title>
+
+{% compress css %}<style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol"; /* Common system font stack */
+            background-color: #f8f9fa; /* Light grey background */
+            color: #333; /* Darker text color */
+            display: flex;
+            flex-direction: column;
+            justify-content: center; /* Center vertically */
+            align-items: center; /* Center horizontally */
+            min-height: 100vh; /* Ensure body takes full viewport height */
+            text-align: center; /* Center text within elements */
+            margin: 0; /* Remove default body margin */
+            padding: 20px; /* Add some padding */
+            box-sizing: border-box; /* Include padding in width/height calculation */
+        }
+
+        h1 {
+            color: #dc3545; /* Red color for error heading */
+            font-size: 2.5em; /* Larger font size */
+            margin-bottom: 15px;
+            font-weight: bold; /* Make it bold */
+        }
+
+        p {
+            color: #6c757d; /* Grey color for descriptive text */
+            font-size: 1.1em;
+            margin-bottom: 30px; /* More space before the link */
+            max-width: 500px; /* Prevent text from getting too wide on large screens */
+        }
+
+        a {
+            display: inline-block; /* Allow padding and margin */
+            background-color: #007bff; /* Blue background for the link */
+            color: #ffffff; /* White text */
+            padding: 12px 25px; /* Padding for button-like appearance */
+            border-radius: 5px; /* Rounded corners */
+            text-decoration: none; /* Remove underline */
+            font-size: 1em;
+            font-weight: bold;
+            transition: background-color 0.2s ease-in-out; /* Smooth transition on hover */
+        }
+
+        a:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+        }
+    </style>{% endcompress %}
+</head>
+<body>
+    <h1>გვერდი არ მოიძებნა</h1>
+    <p>ბოდიში, გვერდი, რომელსაც ეძებთ არ არსებობს ან გადატანილია სხვა მისამართზე.</p> <a href="/">მთავარ გვერდზე დაბრუნება</a> </body>
+</html>

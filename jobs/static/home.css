@@ -1,0 +1,1036 @@
+/* Header Styles */
+.header {
+    background: linear-gradient(135deg, var(--primary), var(--secondary));
+    border-radius: var(--border-radius);
+    /*padding: 60px 40px;*/
+    margin: 30px 0;
+    color: white;
+    box-shadow: var(--box-shadow);
+    position: relative;
+    /*overflow: hidden;*/
+}
+
+.header::before {
+    content: '';
+    position: absolute;
+    top: -50px;
+    right: -10px;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    z-index: 0;
+}
+
+.header::after {
+    content: '';
+    position: absolute;
+    bottom: -80px;
+    left: -80px;
+    width: 300px;
+    height: 300px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.05);
+    z-index: 0;
+}
+
+.job-list.vip-jobs h2 {
+    margin-bottom: 10px;
+}
+
+.job-list.regular-jobs h2 {
+    margin-bottom: 10px;
+}
+
+.section-title {
+    position: relative;
+    z-index: 1;
+}
+
+.section-title h2 {
+    font-size: 36px;
+    font-weight: 700;
+    margin-bottom: 15px;
+}
+
+.section-title p {
+    font-size: 16px;
+    opacity: 0.9;
+    max-width: 600px;
+}
+
+.job-filters {
+    background-color: transparent;
+    border-radius: var(--border-radius);
+    padding: 25px;
+    margin-bottom: 30px;
+    box-shadow: var(--box-shadow);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: start;
+    flex-direction: column;
+    font-size: 12px;
+}
+
+.search-box {
+    position: relative;
+    flex: 1;
+    min-width: 250px;
+}
+
+.search-box input {
+    width: 100%;
+    padding: 15px 20px 15px 50px;
+    border: 1px solid var(--gray-light);
+    background-color: white;
+    border-radius: var(--border-radius);
+    font-size: 12px;
+    transition: var(--transition);
+}
+
+.search-box input:focus {
+    outline: none;
+    border-color: var(--primary);
+    box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.3);
+}
+
+.search-box i {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--gray);
+}
+
+.filter-group {
+    display: flex;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.filter-group a {
+    color: var(--primary);
+}
+
+.filter-dropdown {
+    position: relative;
+    min-width: 180px;
+}
+
+.dropdown-select {
+    width: 100%;
+    padding: 12px 20px;
+    background-color: white;
+    border: 1px solid var(--gray-light);
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-weight: 500;
+    color: var(--dark);
+    transition: var(--transition);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.dropdown-select:hover {
+    border-color: var(--primary-light);
+}
+
+.dropdown-select i {
+    transition: var(--transition);
+}
+
+.dropdown-select.active i {
+    transform: rotate(180deg);
+}
+
+.dropdown-menu {
+    position: absolute;
+    top: calc(100% + 10px);
+    left: 0;
+    width: 100%;
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+    z-index: 100;
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease, opacity 0.3s ease;
+    opacity: 0;
+    display: inline-grid;
+
+}
+
+.dropdown-menu.show {
+    max-height: 300px;
+    opacity: 1;
+    overflow-y: auto;
+}
+
+.dropdown-item {
+    padding: 12px 20px;
+    cursor: pointer;
+    transition: var(--transition);
+    text-decoration: none;
+}
+
+
+.dropdown-item:hover {
+    background-color: var(--gray-light);
+}
+
+.dropdown-item.selected {
+    background-color: rgba(67, 97, 238, 0.1);
+    color: var(--primary);
+    font-weight: 500;
+}
+
+.filter-buttons {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.filter-btn {
+    padding: 12px 20px;
+    background-color: white;
+    border: 1px solid var(--gray-light);
+    border-radius: var(--border-radius);
+    cursor: pointer;
+    font-weight: 500;
+    color: var(--dark);
+    transition: var(--transition);
+    text-decoration: none;
+}
+
+.filter-btn:hover {
+    border-color: var(--primary-light);
+}
+
+.filter-btn.active {
+    background-color: var(--primary);
+    color: white;
+    /*border-color: var(--primary);*/
+}
+
+.job-list {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2px;
+}
+
+
+.company-details {
+    /* Occupies the middle 'auto' track */
+    /* Remove margin: auto if present */
+    /* margin-left: auto; */
+    /* margin-right: auto; */
+    /* remove padding added for flex separation */
+    /* padding-left: 0; */
+    /* padding-right: 0; */
+
+    /* Internal layout */
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    /* Optional: Center content within its track if track grows */
+    /* justify-self: center; */
+}
+
+.company-name {
+    /* Add any specific styles for the company name text if required */
+    /* For example, ensuring it doesn't wrap unexpectedly */
+    white-space: nowrap; /* Prevent name from wrapping if it's long */
+    overflow: visible; /* Hide overflow */
+    text-overflow: ellipsis; /* Add ellipsis (...) if name is too long */
+    max-width: 150px; /* Set a max-width to prevent it pushing other elements (adjust as needed) */
+    font-size: 12px;
+    text-decoration: none;
+}
+
+.company-name a {
+    text-decoration: none;
+    color: var(--gray);
+}
+
+.job-location-time {
+    display: flex; /* Arrange location and time type horizontally */
+    align-items: center; /* Vertically align them (useful if fonts/icons differ in size) */
+    gap: 200px; /* <<<< Adjust this value for desired space between items */
+    flex-wrap: wrap; /* Allows items to wrap onto the next line on very small screens */
+}
+
+.job-time-type {
+    /* grid-column: 3; */ /* Usually automatic */
+    color: var(--gray);
+    font-size: 12px;
+    font-weight: 500;
+    white-space: nowrap;
+    margin-left: 50%;
+}
+
+
+.job-card {
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    padding: 0 25px;
+    /* --- Use Grid --- */
+    display: grid;
+    /* --- Key Change: Define 3 columns for symmetrical spacing --- */
+    /*grid-template-columns: minmax(0, 1fr) auto 1fr;*/
+    grid-template-columns: minmax(0, 1fr) 200px 1fr 0fr;
+    align-items: center; /* Vertically align items in the row */
+    gap: 20px; /* Space between columns */
+    position: relative;
+    overflow: hidden; /* Still useful */
+    transition: var(--transition);
+}
+
+.job-primary-info {
+    /* Occupies the first 'minmax(0, 1fr)' track */
+    /* Still needs min-width and overflow for internal content */
+    min-width: 0;
+    overflow: hidden;
+    /* Internal layout */
+    display: flex;
+    flex-direction: column;
+    /*gap: 5px;*/
+    margin-left: 25px;
+    /* Remove flex properties if they were added */
+    /* flex-shrink: 1; */ /* Not needed for grid item */
+}
+
+.job-title-location {
+    margin-left: 1.5rem;
+}
+
+
+.job-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+
+.job-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    height: 100%;
+    width: 5px;
+    background: linear-gradient(to bottom, var(--primary), var(--success));
+    opacity: 0;
+    transition: var(--transition);
+}
+
+.job-card:hover::before {
+    opacity: 1;
+}
+
+.job-info {
+    flex: 2;
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+
+.job-title {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--dark);
+    text-decoration: none;
+    /* Required for overflow in the shrinking grid track */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: block; /* Or inline-block */
+    max-width: 100%;
+}
+
+.job-title .badge {
+    font-size: 12px;
+    padding: 4px 12px;
+    border-radius: 20px;
+    font-weight: 500;
+}
+
+.badge-vacancies {
+    background-color: rgba(76, 201, 240, 0.15);
+    color: var(--success);
+}
+
+.badge-scholarships {
+    background-color: rgba(248, 150, 30, 0.15);
+    color: var(--warning);
+}
+
+.badge-tenders {
+    background-color: rgba(63, 55, 201, 0.15);
+    color: var(--secondary);
+}
+
+.badge-trainings {
+    background-color: rgba(67, 97, 238, 0.15);
+    color: var(--primary);
+}
+
+.badge-other {
+    background-color: rgba(247, 37, 133, 0.15);
+    color: var(--danger);
+}
+
+.badge-urgent {
+    background-color: rgba(247, 37, 133, 0.15);
+    color: var(--danger);
+}
+
+.badge-fulltime {
+    background-color: rgba(76, 201, 240, 0.15);
+    color: var(--success);
+}
+
+.badge-parttime {
+    background-color: rgba(248, 150, 30, 0.15);
+    color: var(--warning);
+}
+
+.badge-onsite {
+    background-color: rgba(63, 55, 201, 0.15);
+    color: var(--secondary);
+}
+
+.badge-hybrid {
+    background-color: rgba(67, 97, 238, 0.15);
+    color: var(--primary);
+}
+
+.job-location {
+    display: inline-flex; /* Use inline-flex if it contains an icon + text to align them */
+    align-items: center; /* Use if it contains an icon + text */
+    gap: 5px;
+    color: var(--gray);
+    font-size: 12px;
+    font-weight: 500;
+    padding: 0; /* Remove original padding if gap provides enough space */
+    position: relative;
+}
+
+.job-location i {
+    font-size: 16px;
+    color: var(--primary);
+}
+
+.job-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+}
+
+.job-meta-item {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 13px;
+    color: var(--gray);
+}
+
+.job-meta-item i {
+    color: var(--primary-light);
+}
+
+.company-logo {
+    /*width: 40px;*/
+    width: auto;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    flex-shrink: 0;
+}
+
+.company-logo img {
+    max-width: 100%;
+    max-height: 100%;
+    object-fit: contain;
+    min-width: 100px;
+}
+
+.job-actions {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.send-cv-btn {
+    padding: 12px 25px;
+    background: linear-gradient(to right, var(--primary), var(--primary-light));
+    color: white;
+    border: none;
+    border-radius: 30px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+    box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+}
+
+.send-cv-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(67, 97, 238, 0.4);
+}
+
+.job-date {
+    color: var(--gray);
+    text-align: right;
+    margin-top: 5px;
+}
+
+.job-dates {
+    width: 90px;
+    /* Occupies the third '1fr' track */
+    /* --- Key Change: Align content to the end of its track --- */
+    justify-self: end;
+    /* --- End Key Change --- */
+
+    /* Internal layout */
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    font-size: 12px;
+    color: var(--gray);
+    white-space: nowrap;
+    text-align: right; /* Keep internal text align */
+    /* Remove flex properties if they were added */
+    /* flex-shrink: 0; */ /* Not needed for grid item */
+}
+
+
+/* Style the individual date divs within .job-dates for consistency */
+.job-dates div {
+    color: var(--gray); /* Use your theme's gray color */
+    white-space: nowrap; /* Prevent dates from wrapping to a new line */
+}
+
+.toast-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 1000;
+}
+
+.toast {
+    background-color: white;
+    color: var(--dark);
+    padding: 15px 20px;
+    border-radius: 8px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    margin-top: 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    transition: all 0.3s ease;
+    opacity: 0;
+    transform: translateY(20px);
+}
+
+.toast.success {
+    border-left: 4px solid var(--success);
+}
+
+.toast.error {
+    border-left: 4px solid var(--danger);
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.toast-icon {
+    font-size: 20px;
+}
+
+.toast.success .toast-icon {
+    color: var(--success);
+}
+
+.toast.error .toast-icon {
+    color: var(--danger);
+}
+
+.no-results {
+    text-align: center;
+    padding: 40px;
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+}
+
+.no-results i {
+    font-size: 50px;
+    color: var(--gray-light);
+    margin-bottom: 20px;
+}
+
+.no-results h3 {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.no-results p {
+    color: var(--gray);
+}
+
+/* Responsive */
+@media (max-width: 992px) {
+    .search-box {
+        flex: 100%;
+    }
+
+    .filter-group {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .filter-dropdown {
+        flex: 1;
+        min-width: 150px;
+    }
+}
+
+@media (max-width: 970px) {
+    .job-time-type {
+        margin-left: 60%;
+    }
+}
+
+@media (max-width: 768px) {
+    .job-list {
+        gap: 8px !important; /* Adjust vertical gap between cards */
+    }
+
+    .job-card {
+        /* Change to a 2-column layout */
+        grid-template-columns: 1fr auto !important; /* Left flexible, Right content width */
+        grid-template-rows: auto auto !important; /* Define two rows for content stacking */
+        gap: 5px 15px !important; /* Row gap, Column gap */
+        padding: 12px 15px !important; /* Reduced padding */
+        align-items: start !important; /* Align items to the top of their grid areas */
+        min-height: auto !important; /* Let height be determined by content */
+    }
+
+    .job-primary-info {
+        grid-column: 1 !important;
+        grid-row: 1 !important; /* Top-left */
+        align-self: center !important; /* Vertically center title/location group */
+        gap: 3px !important;
+        margin-left: 0 !important; /* Reset margin if any */
+        width: 100% !important; /* Occupy full width of the column */
+    }
+
+    .job-title-location{
+        margin-left: 0 !important; /* Reset margin if any */
+
+    }
+
+    .job-title {
+        font-size: 13px !important; /* Slightly smaller title */
+        white-space: normal !important; /* Allow title wrapping */
+    }
+
+    .job-location,
+    .job-time-type,
+    .job-dates,
+    .job-dates div,
+    .company-name {
+        font-size: 11px !important; /* Smaller secondary text */
+    }
+
+    .job-location {
+        white-space: normal !important; /* Allow location wrapping */
+    }
+
+
+    .company-details {
+        grid-column: 1 !important;
+        grid-row: 2 !important; /* Bottom-left, under primary info */
+        align-self: center !important; /* Center vertically within its row */
+        padding-top: 5px !important; /* Small space above company */
+        gap: 8px !important;
+        width: 100% !important; /* Occupy full width of the column */
+        justify-self: start !important; /* Align to start */
+    }
+
+    .company-logo {
+        height: 35px !important; /* Smaller logo */
+        border-radius: 8px !important;
+    }
+
+    .company-name {
+        max-width: none !important; /* Allow more width as it wraps */
+        white-space: normal !important; /* Allow wrapping */
+        overflow: visible !important;
+        text-overflow: clip !important;
+    }
+
+    .job-time-type {
+        grid-column: 2 !important; /* Top-right */
+        grid-row: 1 !important;
+        justify-self: end !important; /* Align to the right */
+        align-self: center !important; /* Center vertically */
+        margin-left: 0 !important; /* Reset margin */
+        text-align: right;
+    }
+
+    /* Adjust spacing between multiple time types if needed */
+    .job-time-type span + span::before {
+        content: "\A"; /* New line */
+        white-space: pre; /* Respect the new line */
+        margin-right: 0;
+        display: block; /* Make it a block element */
+        line-height: 0.5em; /* Adjust spacing */
+    }
+
+
+    .job-dates {
+        grid-column: 2 !important; /* Bottom-right */
+        grid-row: 2 !important;
+        justify-self: end !important; /* Align to the right */
+        align-self: end !important; /* Align to the bottom */
+        text-align: right;
+        gap: 5px !important; /* Reduce gap between dates */
+        /* Optional: Stack dates vertically if needed */
+        /* display: flex !important; */
+        /* flex-direction: column !important; */
+        /* align-items: flex-end !important; */
+    }
+
+    .vip-label {
+        left: 8px !important;
+        top: 8px !important;
+        padding: 2px 5px !important;
+        font-size: 8px !important;
+    }
+
+    /* Ensure filters adapt - Copied from previous example */
+    .search-box {
+        flex: 100%;
+    }
+
+    .filter-group {
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .filter-dropdown {
+        flex: 1;
+        min-width: 150px;
+    }
+
+    .header {
+        padding: 20px !important;
+    }
+
+    .job-filters {
+        padding: 20px !important;
+    }
+}
+
+/* Mobile Styles (Example: <= 576px) */
+@media (max-width: 576px) {
+    .job-list {
+        gap: 6px !important; /* Even tighter gap */
+    }
+
+    .job-card {
+        padding: 10px 12px !important; /* Further reduced padding */
+        gap: 4px 10px !important; /* Further reduced gap */
+    }
+
+    .job-title {
+        font-size: 12px !important; /* Smaller title */
+    }
+
+    .job-location,
+    .job-time-type,
+    .job-dates,
+    .job-dates div,
+    .company-name {
+        font-size: 10px !important; /* Even smaller secondary text */
+    }
+
+    .company-details {
+        padding-top: 4px !important; /* Adjust space */
+        gap: 6px !important;
+    }
+
+    .company-logo {
+        height: 30px !important; /* Smallest logo */
+        border-radius: 6px !important;
+    }
+
+    .job-time-type span + span::before {
+        line-height: 0.4em !important; /* Tighter spacing for stacked time types */
+    }
+
+    .job-dates {
+        gap: 3px !important; /* Tighter gap for dates */
+    }
+
+    .vip-label {
+        left: 6px !important;
+        top: 6px !important;
+        padding: 1px 4px !important;
+        font-size: 7px !important;
+    }
+
+
+    .search-box {
+        min-width: 100% !important;
+    }
+
+    .header {
+        padding: 15px !important; /* Smaller header padding */
+    }
+
+    .section-title h2 {
+        font-size: 24px !important; /* Smaller heading */
+    }
+
+    .job-filters {
+        padding: 15px !important; /* Smaller filter padding */
+    }
+}
+
+@media (max-width: 768px) {
+    .job-list {
+        gap: 8px !important; /* Slightly tighter gap */
+    }
+
+    .job-card {
+        /* Override stacking, keep grid but narrower */
+        grid-template-columns: minmax(0, 100%) auto auto 1fr !important; /* Title/Loc | Company | TimeType | Dates */
+        padding: 12px 15px !important; /* Reduced padding */
+        gap: 10px !important; /* Reduced gap */
+        min-height: 70px !important; /* Slightly smaller min height */
+        justify-items: normal !important; /* Reset justify-items */
+    }
+
+    .job-primary-info {
+        width: auto !important; /* Reset width */
+        justify-self: normal !important; /* Reset justify-self */
+        gap: 3px !important;
+    }
+
+    .job-title {
+        font-size: 13px !important; /* Slightly smaller title */
+    }
+
+    .job-location,
+    .job-time-type,
+    .job-dates,
+    .job-dates div,
+    .company-name {
+        font-size: 11px !important; /* Smaller secondary text */
+    }
+
+    .company-details {
+        width: auto !important; /* Reset width */
+        justify-self: start !important; /* Keep aligned left in its cell */
+        gap: 8px !important;
+    }
+
+    .company-logo {
+        height: 35px !important; /* Slightly smaller logo */
+        border-radius: 8px !important;
+    }
+
+    .company-name {
+        max-width: 120px !important; /* Adjust max width */
+    }
+
+    .job-dates {
+        width: auto !important; /* Reset width */
+        justify-self: end !important; /* Keep aligned right */
+        justify-content: flex-end !important; /* Align internal items end */
+        gap: 10px !important; /* Smaller gap */
+        padding-top: 0 !important; /* Remove padding-top */
+        border-top: none !important; /* Remove border */
+        text-align: right !important;
+    }
+
+    .vip-label {
+        display: none !important;
+        left: 8px !important;
+        top: 8px !important;
+        padding: 2px 5px !important;
+        font-size: 8px !important;
+    }
+}
+
+/* Mobile Styles */
+@media (max-width: 576px) {
+    .job-list {
+        gap: 6px !important; /* Even tighter gap */
+    }
+
+    .job-card {
+        /* Keep grid, make it even tighter */
+        grid-template-columns: minmax(0, 100%) auto auto 1fr !important; /* Same structure, relies on content shrinking */
+        padding: 10px 12px !important; /* Further reduced padding */
+        gap: 8px !important; /* Further reduced gap */
+        min-height: 65px !important; /* Smaller min height */
+    }
+
+
+    .job-primary-info {
+        gap: 2px !important;
+    }
+
+    .job-title {
+        font-size: 12px !important; /* Smaller title */
+    }
+
+    .job-location,
+    .job-time-type,
+    .job-dates,
+    .job-dates div,
+    .company-name {
+        font-size: 10px !important; /* Even smaller secondary text */
+    }
+
+    .company-details {
+        gap: 6px !important;
+    }
+
+    .company-logo {
+        height: 30px !important; /* Smaller logo */
+        border-radius: 6px !important;
+    }
+
+    .company-name {
+        max-width: 90px !important; /* Tighter max-width */
+    }
+
+    .job-time-type {
+        /* Might need adjustment if wrapping occurs, but keep simple first */
+        white-space: normal !important; /* Allow wrapping if needed */
+        line-height: 1.2 !important;
+        align-self: center !important; /* Keep centered vertically */
+    }
+
+    .job-dates {
+        gap: 8px !important; /* Tightest gap */
+    }
+
+    .vip-label {
+        left: 6px !important;
+        top: 6px !important;
+        padding: 1px 4px !important;
+        font-size: 7px !important;
+    }
+
+    /* Adjust filter layout on small screens */
+    .filter-group {
+        flex-direction: column !important;
+        gap: 10px !important;
+    }
+
+    .filter-dropdown {
+        width: 100% !important;
+        min-width: unset !important;
+    }
+
+    .filter-buttons {
+        width: 100% !important;
+        overflow-x: auto !important;
+        padding-bottom: 10px !important;
+        justify-content: flex-start !important; /* Align buttons left */
+    }
+
+    .filter-btn {
+        flex: 0 0 auto !important;
+        padding: 8px 12px !important;
+        font-size: 11px !important;
+    }
+
+    .search-box {
+        min-width: 100% !important;
+    }
+
+    .header {
+        padding: 15px !important; /* Smaller header padding */
+    }
+
+    .section-title h2 {
+        font-size: 24px !important; /* Smaller heading */
+    }
+
+    .job-filters {
+        padding: 15px !important; /* Smaller filter padding */
+    }
+}
+
+/* --- END: New Responsive Overrides for Job Card --- */
+
+
+/* Animation Styles - Remain the same */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.job-card {
+    animation: fadeIn 0.5s ease forwards;
+    opacity: 0;
+}
+
+.job-card:nth-child(1) {
+    animation-delay: 0.1s;
+}
+
+.job-card:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.job-card:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+.job-card:nth-child(4) {
+    animation-delay: 0.4s;
+}
+
+.job-card:nth-child(5) {
+    animation-delay: 0.5s;
+}
+
+.job-card:nth-child(6) {
+    animation-delay: 0.6s;
+}
+
+.job-card:nth-child(7) {
+    animation-delay: 0.7s;
+}
+
+.job-card:nth-child(8) {
+    animation-delay: 0.8s;
+}
+
+.job-card:nth-child(9) {
+    animation-delay: 0.9s;
+}
+
+.job-card:nth-child(10) {
+    animation-delay: 1s;
+}

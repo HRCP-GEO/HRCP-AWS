@@ -1,0 +1,906 @@
+/* Base and Hero Styles (Assuming some might be from base.html) */
+.contact-hero {
+  position: relative;
+  /*background: white;*/
+  padding: 50px; /* Base padding */
+  overflow: hidden;
+  min-height: 600px;
+  display: flex;
+  align-items: center;
+}
+
+.contact-hero-container {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: center;
+}
+
+.contact-hero-content {
+  padding: 4rem 0; /* Base padding */
+}
+
+.contact-hero-title {
+  font-size: 3.5rem; /* Base font size */
+  font-weight: 800;
+  line-height: 1.2;
+  margin-bottom: 1.5rem;
+  color: #2a3b4c;
+  position: relative;
+}
+
+.contact-hero-title::after {
+  content: '';
+  position: absolute;
+  bottom: -15px;
+  left: 0;
+  width: 80px;
+  height: 5px;
+  background: linear-gradient(90deg, rgb(31, 54, 100), rgba(31, 54, 100, 0.28));
+  border-radius: 5px;
+}
+
+.contact-hero-title .accent {
+  color: rgb(31, 54, 100);
+  position: relative;
+  display: inline-block;
+}
+
+.contact-hero-title .accent::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 10px;
+  background: rgb(31 54 100 / 20%); /* Corrected rgba syntax */
+  bottom: 5px;
+  left: 0;
+  z-index: -1;
+  border-radius: 10px;
+}
+
+.contact-hero-description {
+  font-size: 1.1rem; /* Base font size */
+  color: #666;
+  line-height: 1.8;
+  margin-bottom: 2rem;
+  max-width: 500px;
+}
+
+.contact-hero-stats {
+  display: flex;
+  gap: 2rem;
+  margin-top: 3rem;
+}
+
+.stat-item {
+  position: relative;
+}
+
+.stat-number {
+  font-size: 2.5rem; /* Base font size */
+  font-weight: 700;
+  color: #2a3b4c;
+  margin-bottom: 0.5rem;
+  position: relative;
+  display: inline-block;
+}
+
+.stat-number::before {
+  content: '';
+  position: absolute;
+  width: 100%;
+  height: 10px;
+  background: rgb(31 54 100 / 20%); /* Corrected rgba syntax */
+  bottom: 5px;
+  left: 0;
+  z-index: -1;
+  border-radius: 10px;
+}
+
+.stat-label {
+  font-size: 0.9rem; /* Base font size */
+  color: #666;
+  font-weight: 500;
+}
+
+.contact-hero-illustration {
+  position: relative;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.illustration-container {
+  position: relative;
+  width: 100%;
+  height: 500px;
+}
+
+.illustration-bg {
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 400px;
+  height: 400px;
+  background: linear-gradient(135deg, rgb(31 54 100 / 53%) 0%, rgb(31 54 100 / 72%) 100%);
+  border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+  animation: morphing 10s ease-in-out infinite;
+}
+
+@keyframes morphing {
+  0% {
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+  }
+  25% {
+    border-radius: 58% 42% 75% 25% / 76% 46% 54% 24%;
+  }
+  50% {
+    border-radius: 50% 50% 33% 67% / 55% 27% 73% 45%;
+  }
+  75% {
+    border-radius: 33% 67% 58% 42% / 63% 68% 32% 37%;
+  }
+  100% {
+    border-radius: 30% 70% 70% 30% / 30% 30% 70% 70%;
+  }
+}
+
+.illustration-element {
+  position: absolute;
+  animation: float 4s ease-in-out infinite;
+}
+
+.element-1 { top: 50px; left: 50px; animation-delay: 0s; }
+.element-2 { bottom: 70px; right: 60px; animation-delay: 0.5s; }
+.element-3 { top: 40%; right: 30%; animation-delay: 1s; }
+.element-4 { bottom: 30%; left: 20%; animation-delay: 1.5s; }
+
+.illustration-main {
+  position: relative;
+  z-index: 2;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.contact-methods {
+  display: flex;
+  gap: 1.5rem;
+  margin-top: 2rem;
+}
+
+.contact-method {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem 1.5rem; /* Base padding */
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.contact-method:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+}
+
+.contact-method-icon {
+  width: 40px;
+  height: 40px;
+  background: rgb(31 54 100 / 10%); /* Corrected rgba syntax */
+  color: rgb(31, 54, 100);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.2rem;
+}
+
+.contact-method-text {
+  font-size: 0.9rem; /* Base font size */
+  font-weight: 500;
+  color: #2a3b4c;
+}
+
+.contact-method-text a {
+  color: rgb(31, 54, 100);
+  text-decoration: none;
+  transition: color 0.3s ease;
+}
+
+.contact-method-text a:hover {
+  color: #ff5252; /* Consider changing this hover color to match theme */
+}
+
+.scroll-down {
+  position: absolute;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  color: #2a3b4c;
+  font-size: 0.9rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.3s ease;
+}
+
+.scroll-down:hover {
+  transform: translateX(-50%) translateY(-5px);
+}
+
+.scroll-down span {
+  margin-bottom: 5px;
+}
+
+.scroll-down i {
+  animation: bounce 2s infinite;
+}
+
+@keyframes bounce {
+  0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
+  40% { transform: translateY(-10px); }
+  60% { transform: translateY(-5px); }
+}
+
+@keyframes float {
+  0% { transform: translateY(0px); }
+  50% { transform: translateY(-10px); }
+  100% { transform: translateY(0px); }
+}
+
+/* Section Header General Styles */
+.section-header {
+  text-align: center;
+  margin-bottom: 3rem;
+  padding: 0 15px; /* Add horizontal padding for smaller screens */
+}
+
+.section-header h1 {
+  font-size: 2.5rem; /* Base font size */
+  color: #1F3664;
+  margin-bottom: 1rem;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 15px;
+}
+.section-header h2 {
+  font-size: 2.5rem; /* Base font size */
+  color: #1F3664;
+  margin-bottom: 1rem;
+  position: relative;
+  display: inline-block;
+  padding-bottom: 15px;
+}
+
+.section-header h1::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(90deg, rgb(31, 54, 100), rgb(31 54 100 / 16%));
+  border-radius: 3px;
+}
+
+.section-header h2::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 80px;
+  height: 3px;
+  background: linear-gradient(90deg, rgb(31, 54, 100), rgb(31 54 100 / 16%));
+  border-radius: 3px;
+}
+
+.section-header p {
+  color: #666;
+  max-width: 700px;
+  margin: 0 auto;
+  font-size: 1.1rem; /* Base font size */
+}
+
+
+/* Contact Cards Styles */
+.contact-cards-container {
+  padding: 2rem 0; /* Base padding */
+  position: relative;
+}
+
+.contact-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1.5rem;
+  padding: 50px; /* Base padding */
+}
+
+.contact-card {
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  padding: 2rem; /* Base padding */
+  text-align: center;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden; /* Keep for ::before */
+}
+
+.contact-card:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+
+.contact-card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 5px;
+  background: linear-gradient(90deg, rgb(31, 54, 100), rgba(31, 54, 100, 0.5));
+}
+
+.contact-icon {
+  width: 70px;
+  height: 70px;
+  background: rgb(31 54 100 / 10%); /* Corrected rgba syntax */
+  color: rgb(31, 54, 100);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 1.5rem;
+  font-size: 1.8rem; /* Base icon size */
+}
+
+.contact-card h3 {
+  font-size: 1.3rem; /* Base font size */
+  color: #2a3b4c;
+  margin-bottom: 1rem;
+}
+
+.contact-card p {
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 0.5rem;
+  font-size: 1rem; /* Explicitly set base font size */
+}
+
+.contact-card a {
+  color: rgb(31, 54, 100);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+  font-size: 1rem; /* Match paragraph font size */
+  word-break: break-all; /* Prevent long emails/links from breaking layout */
+}
+
+.contact-card a:hover {
+  background: var(--primary-light); /* Slightly adjusted hover */
+}
+
+.social-links {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+}
+
+.social-link {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: rgba(42, 59, 76, 0.05);
+  color: #2a3b4c;
+  font-size: 1.1rem; /* Base icon size */
+  transition: all 0.3s ease;
+}
+
+.social-link:hover {
+  background: rgb(31 54 100 / 70%); /* Adjusted hover background */
+  color: white;
+  transform: translateY(-3px);
+}
+
+/* Map Section Styles */
+.map-section {
+  padding-bottom: 5rem; /* Base padding */
+  position: relative;
+}
+
+/* --- Default Map Layout (Desktop - Floating Overlay) --- */
+.map-container {
+  position: relative; /* Context for absolute overlay */
+  height: 500px; /* Fixed height for map area */
+  border-radius: 15px;
+  overflow: hidden; /* Clip the overlay corners */
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+  margin: 0 15px; /* Horizontal margin */
+}
+
+.map-container iframe {
+  width: 100%;
+  height: 100%; /* Fill the container height */
+  border: none;
+  display: block;
+}
+
+.map-overlay {
+  position: absolute; /* Float over the map */
+  top: 30px;
+  right: 30px;
+  background: white;
+  padding: 2rem;
+  border-radius: 10px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  max-width: 350px;
+  z-index: 1; /* Ensure it's above the iframe */
+  transition: top 0.3s ease, right 0.3s ease, max-width 0.3s ease, padding 0.3s ease, position 0s linear 0.3s;
+}
+
+.map-overlay h3 {
+  font-size: 1.5rem; /* Base font size */
+  color: #2a3b4c;
+  margin-bottom: 1rem;
+  position: relative;
+  padding-bottom: 0.5rem;
+}
+
+.map-overlay h3::after {
+  content: '';
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 50px;
+  height: 2px;
+  background: rgb(31, 54, 100);
+}
+
+.map-overlay p {
+  color: #666;
+  line-height: 1.6;
+  margin-bottom: 1rem;
+  font-size: 0.95rem; /* Slightly smaller base font */
+  word-wrap: break-word; /* Ensure text wraps */
+}
+
+.map-overlay .hours {
+  margin-top: 1.5rem;
+}
+
+.map-overlay .hours h4 {
+    font-size: 1.1rem; /* Base font size */
+    color: #2a3b4c; /* Added color for consistency */
+    margin-bottom: 10px; /* Copied from original */
+}
+
+.map-overlay .hours p {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 0.5rem;
+  font-size: 0.9rem; /* Base font size */
+}
+
+.map-overlay .hours span {
+  color: #2a3b4c;
+  font-weight: 500;
+  margin-right: 10px;
+}
+
+/* Team Section Styles (Example - Keep if needed) */
+.team-section {
+  padding: 5rem 0; /* Base padding */
+}
+
+.team-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 2rem;
+  padding: 0 15px; /* Add horizontal padding */
+}
+
+.team-member {
+  background: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s ease;
+}
+
+.team-member:hover {
+  transform: translateY(-10px);
+  box-shadow: 0 15px 35px rgba(0, 0, 0, 0.1);
+}
+
+.team-photo {
+  height: 250px;
+  position: relative;
+  overflow: hidden;
+}
+
+.team-photo img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.team-member:hover .team-photo img {
+  transform: scale(1.05);
+}
+
+.team-info {
+  padding: 1.5rem; /* Base padding */
+  text-align: center;
+}
+
+.team-info h3 {
+  font-size: 1.2rem; /* Base font size */
+  color: #2a3b4c;
+  margin-bottom: 0.3rem;
+}
+
+.team-info p.position {
+  color: rgb(31, 54, 100);
+  font-weight: 500;
+  margin-bottom: 1rem;
+  font-size: 1rem; /* Base font size */
+}
+
+.team-info p.contact {
+  color: #666;
+  font-size: 0.9rem; /* Base font size */
+}
+
+.team-social {
+  display: flex;
+  justify-content: center;
+  gap: 0.8rem;
+  margin-top: 1rem;
+}
+
+.team-social a {
+  color: #2a3b4c;
+  transition: color 0.3s ease;
+}
+
+.team-social a:hover {
+  color: rgb(31, 54, 100);
+}
+
+
+/* CTA Section Styles */
+.cta-section {
+  background: linear-gradient(135deg, #2a3b4c 0%, #1e2a3a 100%);
+  color: white;
+  padding: 5rem 0; /* Base padding */
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  border-radius: 10px;
+  margin: 0 15px 2rem 15px; /* Add horizontal margin and bottom margin */
+}
+
+.cta-section::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M11 18c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm48 25c3.866 0 7-3.134 7-7s-3.134-7-7-7-7 3.134-7 7 3.134 7 7 7zm-43-7c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm63 31c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM34 90c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zm56-76c1.657 0 3-1.343 3-3s-1.343-3-3-3-3 1.343-3 3 1.343 3 3 3zM12 86c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm28-65c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm23-11c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-6 60c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm29 22c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zM32 63c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm57-13c2.76 0 5-2.24 5-5s-2.24-5-5-5-5 2.24-5 5 2.24 5 5 5zm-9-21c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM60 91c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM35 41c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2zM12 60c1.105 0 2-.895 2-2s-.895-2-2-2-2 .895-2 2 .895 2 2 2z' fill='rgba(255,255,255,0.05)' fill-rule='evenodd'/%3E%3C/svg%3E");
+  opacity: 0.5;
+}
+
+.cta-content {
+  position: relative;
+  z-index: 1;
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 0 15px; /* Add horizontal padding */
+}
+
+.cta-content h2 {
+  font-size: 2.5rem; /* Base font size */
+  margin-bottom: 1.5rem;
+}
+
+.cta-content p {
+  font-size: 1.1rem; /* Base font size */
+  opacity: 0.9;
+  margin-bottom: 2rem;
+  max-width: 600px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.cta-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 1rem;
+  flex-wrap: wrap; /* Keeps buttons wrapping */
+}
+
+.cta-btn {
+  display: inline-block;
+  padding: 0.8rem 2rem; /* Base padding */
+  border-radius: 5px;
+  font-weight: 500;
+  text-decoration: none;
+  transition: all 0.3s ease;
+  font-size: 1rem; /* Base font size */
+}
+
+.cta-btn.primary {
+  background: rgb(31, 54, 100);
+  color: white;
+}
+
+.cta-btn.primary:hover {
+  background: rgba(31, 54, 100, 0.8);
+  transform: translateY(-3px);
+}
+
+.cta-btn.secondary {
+  background: rgba(255, 255, 255, 0.1);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.cta-btn.secondary:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-3px);
+}
+
+
+/* --- Responsive Styles --- */
+
+/* Medium Devices (Tablets, smaller laptops) */
+@media (max-width: 992px) {
+  .contact-hero {
+    padding: 40px 20px; /* Adjust padding */
+    min-height: auto; /* Allow height to adjust */
+  }
+  .contact-hero-container {
+    grid-template-columns: 1fr;
+    gap: 1.5rem; /* Reduce gap */
+  }
+
+  .contact-hero-illustration {
+    display: none; /* Hide illustration */
+  }
+
+  .contact-hero-title { font-size: 2.8rem; }
+  .contact-hero-description { font-size: 1rem; }
+  .stat-number { font-size: 2.2rem; }
+  .stat-label { font-size: 0.85rem; }
+
+  .contact-methods {
+    flex-direction: column; /* Stack methods */
+    gap: 1rem;
+  }
+  .contact-method { padding: 0.8rem 1.2rem; }
+
+  .contact-cards-container { padding: 1.5rem 0; }
+  .contact-cards { padding: 30px 20px; gap: 1rem; }
+  .contact-card { padding: 1.5rem; }
+
+  .section-header h2 { font-size: 2.2rem; }
+  .section-header p { font-size: 1rem; }
+
+  .map-section { padding-bottom: 3rem; } /* Adjusted padding */
+
+  /* --- Map Layout Change for Tablet --- */
+  .map-container {
+    height: auto; /* Remove fixed height */
+    margin: 0 10px;
+    overflow: visible; /* Allow overlay shadow to show */
+    box-shadow: none; /* Remove shadow from container */
+    border-radius: 0; /* Remove radius from container */
+    /* position: relative; /* No longer needed for overlay positioning */
+  }
+
+  .map-overlay {
+    position: static; /* CHANGE: Stack above map */
+    /* REMOVE top, right, z-index */
+    max-width: none; /* Allow full width */
+    width: 100%; /* Take full width */
+    padding: 1.5rem; /* Adjust padding */
+    margin-bottom: 1.5rem; /* Space below overlay */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.08); /* Optional: Adjust shadow */
+    border-radius: 10px; /* Keep or adjust */
+  }
+
+  .map-container iframe {
+    height: 400px; /* ADD: Specific height for map */
+    width: 100%;
+    border-radius: 10px; /* Optional: Add radius */
+    box-shadow: 0 10px 25px rgba(0,0,0,0.1); /* Optional: Add shadow */
+  }
+  /* --- End Map Layout Change --- */
+
+   /* Overlay Text Adjustments */
+   .map-overlay h3 { font-size: 1.3rem; }
+   .map-overlay p { font-size: 0.9rem; }
+   .map-overlay .hours h4 { font-size: 1rem; }
+   .map-overlay .hours p { font-size: 0.85rem; justify-content: normal;}
+
+  .team-section { padding: 4rem 0; }
+  .team-grid {
+      grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+      gap: 1.5rem;
+      padding: 0 10px;
+  }
+
+  .cta-section {
+      padding: 4rem 0;
+      margin: 0 10px 1.5rem 10px;
+  }
+  .cta-content h2 { font-size: 2.2rem; }
+  .cta-content p { font-size: 1rem; }
+  .cta-btn { padding: 0.7rem 1.8rem; font-size: 0.95rem; }
+}
+
+/* Small Devices (Tablets portrait, large phones) */
+@media (max-width: 768px) {
+  .contact-hero { padding: 30px 15px; }
+  .contact-hero-content { padding: 2rem 0; }
+  .contact-hero-title { font-size: 2.2rem; }
+  .contact-hero-description { font-size: 0.95rem; }
+  .stat-number { font-size: 2rem; }
+
+  .contact-hero-stats {
+    flex-direction: column; /* Stack stats */
+    gap: 1rem;
+    margin-top: 2rem;
+  }
+
+  .contact-cards-container { padding: 1rem 0; }
+  .contact-cards {
+    grid-template-columns: 1fr; /* Single column */
+    padding: 20px 15px;
+    gap: 1rem;
+  }
+  .contact-card { padding: 1.5rem; }
+  .contact-icon { width: 60px; height: 60px; font-size: 1.6rem; }
+  .contact-card h3 { font-size: 1.2rem; }
+  .contact-card p, .contact-card a { font-size: 0.95rem; }
+
+  .section-header { margin-bottom: 2rem; }
+  .section-header h2 { font-size: 2rem; }
+  .section-header p { font-size: 0.95rem; }
+
+  .map-section { padding-bottom: 2.5rem; } /* Adjusted padding */
+  .map-container { margin: 0 10px; } /* Keep margin */
+
+  /* Map layout (static overlay) inherited */
+  .map-overlay {
+      padding: 1.2rem; /* Adjust padding */
+      margin-bottom: 1.2rem; /* Adjust space */
+  }
+  .map-container iframe {
+      height: 350px; /* Adjust map height */
+  }
+
+   /* Overlay Text Adjustments */
+   .map-overlay h3 { font-size: 1.2rem; }
+   .map-overlay p { font-size: 0.85rem; }
+   .map-overlay .hours h4 { font-size: 0.95rem; }
+   .map-overlay .hours p { font-size: 0.8rem; flex-wrap: wrap; }
+
+  .team-section { padding: 3rem 0; }
+  .team-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 1rem;
+    padding: 0 10px;
+  }
+   .team-info { padding: 1.2rem; }
+   .team-info h3 { font-size: 1.1rem; }
+   .team-info p.position { font-size: 0.95rem; }
+
+  .cta-section {
+      padding: 3rem 1rem;
+      margin: 0 10px 1rem 10px;
+  }
+  .cta-content { padding: 0 10px; }
+  .cta-content h2 { font-size: 2rem; }
+  .cta-content p { font-size: 0.95rem; }
+  .cta-buttons { gap: 0.8rem; }
+  .cta-btn { padding: 0.6rem 1.5rem; font-size: 0.9rem; }
+}
+
+/* Extra Small Devices (Phones landscape and smaller) */
+@media (max-width: 576px) {
+  .contact-hero-content { padding: 1.5rem 0; }
+  .contact-hero-title { font-size: 1.8rem; margin-bottom: 1rem; }
+  .contact-hero-description { font-size: 0.9rem; line-height: 1.6; }
+  .stat-number { font-size: 1.8rem; }
+  .stat-label { font-size: 0.8rem; }
+
+  .contact-cards { padding: 15px 10px; }
+  .contact-card { padding: 1.2rem; }
+
+  .section-header h2 { font-size: 1.8rem; }
+  .section-header p { font-size: 0.9rem; }
+
+  .map-section { padding-bottom: 2rem; } /* Adjusted padding */
+  .map-container { margin: 0 5px; } /* Adjust margin */
+
+  /* Map layout (static overlay) inherited */
+  .map-overlay {
+      padding: 1rem; /* Adjust padding */
+      margin-bottom: 1rem; /* Adjust space */
+  }
+  .map-container iframe {
+      height: 300px; /* Adjust map height */
+  }
+
+   /* Overlay Text Adjustments */
+   .map-overlay h3 { font-size: 1.1rem; }
+   .map-overlay p { font-size: 0.8rem; margin-bottom: 0.5rem; }
+   .map-overlay .hours h4 { font-size: 0.9rem; margin-bottom: 5px; }
+   .map-overlay .hours p { font-size: 0.75rem; margin-bottom: 0.3rem; }
+   .map-overlay .hours span { margin-right: 5px; }
+
+  .team-section { padding: 2.5rem 0; }
+  .team-grid {
+    grid-template-columns: 1fr; /* Single column team */
+    padding: 0 10px;
+  }
+  .team-photo { height: 280px; }
+  .team-info { padding: 1rem; }
+
+  .cta-section {
+      padding: 2.5rem 1rem;
+      margin: 0 5px 1rem 5px;
+  }
+  .cta-content h2 { font-size: 1.8rem; }
+  .cta-content p { font-size: 0.9rem; }
+  .cta-buttons { gap: 0.5rem; }
+  .cta-btn {
+      padding: 0.5rem 1.2rem;
+      font-size: 0.85rem;
+      width: 100%; /* Full width buttons */
+      max-width: 250px; /* Optional max-width */
+      margin-left: auto;
+      margin-right: auto;
+  }
+}
+
+/* Optional: Very Small Devices (Phones portrait) */
+@media (max-width: 420px) {
+    .contact-hero-title { font-size: 1.6rem; }
+    .section-header h2 { font-size: 1.6rem; }
+    .cta-content h2 { font-size: 1.6rem; }
+    .contact-card h3 { font-size: 1.1rem; }
+    .contact-card p, .contact-card a { font-size: 0.9rem; }
+
+    /* Map layout (static overlay) inherited */
+   .map-overlay {
+        padding: 0.8rem; /* Adjust padding */
+        margin-bottom: 0.8rem; /* Adjust space */
+   }
+   .map-container iframe {
+       height: 280px; /* Adjust map height */
+   }
+
+   /* Overlay Text Adjustments */
+   .map-overlay h3 { font-size: 1rem; }
+   .map-overlay p { font-size: 0.75rem; line-height: 1.5; }
+   .map-overlay .hours p { font-size: 0.7rem; }
+
+   .cta-btn { padding: 0.5rem 1rem; }
+}

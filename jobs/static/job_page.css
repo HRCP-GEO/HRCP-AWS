@@ -1,0 +1,420 @@
+:root {
+  --primary-color: #2563eb;
+  --primary-dark: #1d4ed8;
+  --secondary-color: #0ea5e9;
+  --accent-color: #f97316;
+  --light-color: #f8fafc;
+  --dark-color: #1e293b;
+  --text-color: #334155;
+  --text-light: #64748b;
+  --link-color: #2563eb;
+  --link-hover-color: #1d4ed8;
+  --border-color: #e2e8f0;
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  --radius: 0.5rem;
+  --transition: all 0.3s ease; /* Added transition definition */
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'Segoe UI', system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+  line-height: 1.6;
+  color: var(--text-color);
+  background-color: #f1f5f9; /* Moved from general rule */
+}
+
+.container {
+  max-width: 1440px;
+  margin: 0 auto;
+  padding: 0 1.5rem;
+}
+
+a {
+  color: var(--link-color);
+  text-decoration: none;
+  transition: all 0.2s ease;
+}
+
+a:hover {
+  color: var(--link-hover-color);
+}
+
+ul {
+  list-style: none; /* Ensure this applies if needed, though not used in snippet */
+}
+
+/* --- Job Detail Page Specific Styles --- */
+
+/* Layout */
+.job-detail-layout { /* Renamed from .main-content */
+  display: flex;
+  gap: 2rem;
+  margin: 2.5rem auto;
+}
+
+.job-detail-main-panel { /* Renamed from main */
+  flex: 1;
+  background: white;
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 2.5rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease; /* Consolidated transitions */
+}
+
+.job-detail-main-panel:hover { /* Renamed from main:hover */
+  transform: translateY(-3px);
+  box-shadow: var(--shadow-lg);
+}
+
+/* Header Section */
+.job-detail-header { /* Renamed from .intro */
+  /* Styles specific to the header section if needed */
+}
+
+.job-detail-header h1 { /* Renamed from .intro h1 */
+  color: var(--dark-color);
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1.25rem;
+  line-height: 1.2;
+}
+
+/* Meta Information Box */
+.job-detail-meta { /* Renamed from .meta-info */
+  background-color: var(--light-color); /* Changed from #f8fafc */
+  padding: 1rem 1.25rem;
+  border-radius: var(--radius);
+  margin-bottom: 2rem;
+  font-size: 0.95rem;
+  color: var(--text-light);
+  border-left: 4px solid var(--primary-color);
+}
+
+.job-detail-meta p { /* Renamed from .meta-info p */
+  margin-bottom: 0.5rem;
+}
+
+.job-detail-meta span { /* Renamed from .meta-info span */
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.job-detail-meta a { /* Renamed from .meta-info a */
+  font-weight: 600;
+}
+
+.job-detail-deadline-urgent { /* Renamed from .last-day-message */
+    color: var(--accent-color); /* Example styling for urgency */
+    font-weight: bold;
+}
+
+
+/* Content Area */
+.job-detail-content-wrapper { /* Renamed from .content-block */
+  margin-bottom: 2.5rem;
+}
+
+/* CKEditor Content Styling (Keep .ck-content) */
+.ck-content {
+  font-size: 14px;
+  line-height: 1.75;
+}
+
+.ck-content p {
+  margin-bottom: 1.25rem;
+}
+
+.ck-content h2 {
+  font-size: 1.5rem;
+  color: var(--dark-color);
+  margin: 2rem 0 1rem;
+  padding-bottom: 0.5rem;
+  border-bottom: 2px solid var(--border-color);
+}
+
+.ck-content h3 {
+  font-size: 1.25rem;
+  color: var(--dark-color);
+  margin: 1.75rem 0 0.75rem;
+}
+
+.ck-content ul, .ck-content ol {
+  margin: 1.25rem 0;
+  padding-left: 2.5rem; /* Adjusted padding-left */
+}
+
+.ck-content ul {
+  list-style-type: disc;
+}
+
+.ck-content ol {
+  list-style-type: decimal;
+}
+
+.ck-content ul li, .ck-content ol li {
+  margin-bottom: 0.75rem;
+  padding-left: 0.5rem; /* Adjusted padding-left */
+}
+
+/* Apply Section */
+.job-detail-apply-section { /* Renamed from .job-actions */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  margin-top: 2rem; /* Added margin top for spacing */
+  /* margin-left: 20px; Removed fixed margin-left for centering */
+  padding: 1.5rem; /* Added padding */
+  background-color: #f8fafc; /* Light background */
+  border-radius: var(--radius);
+  border-top: 1px solid var(--border-color);
+}
+
+.job-detail-apply-button { /* Renamed from .send-cv-btn */
+  padding: 12px 25px;
+  background: linear-gradient(to right, var(--primary-color), var(--primary-dark)); /* Use CSS variables */
+  color: white;
+  border: none;
+  border-radius: 30px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: var(--transition);
+  box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3); /* Use rgba for consistency */
+}
+
+.job-detail-apply-button:hover { /* Renamed from .send-cv-btn:hover */
+  transform: translateY(-2px);
+  box-shadow: 0 8px 20px rgba(67, 97, 238, 0.4); /* Use rgba */
+}
+
+/* Actions Footer (Print Button) */
+.job-detail-actions-footer { /* Renamed from .document-footer */
+  margin-top: 3rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid var(--border-color);
+  /* Removed font-size, color, line-height assuming they are not needed or inherited */
+  text-align: right; /* Align button to the right */
+}
+
+/* Styles previously in .document-footer p, a are removed unless needed */
+
+.job-detail-print-button { /* Renamed from .print-btn */
+    background-color: var(--primary-color); /* Use CSS variable */
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    /* margin-top: 10px; Removed, spacing handled by footer */
+    cursor: pointer;
+    border-radius: var(--radius); /* Use CSS variable */
+    font-size: 1rem; /* Adjusted font size */
+    transition: background-color 0.2s ease; /* Added transition */
+}
+
+.job-detail-print-button:hover { /* Renamed from .print-btn:hover */
+    background-color: var(--primary-dark); /* Use CSS variable */
+}
+
+/* Sidebar */
+.job-detail-sidebar { /* Renamed from .sidebar */
+  width: 280px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+}
+
+.job-detail-sponsor-card { /* Renamed from .sponsor-box */
+  background: white;
+  border-radius: var(--radius);
+  padding: 1.5rem;
+  text-align: center;
+  box-shadow: var(--shadow);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  overflow: hidden;
+}
+
+.job-detail-sponsor-card:hover { /* Renamed from .sponsor-box:hover */
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-lg);
+}
+
+.job-detail-sponsor-logo { /* Renamed from .sponsor-logo */
+  max-width: 85%;
+  height: 60px;
+  /*margin-bottom: 1rem;*/
+  filter: drop-shadow(0 2px 4px rgba(0,0,0,0.1));
+}
+
+.job-detail-sponsor-card p { /* Renamed from .sponsor-box p */
+  margin-top: 1rem;
+}
+
+.job-detail-sponsor-card a { /* Renamed from .sponsor-box a */
+  display: inline-block;
+  padding: 0.6rem 1.2rem;
+  background-color: var(--primary-color);
+  color: white;
+  border-radius: 2rem;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.2s ease;
+}
+
+.job-detail-sponsor-card a:hover { /* Renamed from .sponsor-box a:hover */
+  background-color: var(--primary-dark);
+  transform: translateY(-2px); /* Keep existing transform */
+}
+
+/* --- Styles likely for base.html (kept as is) --- */
+/* These selectors target elements assumed to be outside the provided template block */
+.main-footer {
+  background-color: var(--dark-color);
+  color: white;
+  padding: 3rem 0;
+  margin-top: 3rem;
+}
+
+.bottom-nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 1.5rem;
+  gap: 1.5rem;
+  list-style: none; /* Ensure list style is none */
+  padding-left: 0; /* Remove default padding */
+}
+
+.bottom-nav li {
+  margin-bottom: 0.75rem;
+}
+
+.bottom-nav a {
+  color: #e2e8f0;
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.bottom-nav a i {
+  margin-right: 0.75rem;
+  font-size: 1.1rem;
+  color: var(--secondary-color);
+}
+
+.bottom-nav a:hover {
+  color: white;
+  transform: translateX(3px);
+}
+
+.copyright {
+  font-size: 0.95rem;
+  color: #94a3b8;
+  text-align: center;
+  margin-top: 2rem;
+  padding-top: 1.5rem;
+  border-top: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+
+/* --- Print Styles --- */
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    /* Ensure the main panel and its header/content are visible */
+    .job-detail-main-panel, .job-detail-main-panel * {
+        visibility: visible;
+    }
+    /* Specifically target the header and content wrapper if needed, but targeting main panel might be enough */
+    /* .job-detail-header, .job-detail-header *, .job-detail-content-wrapper, .job-detail-content-wrapper * {
+        visibility: visible;
+    } */
+
+    .job-detail-main-panel { /* Renamed from .intro */
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        box-shadow: none; /* Remove shadow for printing */
+        border: none; /* Remove border if any */
+        padding: 0; /* Adjust padding for print if needed */
+        margin: 0;
+    }
+    /* Hide elements not meant for printing */
+    .job-detail-sidebar,
+    .job-detail-apply-section,
+    .job-detail-actions-footer,
+    /* Add selectors for header/nav/footer from base.html if they exist and need hiding */
+    .main-header, .main-footer {
+        display: none;
+    }
+}
+
+/* --- Responsive Design --- */
+@media (max-width: 900px) {
+  .job-detail-layout { /* Renamed from .main-content */
+    flex-direction: column;
+  }
+
+  .job-detail-sidebar { /* Renamed from .sidebar */
+    width: 100%;
+    flex-direction: row; /* Items side-by-side */
+    flex-wrap: wrap;    /* Allow wrapping */
+    justify-content: center;
+  }
+
+  .job-detail-sponsor-card { /* Renamed from .sponsor-box */
+    width: calc(50% - 1rem); /* 2 columns on medium screens */
+    min-width: 250px;
+  }
+}
+
+@media (max-width: 768px) {
+  .job-detail-main-panel { /* Renamed from main */
+    padding: 1.5rem;
+  }
+
+  .job-detail-header h1 { /* Renamed from .intro h1 */
+    font-size: 1.75rem;
+  }
+
+  /* Keep .bottom-nav styles as they likely apply to base template */
+  .bottom-nav ul {
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+
+}
+
+@media (max-width: 480px) {
+  .container {
+    padding: 0 1rem;
+  }
+
+  .job-detail-layout { /* Renamed from .main-content */
+    margin: 1.5rem auto;
+  }
+
+  .job-detail-meta { /* Renamed from .meta-info */
+    padding: 0.75rem 1rem;
+  }
+
+  .job-detail-main-panel { /* Add specific padding for smallest screens */
+      padding: 1rem;
+  }
+
+  .job-detail-header h1 { /* Further adjust heading size */
+      font-size: 1.5rem;
+  }
+
+  .job-detail-apply-section { /* Adjust padding for apply section */
+      padding: 1rem;
+  }
+}

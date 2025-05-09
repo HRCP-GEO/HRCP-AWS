@@ -1,0 +1,151 @@
+{% load compress %}
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Success!</title>
+        {% compress css %}<style>
+            body {
+                font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+                background-color: #f4f7f6;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                min-height: 100vh;
+                margin: 0;
+                padding: 20px; /* Add some padding to the body for small screens */
+            }
+
+            .success-container {
+                background-color: #fff;
+                padding: 30px; /* Slightly reduce padding for responsiveness */
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+                text-align: center;
+                max-width: 500px;
+                width: 100%; /* Make the container take full width on smaller screens */
+            }
+
+            .success-icon {
+                color: #28a745;
+                font-size: 3em; /* Adjust icon size for smaller screens */
+                margin-bottom: 15px;
+            }
+
+            h2 {
+                color: #333;
+                margin-bottom: 8px;
+                font-size: 1.5em; /* Adjust heading size */
+            }
+
+            p {
+                color: #555;
+                line-height: 1.5; /* Adjust line height */
+                margin-bottom: 20px;
+                font-size: 0.9em; /* Adjust paragraph size */
+            }
+
+            .button-group {
+                display: flex;
+                flex-direction: column; /* Stack buttons on smaller screens */
+                gap: 10px; /* Adjust gap */
+                justify-content: center;
+            }
+
+            .btn {
+                display: block; /* Make buttons full width on smaller screens */
+                padding: 10px 20px; /* Adjust button padding */
+                text-decoration: none;
+                border-radius: 6px;
+                transition: background-color 0.3s ease;
+                text-align: center; /* Center text in full-width buttons */
+            }
+
+            .btn-primary {
+                background-color: #007bff;
+                color: white;
+            }
+
+            .btn-secondary {
+                background-color: #6c757d;
+                color: white;
+            }
+
+            .btn-primary:hover {
+                background-color: #0056b3;
+            }
+
+            .btn-secondary:hover {
+                background-color: #545b62;
+            }
+
+            /* Optional: Add a subtle animation */
+            @keyframes fadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(-10px);
+                }
+                /* Adjust animation distance */
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            .success-container {
+                animation: fadeIn 0.5s ease-out;
+            }
+
+            /* Media query for larger screens (e.g., tablets and desktops) */
+            @media (min-width: 600px) {
+                .success-container {
+                    padding: 40px;
+                    max-width: 500px;
+                    width: 90%;
+                }
+
+                .success-icon {
+                    font-size: 4em;
+                    margin-bottom: 30px;
+                }
+
+                h2 {
+                    {#font-size: 2em;#}
+                    margin-bottom: 40px;
+                }
+
+                p {
+                    line-height: 1.6;
+                    margin-bottom: 30px;
+                    font-size: 1em;
+                }
+
+                .button-group {
+                    flex-direction: row; /* Display buttons in a row on larger screens */
+                    gap: 15px;
+                }
+
+                .btn {
+                    display: inline-block; /* Allow buttons to sit side-by-side */
+                    text-align: left; /* Reset text alignment for inline-block */
+                }
+            }
+        </style>{% endcompress %}
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    </head>
+    <body>
+
+    <div class="success-container">
+        <i class="fas fa-check-circle success-icon"></i>
+        <h2>თქვენი განცხადება გაგზავნილია!</h2>
+
+        <div class="button-group">
+            <a href="{% url 'home' %}" class="btn btn-primary">მთავარი</a>
+                <a href="{% url 'contact_page' %}" class="btn btn-secondary">კონტაქტი</a>
+        </div>
+
+    </div>
+
+    </body>
+    </html>

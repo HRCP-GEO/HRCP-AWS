@@ -1,0 +1,33 @@
+{% load static %}
+{% load compress %}
+
+{% compress css %}<link rel="stylesheet" href="{% static 'company_boxes.css' %}">{% endcompress %}
+
+<section class="partners-showcase">
+    <div class="partners-showcase__container">
+        <h2 class="partners-showcase__title">ჩვენი სანდო პარტნიორები</h2>
+
+        <div class="partners-showcase__grid">
+            {% for company in companies %}
+                {% if company.is_vip %}
+                <a href="{% url 'jobs_by_company' company.slug %}" class="partners-showcase__card-link">
+
+                    <div class="partners-showcase__card">
+                        <div class="partners-showcase__logo-container">
+                        {% if company.logo %}
+                            <img src="{{ company.logo.url }}" alt="{{ company.name }}" class="partners-showcase__logo-placeholder">
+                        {% endif %}
+                        </div>
+                        <div class="partners-showcase__details">
+                            <h3 class="partners-showcase__text">{{ company.name }}</h3>
+                            <p class="partners-showcase__text">ყველა ვაკანსია</p>
+                        </div>
+                    </div>
+                </a>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</section>
+
+{% compress js %}<script src="{% static 'company_boxes.js' %}"></script>{% endcompress %}

@@ -1,0 +1,404 @@
+/* ==============================================
+   FAQ Page Styles (faq_page.css)
+   ============================================== */
+
+/* --- General Container --- */
+.cphr-faq-container {
+    max-width: 1440px; /* Max width of the content area */
+    margin: 0 auto; /* Center the container */
+    padding: 4rem 2rem; /* Padding top/bottom and left/right */
+    font-family: 'Poppins', sans-serif; /* Example modern font */
+    background-color: #f8f9fa; /* Light background for the page */
+}
+
+/* --- FAQ Header --- */
+.cphr-faq-header {
+    text-align: center;
+    margin-bottom: 3rem;
+}
+
+.cphr-faq-title {
+    font-size: 2.5rem;
+    font-weight: 800; /* Extra bold */
+    color: #2a3b4c; /* Dark blue-grey */
+    margin-bottom: 1rem;
+    position: relative; /* For the underline pseudo-element */
+    display: inline-block; /* Allows centering and underline */
+    padding-bottom: 15px; /* Space for the underline */
+}
+
+/* Title Underline Effect */
+.cphr-faq-title::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translateX(-50%); /* Center the underline */
+    width: 80px; /* Width of the underline */
+    height: 3px; /* Thickness of the underline */
+    background: linear-gradient(90deg, #4361ee, #4cc9f0); /* Gradient color */
+    border-radius: 3px;
+}
+
+.cphr-faq-subtitle {
+    font-size: 1.1rem;
+    color: #6c757d; /* Medium grey */
+    max-width: 700px; /* Constrain width for readability */
+    margin: 0 auto; /* Center the subtitle */
+    line-height: 1.6;
+}
+
+/* --- FAQ Search --- */
+.cphr-faq-search-container {
+    display: none !important;
+    max-width: 600px; /* Limit search bar width */
+    margin: 0 auto 3rem; /* Center and add bottom margin */
+    position: relative; /* For icon positioning */
+}
+
+.cphr-faq-search {
+    width: 100%;
+    padding: 1rem 1.5rem;
+    padding-left: 3rem; /* Make space for the icon */
+    border: 1px solid #e9ecef; /* Light border */
+    border-radius: 50px; /* Pill shape */
+    font-size: 1rem;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+    transition: all 0.3s ease;
+    font-family: 'Poppins', sans-serif; /* Match page font */
+}
+
+.cphr-faq-search:focus {
+    outline: none; /* Remove default focus outline */
+    border-color: #4361ee; /* Highlight border on focus */
+    box-shadow: 0 5px 20px rgba(67, 97, 238, 0.15); /* Enhance shadow on focus */
+}
+
+.cphr-faq-search-icon {
+    position: absolute;
+    left: 1.2rem; /* Position icon inside padding */
+    top: 50%;
+    transform: translateY(-50%); /* Center icon vertically */
+    color: #6c757d; /* Icon color */
+    font-size: 1.1rem;
+    pointer-events: none; /* Prevent icon from blocking input */
+}
+
+/* --- FAQ Categories --- */
+.cphr-faq-categories {
+    display: none !important;
+    /*display: flex; !* Use flexbox for layout *!*/
+    justify-content: center; /* Center categories on desktop */
+    flex-wrap: wrap; /* Allow categories to wrap on smaller screens */
+    gap: 1rem; /* Spacing between categories */
+    margin-bottom: 3rem;
+}
+
+.cphr-faq-category {
+    padding: 0.7rem 1.5rem;
+    background: white;
+    border: 1px solid #e9ecef;
+    border-radius: 50px; /* Pill shape */
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: #6c757d;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap; /* Prevent category text from wrapping */
+}
+
+.cphr-faq-category:hover {
+    background: #f8f9fa; /* Light hover background */
+    transform: translateY(-2px); /* Slight lift effect */
+}
+
+.cphr-faq-category.active {
+    background: #4361ee; /* Active state background */
+    color: white; /* Active state text color */
+    border-color: #4361ee; /* Match active background */
+}
+
+/* --- FAQ List --- */
+.cphr-faq-list {
+    max-width: 800px; /* Limit width of the FAQ list */
+    margin: 0 auto; /* Center the list */
+}
+
+/* --- FAQ Item (Accordion) --- */
+.cphr-faq-item {
+    background: white;
+    border-radius: 12px; /* Rounded corners */
+    margin-bottom: 1.5rem; /* Space between items */
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05); /* Subtle shadow */
+    overflow: hidden; /* Needed for max-height transition */
+    transition: all 0.3s ease;
+}
+
+.cphr-faq-item:hover {
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1); /* Enhanced shadow on hover */
+    transform: translateY(-2px); /* Lift effect */
+}
+
+.cphr-faq-question {
+    padding: 1.5rem;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between; /* Push text and icon apart */
+    align-items: center; /* Vertically align text and icon */
+    font-weight: 600;
+    color: #2a3b4c;
+    position: relative;
+    gap: 1rem; /* **Ensure space between text and icon** */
+}
+
+/* Span containing the question text */
+.cphr-faq-question-text {
+    flex-grow: 1; /* **Allow text to take available space** */
+    line-height: 1.4; /* Improve readability if text wraps */
+}
+
+/* Toggle Icon (Chevron) */
+.cphr-faq-toggle-icon {
+    width: 24px;
+    height: 24px;
+    background: rgba(67, 97, 238, 0.1); /* Light background */
+    border-radius: 50%; /* Make it circular */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #4361ee; /* Icon color */
+    transition: all 0.3s ease;
+    flex-shrink: 0; /* **Prevent icon from shrinking** */
+}
+
+/* Icon rotation and style when item is active */
+.cphr-faq-item.active .cphr-faq-toggle-icon {
+    transform: rotate(180deg);
+    background: #4361ee;
+    color: white;
+}
+
+/* Answer Panel */
+.cphr-faq-answer {
+    max-height: 0; /* Initially hidden */
+    overflow: hidden;
+    transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s ease; /* Smooth transition */
+    padding: 0 1.5rem; /* Horizontal padding when hidden */
+    color: #6c757d;
+    line-height: 1.7; /* Improve readability */
+    font-size: 0.95rem;
+}
+
+/* Styles when item is active (answer is shown) */
+.cphr-faq-item.active .cphr-faq-answer {
+    max-height: 1000px; /* Set large enough max-height to reveal content */
+    padding: 0 1.5rem 1.5rem; /* Add bottom padding when revealed */
+}
+
+.cphr-faq-answer p {
+    margin-bottom: 1rem;
+}
+
+.cphr-faq-answer p:last-child {
+    margin-bottom: 0;
+}
+
+.cphr-faq-answer a {
+    color: #4361ee;
+    text-decoration: none;
+    font-weight: 500;
+    transition: color 0.3s ease;
+}
+
+.cphr-faq-answer a:hover {
+    color: #3a4fd7; /* Darker shade on hover */
+    text-decoration: underline;
+}
+
+/* --- No Results Message --- */
+.cphr-faq-no-results {
+    text-align: center;
+    padding: 3rem 1rem;
+    color: #6c757d;
+    display: none; /* Hidden by default, shown via JS */
+    border: 1px dashed #e0e0e0;
+    border-radius: 8px;
+    background-color: #f8f9fa;
+    margin-top: 2rem;
+}
+
+.cphr-faq-no-results-icon {
+    font-size: 3rem;
+    color: #ced4da; /* Lighter grey */
+    margin-bottom: 1rem;
+}
+
+.cphr-faq-no-results-text {
+    font-size: 1.1rem;
+    font-weight: 500;
+    color: #495057; /* Slightly darker grey */
+    margin-bottom: 0.5rem;
+}
+
+.cphr-faq-no-results-subtext {
+    font-size: 0.9rem;
+    max-width: 500px;
+    margin: 0 auto;
+}
+
+/* --- Contact Section --- */
+.cphr-faq-contact {
+    display: none;
+    background: linear-gradient(135deg, #4361ee 0%, #4cc9f0 100%);
+    border-radius: 12px;
+    padding: 3rem;
+    text-align: center;
+    color: white;
+    margin-top: 4rem;
+    position: relative; /* For pseudo-elements/shapes */
+    overflow: hidden; /* Contain shapes */
+}
+
+/* Decorative shapes */
+.cphr-faq-contact-shape {
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 200px;
+    height: 200px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.cphr-faq-contact-shape-2 {
+    position: absolute;
+    bottom: -80px;
+    left: -80px;
+    width: 250px;
+    height: 250px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+    pointer-events: none;
+}
+
+.cphr-faq-contact-content {
+    position: relative; /* Ensure content is above shapes */
+    z-index: 1;
+}
+
+.cphr-faq-contact-title {
+    font-size: 1.8rem;
+    font-weight: 700;
+    margin-bottom: 1rem;
+}
+
+.cphr-faq-contact-text {
+    font-size: 1.1rem;
+    opacity: 0.9; /* Slightly transparent text */
+    margin-bottom: 2rem;
+    max-width: 600px;
+    margin-left: auto;
+    margin-right: auto;
+    line-height: 1.6;
+}
+
+.cphr-faq-contact-btn {
+    display: inline-block;
+    padding: 1rem 2.5rem;
+    background: white;
+    color: #4361ee; /* Button text color matches theme */
+    border-radius: 50px; /* Pill shape */
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+.cphr-faq-contact-btn:hover {
+    transform: translateY(-3px); /* Lift effect on hover */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15); /* Enhanced shadow */
+    background: #f8f9fa; /* Slightly off-white on hover */
+}
+
+/* ==============================================
+   Responsive Styles
+   ============================================== */
+
+/* Medium screens and down (Tablets and Phones) */
+@media (max-width: 768px) {
+    .cphr-faq-container {
+        padding: 3rem 1.5rem; /* Reduce padding */
+    }
+
+    .cphr-faq-title {
+        font-size: 2rem; /* Reduce title size */
+    }
+
+    /* Make categories horizontally scrollable */
+    .cphr-faq-categories {
+        justify-content: flex-start; /* Align to start */
+        flex-wrap: nowrap; /* Prevent wrapping */
+        overflow-x: auto; /* Enable horizontal scroll */
+        padding-bottom: 1rem; /* Space for scrollbar */
+        /* Hide scrollbar visually but keep functionality */
+        -ms-overflow-style: none;  /* IE and Edge */
+        scrollbar-width: none;  /* Firefox */
+    }
+    /* Hide scrollbar for Chrome, Safari and Opera */
+    .cphr-faq-categories::-webkit-scrollbar {
+        display: none;
+    }
+
+    .cphr-faq-category {
+        flex: 0 0 auto; /* Prevent categories from shrinking */
+    }
+
+    .cphr-faq-contact {
+        padding: 2.5rem 1.5rem; /* Reduce padding */
+    }
+
+    .cphr-faq-contact-title {
+        font-size: 1.6rem; /* Reduce title size */
+    }
+    .cphr-faq-contact-text {
+        font-size: 1rem; /* Reduce text size */
+    }
+}
+
+/* Smaller screens (Phones) */
+@media (max-width: 576px) {
+    .cphr-faq-container {
+        padding: 2.5rem 1rem; /* Further reduce padding */
+    }
+
+    .cphr-faq-title {
+        font-size: 1.8rem; /* Further reduce title size */
+    }
+    .cphr-faq-subtitle {
+        font-size: 1rem; /* Reduce subtitle size */
+    }
+
+    .cphr-faq-question {
+        padding: 1rem; /* Reduce padding */
+        font-size: 0.95rem; /* Slightly smaller font */
+        gap: 0.75rem; /* Slightly smaller gap */
+    }
+
+    .cphr-faq-answer {
+         padding: 0 1rem; /* Match question horizontal padding */
+         font-size: 0.9rem; /* Smaller answer font */
+    }
+
+    .cphr-faq-item.active .cphr-faq-answer {
+        padding: 0 1rem 1rem; /* Adjust padding when shown */
+    }
+
+    .cphr-faq-contact {
+        padding: 2rem 1rem; /* Further reduce padding */
+    }
+     .cphr-faq-contact-btn {
+        padding: 0.8rem 2rem; /* Smaller button */
+        font-size: 0.95rem;
+     }
+}
