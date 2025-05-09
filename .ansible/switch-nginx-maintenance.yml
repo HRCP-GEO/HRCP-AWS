@@ -1,0 +1,25 @@
+---
+- name: Rename app nginx conf file
+  ansible.builtin.command: >
+    mv
+    "{{ (maintenance is true) | ternary(prefix + '.conf', prefix + '.conf.bak') }}"
+    "{{ (maintenance is true) | ternary(prefix + '.conf.bak', prefix + '.conf') }}"
+  args:
+    chdir: /etc/nginx/conf.d
+    removes: "{{ (maintenance is true) | ternary(prefix + '.conf', prefix + '.conf.bak') }}"
+    creates: "{{ (maintenance is true) | ternary(prefix + '.conf.bak', prefix + '.conf') }}"
+
+- name: Rename app maintenance nginx conf file
+  ansible.builtin.command: >
+    mv
+    "{{ (maintenance is true) | ternary(prefix + '.maintenance.conf.bak', prefix + '.maintenance.conf') }}"
+    "{{ (maintenance is true) | ternary(prefix + '.maintenance.conf', prefix + '.maintenance.conf.bak') }}"
+  args:
+    chdir: /etc/nginx/conf.d
+    removes: "{{ (maintenance is true) | ternary(prefix + '.maintenance.conf.bak', prefix + '.maintenance.conf') }}"
+    creates: "{{ (maintenance is true) | ternary(prefix + '.maintenance.conf', prefix + '.maintenance.conf.bak') }}"
+
+- name: Reload nginx
+  ansible.builtin.service:
+    name: nginx
+    state: reloaded

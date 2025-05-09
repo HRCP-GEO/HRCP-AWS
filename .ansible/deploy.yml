@@ -1,0 +1,106 @@
+---
+- name: Deploy django application
+  hosts: hrcp_www
+  gather_facts: false
+  become: true
+
+  vars:
+    project: "{{ github_vars.AWS_PROJECT }}"
+    app_name: "{{ github_vars.AWS_APP }}"
+    app_user: hrcp
+    app_dir: "/home/{{ app_user }}/{{ app_name }}"
+    env_params: "{{ lookup('amazon.aws.aws_ssm', '/{}/{}/{}/env_params'.format(project, ENVIRONMENT, app_name)) | from_json }}"
+
+  pre_tasks:
+    - name: Slurp example dotenv file content
+      ansible.builtin.slurp:
+        src: "../.env.example"
+      register: env_file_content
+      delegate_to: localhost
+      vars:
+        ansible_become: false
+
+    - name: Parse example dotenv file
+      ansible.builtin.set_fact:
+        dotenv_keys: "{{ (env_file_content.content | b64decode).split('\n') | select('match', '^[^#].*') | map('regex_replace', '=.*$', '') }}"
+
+    - name: Compare example dotenv keys with dotenv keys from AWS
+      ansible.builtin.set_fact:
+        missing_keys: "{{ dotenv_keys | difference(env_params.keys()) }}"
+
+    - name: Fail deployment if local and aws dotenv keys do not match
+      ansible.builtin.fail:
+        msg: "dotenv keys in AWS parameter store do not match with keys in local dotenv example file, missing keys: {{ missing_keys }}"
+      when: missing_keys | length > 0
+
+    - name: Create dotenv file
+      ansible.builtin.copy:
+        content: |
+          {% for key, value in env_params.items() %}
+          {{ key }}={{ value }}
+          {% endfor %}
+        mode: "0640"
+        dest: "../.env"
+      delegate_to: localhost
+      vars:
+        ansible_become: false
+
+  tasks:
+    - name: Turn on maintenance
+      vars:
+        prefix: "{{ project }}_{{ ENVIRONMENT }}"
+        maintenance: true
+      ansible.builtin.include_tasks: switch-nginx-maintenance.yml
+
+    - name: Get app from GitHub
+      ansible.builtin.git:
+        repo: git@github.com:{{ REPOSITORY }}.git
+        version: "{{ REF_SHA }}"
+        dest: "{{ app_dir }}"
+        depth: 1
+        accept_newhostkey: true
+        force: true
+        key_file: "/home/{{ app_user }}/.ssh/id_rsa"
+
+    - name: Install packages based on requirements.txt file
+      ansible.builtin.pip:
+        requirements: "{{ app_dir }}/requirements.txt"
+        virtualenv: "{{ app_dir }}/venv"
+
+    - name: Collect static files
+      ansible.builtin.shell:
+        cmd: |
+          source venv/bin/activate
+          python manage.py collectstatic
+      args:
+        chdir: "{{ app_dir }}"
+        creates: "{{ app_dir }}/staticfiles"
+        executable: /bin/bash
+
+    - name: Copy content of directory staticfiles
+      ansible.builtin.copy:
+        src: "{{ app_dir }}/staticfiles/"
+        dest: "/var/www/{{ project }}/static/"
+        owner: www-data
+        group: www-data
+        mode: "0755"
+
+    - name: Delete staticfiles directory
+      ansible.builtin.shell:
+        cmd: |
+          rm -rf staticfiles/
+      args:
+        chdir: "{{ app_dir }}"
+        removes: "{{ app_dir }}/staticfiles"
+
+    - name: Restart gunicorn socket
+      ansible.builtin.systemd:
+        name: "{{ project }}_{{ ENVIRONMENT }}_gunicorn.socket"
+        state: restarted
+        enabled: true
+
+    - name: Turn off maintenance
+      vars:
+        prefix: "{{ project }}_{{ ENVIRONMENT }}"
+        maintenance: false
+      ansible.builtin.include_tasks: switch-nginx-maintenance.yml
