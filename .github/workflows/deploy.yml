@@ -1,0 +1,53 @@
+---
+name: Deploy django
+
+concurrency:
+  group: ${{ github.ref_name }}
+  cancel-in-progress: true
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+env:
+  ENVIRONMENT: production
+
+jobs:
+  deploy:
+    if: github.event_name == 'push' ||
+      github.event_name == 'workflow_dispatch' ||
+      github.event.action == 'released' ||
+      github.event.action == 'published' && github.event.release.prerelease
+    runs-on: ubuntu-latest
+    container:
+      image: ${{ vars.TOOLS_REGISTRY_URL }}:gh-workflow
+
+    steps:
+      - name: Configure SSH key
+        run: |
+          mkdir -p /.ssh && chmod 700 /.ssh
+          echo "${{ secrets.AWS_MASTER_SSH_KEY }}" > /.ssh/id_rsa
+          chmod 600 /.ssh/id_rsa
+
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ vars.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ vars.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ vars.AWS_REGION }}
+
+      - uses: actions/checkout@v4
+
+      - name: Run deploy ansible playbook
+        working-directory: .ansible
+        run: >
+          ansible-playbook --user admin -i inventories/ deploy.yml -e
+          '{
+            "ENVIRONMENT": "${{ env.ENVIRONMENT }}",
+            "REPOSITORY": "${{ github.repository }}",
+            "REF_SHA": "${{ github.sha }}",
+            "github_vars": ${{ toJson(vars) }},
+            "github_secrets": ${{ toJson(secrets) }}
+          }'

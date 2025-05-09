@@ -1,0 +1,17 @@
+---
+plugin: amazon.aws.aws_ec2
+
+filters:
+  tag:project: hrcp
+  instance-state-name: running
+
+hostnames:
+  - ip-address
+
+groups:
+  hrcp_www: >
+    'hrcp-production-HRCP-AWS' in tags.hosts.split(',')
+
+keyed_groups:
+  - key: tags.ansible_inventory_os
+    separator: ""
