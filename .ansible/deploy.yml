@@ -33,25 +33,6 @@
         msg: "dotenv keys in AWS parameter store do not match with keys in local dotenv example file, missing keys: {{ missing_keys }}"
       when: missing_keys | length > 0
 
-    - name: Create dotenv file
-      ansible.builtin.copy:
-        content: |
-          {% for key, value in env_params.items() %}
-          {{ key }}={{ value }}
-          {% endfor %}
-        mode: "0640"
-        dest: "../.env"
-      delegate_to: localhost
-      vars:
-        ansible_become: false
-
-  tasks:
-    - name: Turn on maintenance
-      vars:
-        prefix: "{{ project }}_{{ ENVIRONMENT }}"
-        maintenance: true
-      ansible.builtin.include_tasks: switch-nginx-maintenance.yml
-
     - name: Get app from GitHub
       become: true
       become_user: "{{ app_user }}"
@@ -63,6 +44,22 @@
         accept_newhostkey: true
         force: true
         key_file: "/home/{{ app_user }}/.ssh/id_rsa"
+
+    - name: Create dotenv file
+      ansible.builtin.copy:
+        content: |
+          {% for key, value in env_params.items() %}
+          {{ key }}={{ value }}
+          {% endfor %}
+        mode: "0640"
+        dest: "{{ app_dir }}/.env"
+
+  tasks:
+    - name: Turn on maintenance
+      vars:
+        prefix: "{{ project }}_{{ ENVIRONMENT }}"
+        maintenance: true
+      ansible.builtin.include_tasks: switch-nginx-maintenance.yml
 
     - name: Create virtualenv
       become: true
