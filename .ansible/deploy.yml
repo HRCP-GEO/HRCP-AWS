@@ -86,6 +86,7 @@
 
     - name: Copy content of directory staticfiles
       ansible.builtin.copy:
+        remote_src: true
         src: "{{ app_dir }}/staticfiles/"
         dest: "/var/www/{{ project }}/static/"
         owner: www-data
