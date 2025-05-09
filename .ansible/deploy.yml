@@ -53,6 +53,8 @@
       ansible.builtin.include_tasks: switch-nginx-maintenance.yml
 
     - name: Get app from GitHub
+      become: true
+      become_user: "{{ app_user }}"
       ansible.builtin.git:
         repo: git@github.com:{{ REPOSITORY }}.git
         version: "{{ REF_SHA }}"
@@ -61,6 +63,14 @@
         accept_newhostkey: true
         force: true
         key_file: "/home/{{ app_user }}/.ssh/id_rsa"
+
+    - name: Create virtualenv
+      become: true
+      become_user: "{{ app_user }}"
+      ansible.builtin.command: python3 -m venv venv
+      args:
+        chdir: "{{ app_dir }}"
+        creates: "{{ app_dir }}/venv"
 
     - name: Install packages based on requirements.txt file
       ansible.builtin.pip:
