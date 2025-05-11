@@ -103,6 +103,27 @@
         chdir: "{{ app_dir }}"
         removes: "{{ app_dir }}/staticfiles"
 
+    - name: Make migrations
+      ansible.builtin.shell:
+        cmd: |
+          source venv/bin/activate
+          python manage.py makemigrations
+      args:
+        chdir: "{{ app_dir }}"
+        executable: /bin/bash
+      changed_when: false
+
+    - name: Migrate database
+      ansible.builtin.shell:
+        cmd: |
+          source venv/bin/activate
+          python manage.py migrate
+      args:
+        chdir: "{{ app_dir }}"
+        executable: /bin/bash
+      register: migrate_result
+      changed_when: "'No migrations to apply' not in artisan_migrate.stdout"    
+
     - name: Restart gunicorn service
       ansible.builtin.systemd:
         name: "{{ project }}_{{ ENVIRONMENT }}_gunicorn"
