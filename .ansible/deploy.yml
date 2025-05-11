@@ -122,7 +122,7 @@
         chdir: "{{ app_dir }}"
         executable: /bin/bash
       register: migrate_result
-      changed_when: "'No migrations to apply' not in artisan_migrate.stdout"    
+      changed_when: "'No migrations to apply' not in migrate_result.stdout"
 
     - name: Restart gunicorn service
       ansible.builtin.systemd:
