@@ -51,6 +51,8 @@
           {% for key, value in env_params.items() %}
           {{ key }}={{ value }}
           {% endfor %}
+        owner: "{{ app_user }}"
+        group: "{{ app_user }}"
         mode: "0640"
         dest: "{{ app_dir }}/.env"
 
@@ -101,9 +103,9 @@
         chdir: "{{ app_dir }}"
         removes: "{{ app_dir }}/staticfiles"
 
-    - name: Restart gunicorn socket
+    - name: Restart gunicorn service
       ansible.builtin.systemd:
-        name: "{{ project }}_{{ ENVIRONMENT }}_gunicorn.socket"
+        name: "{{ project }}_{{ ENVIRONMENT }}_gunicorn"
         state: restarted
         enabled: true
 
