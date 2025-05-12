@@ -63,6 +63,8 @@ STATICFILES_FINDERS = [
 COMPRESS_ENABLED = True
 COMPRESS_OFFLINE = True
 
+
+
 # CKEditor 5 Configuration
 CKEDITOR_5_CONFIGS = {
     "default": {
@@ -227,3 +229,7 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # ✅ This is for collectst
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+
+COMPRESS_ROOT = STATIC_ROOT
+COMPRESS_OUTPUT_DIR = 'CACHE'
