@@ -60,8 +60,8 @@ STATICFILES_FINDERS = [
     "compressor.finders.CompressorFinder",
 ]
 
-COMPRESS_ENABLED = not DEBUG
-COMPRESS_OFFLINE = not DEBUG
+COMPRESS_ENABLED = True
+COMPRESS_OFFLINE = True
 
 # CKEditor 5 Configuration
 CKEDITOR_5_CONFIGS = {
