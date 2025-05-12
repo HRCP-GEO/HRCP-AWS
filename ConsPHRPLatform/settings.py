@@ -232,4 +232,5 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
 COMPRESS_ROOT = os.getenv('MEDIA_FOLDER_NAME')
+
 COMPRESS_OUTPUT_DIR = 'CACHE'
