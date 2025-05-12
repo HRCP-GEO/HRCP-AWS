@@ -80,11 +80,12 @@
       ansible.builtin.shell:
         cmd: |
           source venv/bin/activate
-          python manage.py collectstatic
+          python manage.py collectstatic --noinput
       args:
         chdir: "{{ app_dir }}"
-        creates: "{{ app_dir }}/staticfiles"
         executable: /bin/bash
+      register: static_collect_result
+      changed_when: "'0 static files copied to' not in static_collect_result.stdout"
 
     - name: Compress static files
       ansible.builtin.shell:
@@ -96,14 +97,14 @@
         executable: /bin/bash
       changed_when: false
 
-    - name: Copy content of directory staticfiles
-      ansible.builtin.copy:
-        remote_src: true
-        src: "{{ app_dir }}/staticfiles/"
-        dest: "/var/www/{{ project }}/static/"
-        owner: www-data
-        group: www-data
-        mode: "0755"
+    # - name: Copy content of directory staticfiles
+    #   ansible.builtin.copy:
+    #     remote_src: true
+    #     src: "{{ app_dir }}/staticfiles/"
+    #     dest: "/var/www/{{ project }}/static/"
+    #     owner: www-data
+    #     group: www-data
+    #     mode: "0755"
 
     - name: Delete staticfiles directory
       ansible.builtin.shell:
