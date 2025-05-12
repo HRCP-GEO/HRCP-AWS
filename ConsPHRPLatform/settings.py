@@ -54,6 +54,15 @@ INSTALLED_APPS = [
 
 STATICFILES_STORAGE = 'compressor.storage.CompressorFileStorage'
 
+STATICFILES_FINDERS = [
+    "django.contrib.staticfiles.finders.FileSystemFinder",
+    "django.contrib.staticfiles.finders.AppDirectoriesFinder",
+    "compressor.finders.CompressorFinder",
+]
+
+COMPRESS_ENABLED = not DEBUG
+COMPRESS_OFFLINE = not DEBUG
+
 # CKEditor 5 Configuration
 CKEDITOR_5_CONFIGS = {
     "default": {
@@ -119,6 +128,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+
 
 ROOT_URLCONF = 'ConsPHRPLatform.urls'
 
