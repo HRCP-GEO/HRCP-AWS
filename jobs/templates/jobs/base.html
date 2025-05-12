@@ -18,8 +18,7 @@
     <meta property="og:title" content="{% block og_title %}HRCP - Your Career Partner{% endblock %}" /> {# Default to page_title #}
     <meta property="og:description" content="{% block og_description %}Find your next career opportunity...{% endblock %}" /> {# Default to meta_description #}
     <meta property="og:url" content="{{ request.build_absolute_uri }}{% block og_url %}{% endblock %}" /> {# Default to canonical #}
-    <meta property="og:image" content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'HRCP.png' %}{% endblock %}" />
-    <meta property="og:image:alt" content="{% block og_image_alt %}HRCP Logo{% endblock %}" />
+
 
     {# --- Optional: Twitter Card Tags (often fallback to OG, but good to include) --- #}
     <meta name="twitter:card" content="summary_large_image"> {# Or "summary" if images aren't prominent #}
