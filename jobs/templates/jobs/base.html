@@ -18,7 +18,7 @@
     <meta property="og:title" content="{% block og_title %}HRCP - Your Career Partner{% endblock %}" /> {# Default to page_title #}
     <meta property="og:description" content="{% block og_description %}Find your next career opportunity...{% endblock %}" /> {# Default to meta_description #}
     <meta property="og:url" content="{{ request.build_absolute_uri }}{% block og_url %}{% endblock %}" /> {# Default to canonical #}
-    <meta property="og:image" content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'HRCP.png' %}{% endblock %}" />
+    <meta property="og:image" content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'HRCP_200.png' %}{% endblock %}" />
     <meta property="og:image:alt" content="{% block og_image_alt %}HRCP Logo{% endblock %}" />
 
     {# --- Optional: Twitter Card Tags (often fallback to OG, but good to include) --- #}
@@ -26,10 +26,8 @@
     <meta name="twitter:site" content="@hrcp">
     <meta name="twitter:title" content="{% block twitter_title %}HRCP - Your Career Partner{% endblock %}">
     <meta name="twitter:description" content="{% block twitter_description %}Find your next career opportunity...{% endblock %}">
-    <meta name="twitter:image" content="{% block twitter_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'HRCP.png' %}{% endblock %}">
+    <meta name="twitter:image" content="{% block twitter_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'HRCP_200.png' %}{% endblock %}">
     <meta name="twitter:image:alt" content="{% block twitter_image_alt %}HRCP Logo{% endblock %}">
-    <meta property="og:image:width" content="1200" />
-    <meta property="og:image:height" content="630" />
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
