@@ -231,5 +231,5 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # ✅ This is for collectst
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
-COMPRESS_ROOT = STATIC_ROOT
+COMPRESS_ROOT = '/var/www/hrcp/static'
 COMPRESS_OUTPUT_DIR = 'CACHE'
