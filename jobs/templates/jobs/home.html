@@ -571,7 +571,7 @@
 {% block scripts_extra %}
     {% compress js %}<script src="{% static 'home.js' %}"></script>{% endcompress %}
     {% if has_more %}
-        {% compress js %}<script>
+        <script>
             document.addEventListener('DOMContentLoaded', function () {
                 let currentPage = {{ current_page }};
                 let loading = false;
@@ -646,6 +646,6 @@
                     }
                 });
             });
-        </script>{% endcompress %}
+        </script>
     {% endif %}
 {% endblock %}
