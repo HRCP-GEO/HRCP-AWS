@@ -409,11 +409,11 @@
             <div class="salary-filter-container">
                     {% url_params exclude='is_foreign_language' as current_params %}
                     <input type="checkbox"
-                           id="salary-filter-checkbox"
+                           id="salary-filter-foreign-language"
                            class="salary-filter-checkbox"
                            {% if is_foreign_language == 'true' %}checked{% endif %}
                            onchange="location = '?{{ current_params }}&is_foreign_language=' + (this.checked ? 'true' : 'all');">
-                    <label for="salary-filter-checkbox">მხოლოდ უცხოენოვანი</label>
+                    <label for="salary-filter-foreign-language">მხოლოდ უცხოენოვანი</label>
                 </div>
             </div>
 

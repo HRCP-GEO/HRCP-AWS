@@ -15,8 +15,8 @@
 {% block canonical_path %}/faq/{% endblock %}
 {# og_type defaults to 'website' from base.html, which is suitable here #}
 
-<meta property="og:image" content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'HRCP.png' %}{% endblock %}" />
-    <meta name="twitter:image" content="{% block twitter_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'HRCP.png' %}{% endblock %}">
+<meta property="og:image" content="{% block og_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'HRCP_200.png' %}{% endblock %}" />
+    <meta name="twitter:image" content="{% block twitter_image %}{{ request.scheme }}://{{ request.get_host }}{% static 'HRCP_200.png' %}{% endblock %}">
 
 
 {% block twitter_image_alt %}{% block og_image_alt %}
