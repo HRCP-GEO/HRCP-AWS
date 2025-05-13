@@ -8,6 +8,7 @@ from django.urls import reverse
 class JobSitemap(Sitemap):
     changefreq = "daily"  # How often job postings might change
     # priority = 0.8       # Higher priority than static pages
+    protocol = "https"
 
     def items(self):
         # Return active/non-expired jobs
@@ -24,6 +25,7 @@ class JobSitemap(Sitemap):
 class CompanySitemap(Sitemap):
     changefreq = "daily"
     # priority = 0.6
+    protocol = "https"
 
     def items(self):
         # Maybe only include companies with active job page status or VIP?
@@ -45,6 +47,7 @@ class CompanySitemap(Sitemap):
 class StaticViewSitemap(Sitemap):
     # priority = 0.5
     changefreq = 'daily'
+    protocol = "https"
 
     def items(self):
         # List the names of your static views
