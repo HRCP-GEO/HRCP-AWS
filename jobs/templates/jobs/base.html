@@ -8,7 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block page_title %}HRCP - Your Career Partner{% endblock %}</title>
     <meta name="description" content="{% block meta_description %}Find your next career opportunity in Georgia. HRCP connects talented professionals with top companies. Search jobs, vacancies, and trainings.{% endblock %}">
-    <link rel="canonical" href="{{ request.scheme }}://{{ request.get_host }}{% block canonical_path %}{% endblock %}">
+    <link rel="canonical" href="https://{{ request.get_host }}{% block canonical_path %}{% endblock %}">
+
 
     <link rel="icon" href="{% static 'HRCP.png' %}" type="image/png" sizes="32x32">
 
