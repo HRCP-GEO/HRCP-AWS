@@ -413,7 +413,7 @@
                            class="salary-filter-checkbox"
                            {% if is_foreign_language == 'true' %}checked{% endif %}
                            onchange="location = '?{{ current_params }}&is_foreign_language=' + (this.checked ? 'true' : 'all');">
-                    <label for="salary-filter-foreign-language">მხოლოდ უცხოენოვანი</label>
+                    <label for="salary-filter-foreign-language">Foreign-language only</label>
                 </div>
             </div>
 
@@ -627,7 +627,7 @@
                     if (entries[0].isIntersecting && hasMore) {
                         loadMoreJobs();
                     }
-                }, {rootMargin: '200px'}); // Start loading when within 200px of the indicator
+                }, {rootMargin: '600px'}); // Start loading when within 200px of the indicator
 
                 if (loadingIndicator) {
                     observer.observe(loadingIndicator);
@@ -641,7 +641,7 @@
                     const scrollTop = window.scrollY || document.documentElement.scrollTop;
                     const clientHeight = window.innerHeight || document.documentElement.clientHeight;
 
-                    if (scrollTop + clientHeight >= scrollHeight - 200) {
+                    if (scrollTop + clientHeight >= scrollHeight - 600) {
                         loadMoreJobs();
                     }
                 });

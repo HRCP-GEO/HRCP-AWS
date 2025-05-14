@@ -234,3 +234,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 COMPRESS_ROOT = os.getenv('COMPRESS_FOLDER_NAME')
 
 COMPRESS_OUTPUT_DIR = 'CACHE'
+
+CSRF_TRUSTED_ORIGINS = [
+    'https://hrcp.ge',
+    'https://www.hrcp.ge',
+]

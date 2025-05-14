@@ -10,7 +10,7 @@
                 </span>
             </div>
         </div>
-        <div class="company-details" {% if job.company.logo and not job.post_with_logo %}style="padding-left: 100px;"{% endif %}>
+        <div class="company-details" {% if not job.company.has_logo or not job.post_with_logo %}style="padding-left: 100px !important;"{% endif %}>
             <div class="company-logo">
                 {% if job.company.logo and job.post_with_logo %}
                     <img src="{{ job.company.logo.url }}" alt="{{ job.company.name }} logo">
