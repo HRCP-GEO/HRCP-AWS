@@ -220,9 +220,9 @@
                     <div class="no-jobs">
                         <i class="fas fa-briefcase empty-icon"></i>
                         {% if query %}
-                            <p>No positions match your search term "{{ query }}" at {{ company.name }}.</p>
+                            <p>"{{ query }}" - შესაბამისი პოზიციები არ მოიძებნა კომპანია {{ company.name }}-ში.</p>
                         {% else %}
-                            <p>There are currently no open positions listed for {{ company.name }}.</p>
+                            <p>ამჟამად არ არის გამოცხადებული ვაკანსიები კომპანია {{ company.name }}-ში.</p>
                         {% endif %}
                     </div>
                 {% endfor %}
