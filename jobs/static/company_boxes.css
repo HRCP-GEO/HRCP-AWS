@@ -31,6 +31,7 @@ body {
   color: #333;
   position: relative;
   font-weight: 600;
+  font-family: 'Poppins', sans-serif;
 }
 
 /*.partners-showcase__title::after {*/

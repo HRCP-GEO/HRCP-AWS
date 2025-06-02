@@ -107,7 +107,7 @@
                     <div class="dates-together" style="display: flex;gap: 30px;"><p>გამოქვეყნების თარიღი:
                         <span>{{ job.created_at|date:"M d" }}</span></p>
                         {% if is_last_day %}
-                            <p class="job-detail-deadline-urgent"><span>It's the last day of this job!</span></p>
+                            <p class="job-detail-deadline-urgent"><span>დღეს ამ სამსახურის ბოლო დღეა!</span></p>
                             {# Changed: last-day-message -> job-detail-deadline-urgent #}
                         {% else %}
                             <p>დასრულების ვადა: <span>{{ job.expired_jobs|date:"M d" }}</span></p>
