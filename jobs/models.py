@@ -14,7 +14,7 @@ class Company(models.Model):
     logo = models.ImageField(upload_to='company_logos/',blank=True, null=True)
     publish_on_job_page = models.BooleanField(default=False)
     job_page_publish_expiration_date = models.DateTimeField(blank=True, null=True)  # Expiration for job page status
-    slug = models.SlugField(unique=True, blank=True, null=True)
+    slug = models.SlugField(unique=True, blank=True, null=True, max_length=150)
     fb_social = models.URLField(blank=True, null=True)
     insta_social = models.URLField(blank=True, null=True)
     linkedin_social = models.URLField(blank=True, null=True)
