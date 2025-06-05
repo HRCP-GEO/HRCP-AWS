@@ -5,11 +5,19 @@ from .models import Job, Company, JobCategory, Location, JobTimeType
 @admin.register(JobCategory)
 class JobCategoryAdmin(admin.ModelAdmin):
     exclude = ('slug',)
+    change_list_template = "jobs/job_change_list.html"
+
+    def changelist_view(self, request, extra_context=None):
+        return super().changelist_view(request, extra_context=extra_context or {})
 
 @admin.register(Location)
 class LocationAdmin(admin.ModelAdmin):
     search_fields = ('name',) # Allow searching by name
     exclude = ('slug',)
+    change_list_template = "jobs/job_change_list.html"
+
+    def changelist_view(self, request, extra_context=None):
+        return super().changelist_view(request, extra_context=extra_context or {})
 
 @admin.register(JobTimeType)
 class JobTimeTypeAdmin(admin.ModelAdmin):
@@ -17,6 +25,10 @@ class JobTimeTypeAdmin(admin.ModelAdmin):
     search_fields = ('name',)
     ordering = ('id',)
     exclude = ('slug',)
+    change_list_template = "jobs/job_change_list.html"
+
+    def changelist_view(self, request, extra_context=None):
+        return super().changelist_view(request, extra_context=extra_context or {})
 
 @admin.register(Job)
 class JobAdmin(admin.ModelAdmin):
@@ -36,3 +48,8 @@ class CompanyAdmin(admin.ModelAdmin):
     search_fields = ['name']
     ordering = ['name']  # 👈 alphabetically ordered
     list_display = ('name', 'email', 'is_vip')
+
+    change_list_template = "jobs/job_change_list.html"
+
+    def changelist_view(self, request, extra_context=None):
+        return super().changelist_view(request, extra_context=extra_context or {})
