@@ -26,7 +26,10 @@ class JobAdmin(admin.ModelAdmin):
     list_display = ('title', 'company', 'job_type', 'created_at')
     filter_horizontal = ['category','locations','job_time_types']
     exclude = ('slug',"company_page_small_job_description")
+    change_list_template = "jobs/job_change_list.html"
 
+    def changelist_view(self, request, extra_context=None):
+        return super().changelist_view(request, extra_context=extra_context or {})
 
 @admin.register(Company)
 class CompanyAdmin(admin.ModelAdmin):
