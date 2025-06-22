@@ -9,10 +9,10 @@ from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.cache import never_cache
 import json
-from .models import Job, Company, JobCategory, JobTimeType, Location
+from .models import Job, Company, JobCategory, JobTimeType, Location, CVApplication
 from collections import Counter
 from django.shortcuts import render, redirect
-from .forms import JobAdForm
+from .forms import JobAdForm, CVApplicationForm
 from django.conf import settings
 from django.core.mail import EmailMessage
 import logging
@@ -215,7 +215,15 @@ def job_detail(request, id, job_slug):
     if job.expired_jobs.date() == timezone.now().date():
         is_last_day = True
 
-    return render(request, 'jobs/job_detail.html', {'job': job, 'companies': companies, 'is_last_day': is_last_day})
+    # Initialize CV form
+    cv_form = CVApplicationForm()
+
+    return render(request, 'jobs/job_detail.html', {
+        'job': job, 
+        'companies': companies, 
+        'is_last_day': is_last_day,
+        'cv_form': cv_form
+    })
 
 
 def partners_showcase(request):
@@ -385,3 +393,96 @@ def banner_page(request):
 
 def custom_404(request, exception):
     return render(request, 'jobs/404.html', status=404)
+
+
+def submit_cv(request, job_id):
+    if request.method == 'POST':
+        job = get_object_or_404(Job, id=job_id)
+        form = CVApplicationForm(request.POST, request.FILES)
+        
+        if form.is_valid():
+            try:
+                # Generate timestamp and random suffix for a unique subject
+                now = timezone.now()
+                now_str = now.strftime("%Y-%m-%d %H:%M:%S")
+                random_suffix = ''.join(random.choices(string.digits, k=4))
+                subject = f"CV მიღებულია: {job.title} - {now_str} (ID: {random_suffix})"
+                
+                first_name = form.cleaned_data['first_name']
+                last_name = form.cleaned_data['last_name']
+                email_address = form.cleaned_data['email']
+                mobile_number = form.cleaned_data['mobile_number']
+                cv_file = form.cleaned_data['cv_file']
+                
+                message = f"""
+                ახალი CV განაცხადი მიღებულია HRCP.GE საიტზე:
+
+                **ვაკანსიის ინფორმაცია**
+                პოზიცია: {job.title}
+                კომპანია: {job.company.name}
+                ვაკანსიის ID: {job.id}
+
+                **მომხმარებლის ინფორმაცია**
+                სახელი: {first_name}
+                გვარი: {last_name}
+                ელ-ფოსტა: {email_address}
+                მობილური ნომერი: {mobile_number}
+                განაცხადის თარიღი: {now.strftime('%Y-%m-%d %H:%M:%S')}
+
+                CV ფაილი მიმაგრებულია ამავე მეილზე.
+                """
+                
+                recipient_email = settings.ADMIN_EMAIL
+                
+                email_msg = EmailMessage(
+                    subject,
+                    message,
+                    settings.DEFAULT_FROM_EMAIL,
+                    [recipient_email]
+                )
+                
+                if cv_file:
+                    try:
+                        cv_file.seek(0)
+                        file_content = cv_file.read()
+                        email_msg.attach(
+                            cv_file.name, 
+                            file_content, 
+                            cv_file.content_type or 'application/octet-stream'
+                        )
+                        cv_file.seek(0)
+                    except Exception as attach_error:
+                        logger.error(f"Error attaching CV file: {attach_error}")
+                        return JsonResponse({
+                            'success': False,
+                            'message': 'CV ფაილის მიმაგრებისას მოხდა შეცდომა. გთხოვთ სცადოთ თავიდან.'
+                        })
+                
+                email_msg.send(fail_silently=False)
+                logger.info(f"CV application email sent successfully for {first_name} {last_name}")
+                
+                cv_application = form.save(commit=False)
+                cv_application.job = job
+                cv_application.save()
+                
+                return JsonResponse({
+                    'success': True,
+                    'message': 'თქვენი CV წარმატებით გაიგზავნა!'
+                })
+                
+            except Exception as e:
+                logger.error(f"Error sending CV application email: {e}")
+                return JsonResponse({
+                    'success': False,
+                    'message': 'CV-ის გაგზავნისას მოხდა შეცდომა. გთხოვთ სცადოთ თავიდან.'
+                })
+        else:
+            errors = form.errors.as_json()
+            logger.warning(f"CV Form validation failed: {errors}")
+            return JsonResponse({
+                'success': False,
+                'message': 'გთხოვთ შეავსოთ ყველა სავალდებულო ველი სწორად.',
+                'errors': errors
+            })
+    
+    return JsonResponse({'success': False, 'message': 'არასწორი მოთხოვნა.'})

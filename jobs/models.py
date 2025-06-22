@@ -141,6 +141,7 @@ class Job(models.Model):
     company_page_small_job_description = models.TextField(blank=True, null=True)
     has_salary = models.BooleanField(blank=True, default=False)
     is_foreign_language = models.BooleanField(blank=True, default=False)
+    show_cv_button = models.BooleanField(default=False, verbose_name="Show CV Button")
 
     salary_amount = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
     salary_currency = models.CharField(max_length=3, choices=[
@@ -217,3 +218,18 @@ class Job(models.Model):
         from django.urls import reverse
         # Use the name defined in urls.py
         return reverse('job_detail', kwargs={'id': self.id, 'job_slug': self.slug})
+
+class CVApplication(models.Model):
+    job = models.ForeignKey(Job, on_delete=models.CASCADE, related_name='cv_applications')
+    first_name = models.CharField(max_length=100)
+    last_name = models.CharField(max_length=100)
+    email = models.EmailField()
+    mobile_number = models.CharField(max_length=20)
+    cv_file = models.FileField(upload_to='cv_applications/')
+    submitted_at = models.DateTimeField(auto_now_add=True)
+    
+    class Meta:
+        ordering = ['-submitted_at']
+    
+    def __str__(self):
+        return f"{self.first_name} {self.last_name} - {self.job.title}"

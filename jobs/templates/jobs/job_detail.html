@@ -94,6 +94,404 @@
       {# ,"directApply": false #}
         }
     </script>
+
+    <style>
+        /* CV Modal Styles - Minimalistic Design */
+        .cv-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .cv-modal-content {
+            background: #ffffff;
+            margin: 3% auto;
+            padding: 0;
+            border: none;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 8px;
+            position: relative;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            animation: slideIn 0.3s ease-out;
+            overflow: hidden;
+        }
+
+        @keyframes slideIn {
+            from { 
+                transform: translateY(-30px);
+                opacity: 0;
+            }
+            to { 
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .cv-modal-header {
+            background: #f8f9fa;
+            border-bottom: 1px solid #e9ecef;
+            padding: 24px 32px 20px;
+            position: relative;
+        }
+
+        .cv-modal-header h2 {
+            margin: 0;
+            font-size: 1.4rem;
+            font-weight: 600;
+            color: #212529;
+            line-height: 1.3;
+        }
+
+        .cv-modal-close {
+            position: absolute;
+            right: 24px;
+            top: 24px;
+            color: #6c757d;
+            font-size: 24px;
+            font-weight: 300;
+            cursor: pointer;
+            background: none;
+            border: none;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+        }
+
+        .cv-modal-close:hover {
+            background: #e9ecef;
+            color: #495057;
+        }
+
+        .cv-modal-body {
+            padding: 8px 32px 32px;
+        }
+
+        .cv-form-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .cv-form-group {
+            flex: 1 1 100%; /* Default to full width */
+            margin-bottom: 24px;
+            position: relative;
+        }
+        
+        .cv-form-row .cv-form-group {
+            flex: 1 1 calc(50% - 10px); /* Two columns with gap */
+        }
+
+        .cv-form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #495057;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .cv-form-control {
+            width: 100%;
+            padding: 16px 20px;
+            border: 2px solid #e9ecef;
+            border-radius: 6px;
+            font-size: 16px;
+            transition: all 0.2s ease;
+            background: #ffffff;
+            box-sizing: border-box;
+            color: #495057;
+        }
+
+        .cv-form-control:focus {
+            outline: none;
+            border-color: #007bff;
+            box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+        }
+
+        .cv-form-control::placeholder {
+            color: #adb5bd;
+            font-size: 14px;
+        }
+
+        /* Beautiful File Upload Box */
+        .cv-file-upload-container {
+            position: relative;
+            margin-top: 8px;
+        }
+
+        .cv-file-upload-box {
+            border: 2px dashed #dee2e6;
+            border-radius: 8px;
+            padding: 40px 20px;
+            text-align: center;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .cv-file-upload-box:hover {
+            border-color: #007bff;
+            background: #f1f3f4;
+        }
+
+        .cv-file-upload-box.dragover {
+            border-color: #007bff;
+            background: #e3f2fd;
+        }
+        
+        .cv-file-upload-box.cv-file-selected {
+            border-color: #28a745;
+            background-color: #e8f5e8;
+        }
+
+        .cv-file-upload-icon {
+            font-size: 48px;
+            color: #adb5bd;
+            margin-bottom: 16px;
+            display: block;
+        }
+
+        .cv-file-upload-text {
+            font-size: 16px;
+            color: #495057;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .cv-file-upload-hint {
+            font-size: 14px;
+            color: #6c757d;
+            margin-bottom: 0;
+        }
+
+        .cv-file-input {
+            position: absolute;
+            opacity: 0;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            cursor: pointer;
+        }
+
+        .cv-file-name {
+            margin-top: 10px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #155724;
+            text-align: center;
+        }
+
+        .cv-submit-btn {
+            background: #007bff;
+            color: white;
+            padding: 16px 32px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            width: 100%;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 16px;
+        }
+
+        .cv-submit-btn:hover:not(:disabled) {
+            background: #0056b3;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+        }
+
+        .cv-submit-btn:active:not(:disabled) {
+            transform: translateY(0);
+        }
+
+        .cv-submit-btn:disabled {
+            background: #6c757d;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .cv-alert {
+            padding: 16px 20px;
+            margin: 24px 0;
+            border-radius: 6px;
+            display: none;
+            font-weight: 500;
+            border-left: 4px solid;
+        }
+
+        .cv-alert-success {
+            background: #d4edda;
+            color: #155724;
+            border-left-color: #28a745;
+        }
+
+        .cv-alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border-left-color: #dc3545;
+        }
+
+        .cv-loading {
+            display: none;
+            text-align: center;
+            margin: 24px 0;
+            color: #007bff;
+            font-weight: 500;
+        }
+
+        .cv-loading::after {
+            content: '';
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid #e9ecef;
+            border-top: 2px solid #007bff;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 8px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .send-cv-btn {
+            background: #28a745;
+            color: white;
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            margin-left: 12px;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .send-cv-btn:hover {
+            background: #218838;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(40, 167, 69, 0.3);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .cv-modal-content {
+                margin: 5% auto;
+                width: 95%;
+                max-width: none;
+            }
+
+            .cv-modal-header {
+                padding: 20px 24px 16px;
+            }
+
+            .cv-modal-header h2 {
+                font-size: 1.2rem;
+                padding-right: 40px;
+            }
+
+            .cv-modal-body {
+                padding: 24px 20px;
+            }
+
+            .cv-form-control {
+                padding: 14px 16px;
+                font-size: 16px;
+            }
+
+            .cv-submit-btn {
+                padding: 14px 24px;
+                font-size: 15px;
+            }
+
+            .send-cv-btn {
+                margin-left: 8px;
+                padding: 10px 20px;
+                font-size: 13px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .cv-modal-content {
+                margin: 10% auto;
+                width: 98%;
+            }
+
+            .cv-modal-header {
+                padding: 16px 20px 12px;
+            }
+
+            .cv-modal-header h2 {
+                font-size: 1.1rem;
+            }
+
+            .cv-modal-body {
+                padding: 20px 16px;
+            }
+
+            .cv-form-group {
+                margin-bottom: 20px;
+            }
+
+            .cv-form-control {
+                padding: 12px 14px;
+            }
+
+            .cv-submit-btn {
+                padding: 12px 20px;
+                font-size: 14px;
+            }
+
+            .send-cv-btn {
+                margin-left: 6px;
+                padding: 8px 16px;
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 640px) {
+            .cv-modal-content {
+                margin: 0;
+                width: 100%;
+                height: 100%;
+                border-radius: 0;
+            }
+
+            .cv-form-row {
+                flex-direction: column;
+                gap: 0;
+                margin-bottom: 0;
+            }
+        }
+    </style>
 {% endblock %}
 
 {% block content %}
@@ -143,6 +541,9 @@
                             <button class="job-detail-apply-button">გაგზავნა</button>
                             {# Changed: send-cv-btn -> job-detail-apply-button #}
                         </a>
+                        {% if job.show_cv_button %}
+                            <button class="send-cv-btn" onclick="openCVModal()">CV გაგზავნა</button>
+                        {% endif %}
                     </div>
                 </div>
             </section>
@@ -168,5 +569,191 @@
             {% endfor %}
         </aside>
     </div>
+
+    <!-- CV Modal -->
+    <div id="cvModal" class="cv-modal">
+        <div class="cv-modal-content">
+            <div class="cv-modal-header">
+                <h2>CV გაგზავნა - {{ job.title }}</h2>
+                <span class="cv-modal-close" onclick="closeCVModal()">&times;</span>
+            </div>
+            
+            <div class="cv-modal-body">
+                <form id="cvForm" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div id="cvAlert" class="cv-alert"></div>
+
+                    <div class="cv-form-row">
+                        <div class="cv-form-group">
+                            <label for="{{ cv_form.first_name.id_for_label }}">{{ cv_form.first_name.label }}</label>
+                            {{ cv_form.first_name }}
+                        </div>
+                        <div class="cv-form-group">
+                            <label for="{{ cv_form.last_name.id_for_label }}">{{ cv_form.last_name.label }}</label>
+                            {{ cv_form.last_name }}
+                        </div>
+                    </div>
+
+                    <div class="cv-form-row">
+                        <div class="cv-form-group">
+                            <label for="{{ cv_form.mobile_number.id_for_label }}">{{ cv_form.mobile_number.label }}</label>
+                            {{ cv_form.mobile_number }}
+                        </div>
+                        <div class="cv-form-group">
+                            <label for="{{ cv_form.email.id_for_label }}">{{ cv_form.email.label }}</label>
+                            {{ cv_form.email }}
+                        </div>
+                    </div>
+
+                    <div class="cv-form-group">
+                        <label for="{{ cv_form.cv_file.id_for_label }}">{{ cv_form.cv_file.label }}</label>
+                        <div class="cv-file-upload-box" id="cvFileUploadBox">
+                            <span class="cv-file-upload-icon">📄</span>
+                            <div class="cv-file-upload-text">აირჩიეთ CV ფაილი</div>
+                            <div class="cv-file-upload-hint">ან ჩაიტანეთ აქ (PDF, DOC, DOCX)</div>
+                            {{ cv_form.cv_file }}
+                        </div>
+                        <div class="cv-file-name" id="cvFileName" style="display: none;"></div>
+                    </div>
+                    
+                    <div id="cvLoading" class="cv-loading">გაგზავნა...</div>
+                    <button type="submit" class="cv-submit-btn" id="cvSubmitBtn">გაგზავნა</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function openCVModal() {
+            document.getElementById('cvModal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeCVModal() {
+            document.getElementById('cvModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+            // Reset form and alerts
+            document.getElementById('cvForm').reset();
+            document.getElementById('cvAlert').style.display = 'none';
+            document.getElementById('cvAlert').className = 'cv-alert';
+            // Reset file upload box visuals
+            resetFileUploadBox();
+        }
+
+        // Close modal when clicking outside of it
+        window.onclick = function(event) {
+            var modal = document.getElementById('cvModal');
+            if (event.target == modal) {
+                closeCVModal();
+            }
+        }
+        
+        // --- File Upload Box Logic ---
+        const fileInput = document.querySelector('.cv-file-input');
+        const uploadBox = document.getElementById('cvFileUploadBox');
+        const fileNameDisplay = document.getElementById('cvFileName');
+
+        function resetFileUploadBox() {
+            if (fileNameDisplay) {
+                fileNameDisplay.textContent = '';
+                fileNameDisplay.style.display = 'none';
+            }
+            if (uploadBox) {
+                uploadBox.classList.remove('cv-file-selected', 'dragover');
+            }
+        }
+        
+        function handleFileSelect(file) {
+            if (file) {
+                fileNameDisplay.textContent = `Selected: ${file.name}`;
+                fileNameDisplay.style.display = 'block';
+                uploadBox.classList.add('cv-file-selected');
+            } else {
+                resetFileUploadBox();
+            }
+        }
+
+        if (uploadBox && fileInput) {
+            // The click listener on the uploadBox was redundant and causing the double-open bug.
+            // The invisible file input itself handles the click perfectly.
+            // uploadBox.addEventListener('click', () => fileInput.click()); // <-- REMOVED THIS LINE
+            fileInput.addEventListener('change', () => handleFileSelect(fileInput.files[0]));
+
+            // Drag and Drop listeners
+            ['dragenter', 'dragover', 'dragleave', 'drop'].forEach(eventName => {
+                uploadBox.addEventListener(eventName, e => {
+                    e.preventDefault();
+                    e.stopPropagation();
+                }, false);
+            });
+            ['dragenter', 'dragover'].forEach(eventName => {
+                uploadBox.addEventListener(eventName, () => uploadBox.classList.add('dragover'));
+            });
+            ['dragleave', 'drop'].forEach(eventName => {
+                uploadBox.addEventListener(eventName, () => uploadBox.classList.remove('dragover'));
+            });
+            uploadBox.addEventListener('drop', e => {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+                if (files.length > 0) {
+                    fileInput.files = files; // Assign dropped files to the input
+                    handleFileSelect(files[0]);
+                }
+            });
+        }
+        // --- End File Upload Logic ---
+
+        // Handle form submission
+        document.getElementById('cvForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            var formData = new FormData(this);
+            var submitBtn = document.getElementById('cvSubmitBtn');
+            var loading = document.getElementById('cvLoading');
+            var alert = document.getElementById('cvAlert');
+            
+            // Disable submit button and show loading
+            submitBtn.disabled = true;
+            loading.style.display = 'block';
+            alert.style.display = 'none';
+            
+            fetch('{% url "submit_cv" job.id %}', {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-CSRFToken': formData.get('csrfmiddlewaretoken')
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                loading.style.display = 'none';
+                submitBtn.disabled = false;
+                
+                if (data.success) {
+                    alert.className = 'cv-alert cv-alert-success';
+                    alert.textContent = data.message;
+                    alert.style.display = 'block';
+                    
+                    // Close modal after 3 seconds
+                    setTimeout(function() {
+                        closeCVModal();
+                    }, 3000);
+                } else {
+                    alert.className = 'cv-alert cv-alert-error';
+                    alert.textContent = data.message;
+                    alert.style.display = 'block';
+                }
+            })
+            .catch(error => {
+                loading.style.display = 'none';
+                submitBtn.disabled = false;
+                
+                alert.className = 'cv-alert cv-alert-error';
+                alert.textContent = 'შეცდომა მოხდა. გთხოვთ სცადოთ თავიდან.';
+                alert.style.display = 'block';
+                console.error('Error:', error);
+            });
+        });
+    </script>
 
 {% endblock %}

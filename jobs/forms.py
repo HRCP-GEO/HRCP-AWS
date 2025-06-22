@@ -1,5 +1,5 @@
 from django import forms
-from .models import Job # <-- Import the Job model
+from .models import Job, CVApplication # <-- Import the Job model and CVApplication model
 import re
 
 class JobAdForm(forms.Form):
@@ -69,3 +69,42 @@ class JobAdForm(forms.Form):
                 raise forms.ValidationError("არასწორი ტელეფონის ნომრის ფორმატი.")  # "Invalid phone number format."
             # You could add more sophisticated regex or checks here
         return phone_number
+
+class CVApplicationForm(forms.ModelForm):
+    class Meta:
+        model = CVApplication
+        fields = ['first_name', 'last_name', 'email', 'mobile_number', 'cv_file']
+        widgets = {
+            'first_name': forms.TextInput(attrs={
+                'class': 'cv-form-control',
+                'placeholder': 'სახელი',
+                'required': True
+            }),
+            'last_name': forms.TextInput(attrs={
+                'class': 'cv-form-control',
+                'placeholder': 'გვარი',
+                'required': True
+            }),
+            'email': forms.EmailInput(attrs={
+                'class': 'cv-form-control',
+                'placeholder': 'მიუთითეთ ელ.ფოსტა',
+                'required': True
+            }),
+            'mobile_number': forms.TextInput(attrs={
+                'class': 'cv-form-control',
+                'placeholder': 'მიუთითეთ მობილურის ნომერი',
+                'required': True
+            }),
+            'cv_file': forms.FileInput(attrs={
+                'class': 'cv-file-input',
+                'accept': '.pdf,.doc,.docx',
+                'required': True
+            })
+        }
+        labels = {
+            'first_name': 'სახელი',
+            'last_name': 'გვარი',
+            'email': 'ელ.ფოსტა',
+            'mobile_number': 'მობილურის ნომერი',
+            'cv_file': 'CV-ს ატვირთვა'
+        }

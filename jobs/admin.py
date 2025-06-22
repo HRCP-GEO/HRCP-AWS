@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Job, Company, JobCategory, Location, JobTimeType
+from .models import Job, Company, JobCategory, Location, JobTimeType, CVApplication
 
 
 @admin.register(JobCategory)
@@ -53,3 +53,27 @@ class CompanyAdmin(admin.ModelAdmin):
 
     def changelist_view(self, request, extra_context=None):
         return super().changelist_view(request, extra_context=extra_context or {})
+
+@admin.register(CVApplication)
+class CVApplicationAdmin(admin.ModelAdmin):
+    list_display = ['first_name', 'last_name', 'email', 'job', 'submitted_at']
+    list_filter = ['submitted_at', 'job__company']
+    search_fields = ['first_name', 'last_name', 'email', 'job__title', 'job__company__name']
+    readonly_fields = ['submitted_at']
+    ordering = ['-submitted_at']
+    
+    fieldsets = (
+        ('მომხმარებლის ინფორმაცია', {
+            'fields': ('first_name', 'last_name', 'email', 'mobile_number')
+        }),
+        ('ვაკანსიის ინფორმაცია', {
+            'fields': ('job',)
+        }),
+        ('CV ფაილი', {
+            'fields': ('cv_file',)
+        }),
+        ('სისტემური ინფორმაცია', {
+            'fields': ('submitted_at',),
+            'classes': ('collapse',)
+        }),
+    )

@@ -1,5 +1,5 @@
 from django.urls import path
-from .views import job_list, jobs_by_company, job_detail, post_job_ad, success_page, contact_page, faq_page, banner_page
+from .views import job_list, jobs_by_company, job_detail, post_job_ad, success_page, contact_page, faq_page, banner_page, submit_cv
 
 urlpatterns = [
     path('', job_list, name="home"),
@@ -10,5 +10,5 @@ urlpatterns = [
     path('kontakti/', contact_page, name='contact_page'),
     path('faq/', faq_page, name='faq_page'),
     path('reklama/', banner_page, name='banner_page'),
-
+    path('submit-cv/<int:job_id>/', submit_cv, name='submit_cv'),
 ]
