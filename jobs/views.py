@@ -18,6 +18,7 @@ from django.core.mail import EmailMessage
 import logging
 import datetime
 from django.conf import settings
+from django.templatetags.static import static
 logger = logging.getLogger(__name__)
 
 
@@ -402,7 +403,6 @@ def submit_cv(request, job_id):
         
         if form.is_valid():
             try:
-                # Generate timestamp and random suffix for a unique subject
                 now = timezone.now()
                 now_str = now.strftime("%Y-%m-%d %H:%M:%S")
                 random_suffix = ''.join(random.choices(string.digits, k=4))
@@ -413,39 +413,55 @@ def submit_cv(request, job_id):
                 email_address = form.cleaned_data['email']
                 mobile_number = form.cleaned_data['mobile_number']
                 cv_file = form.cleaned_data['cv_file']
+
+                # Build absolute URL for job detail
+                if request.is_secure():
+                    scheme = 'https://'
+                else:
+                    scheme = 'http://'
+                domain = request.get_host()
+                job_url = scheme + domain + job.get_absolute_url()
+                logo_url = scheme + domain + static('HRCP_200.png')
+
+                # 1. Email to job poster company (HTML)
+                company_email = job.company.email
+                if not company_email:
+                    return JsonResponse({'success': False, 'message': 'კომპანიის ელფოსტა ვერ მოიძებნა.'})
                 
-                message = f"""
-                ახალი CV განაცხადი მიღებულია HRCP.GE საიტზე:
-
-                **ვაკანსიის ინფორმაცია**
-                პოზიცია: {job.title}
-                კომპანია: {job.company.name}
-                ვაკანსიის ID: {job.id}
-
-                **მომხმარებლის ინფორმაცია**
-                სახელი: {first_name}
-                გვარი: {last_name}
-                ელ-ფოსტა: {email_address}
-                მობილური ნომერი: {mobile_number}
-                განაცხადის თარიღი: {now.strftime('%Y-%m-%d %H:%M:%S')}
-
-                CV ფაილი მიმაგრებულია ამავე მეილზე.
+                message_to_company = f"""
+                <div style='font-family:Arial,sans-serif;max-width:500px;margin:auto;border:1px solid #eee;padding:24px;'>
+                  <div style='text-align:center;margin-bottom:24px;'>
+                    <img src='{logo_url}' alt='HRCP Logo' style='max-width:120px;'>
+                  </div>
+                  <h2 style='color:#36B37E;margin-bottom:8px;'>ახალი CV განაცხადი</h2>
+                  <p style='margin:0 0 16px 0;'>ვაკანსია: <a href='{job_url}' style='color:#0052cc;text-decoration:none;font-weight:600;'>{job.title}</a></p>
+                  <p style='margin:0 0 16px 0;'>კომპანია: <b>{job.company.name}</b></p>
+                  <hr style='margin:24px 0;'>
+                  <h3 style='color:#172B4D;margin-bottom:8px;'>მომხმარებლის ინფორმაცია</h3>
+                  <ul style='padding-left:18px;margin:0 0 16px 0;'>
+                    <li>სახელი: <b>{first_name}</b></li>
+                    <li>გვარი: <b>{last_name}</b></li>
+                    <li>ელ-ფოსტა: <b>{email_address}</b></li>
+                    <li>მობილური ნომერი: <b>{mobile_number}</b></li>
+                    <li>განაცხადის თარიღი: <b>{now_str}</b></li>
+                  </ul>
+                  <p style='margin:0 0 16px 0;'>CV ფაილი მიმაგრებულია ამავე მეილზე.</p>
+                  <div style='margin-top:32px;font-size:13px;color:#888;'>ეს ვაკანსია და განაცხადი გამოგზავნილია ვებ-გვერდიდან <a href='{scheme + domain}' style='color:#36B37E;text-decoration:none;'>HRCP.GE</a></div>
+                </div>
                 """
                 
-                recipient_email = settings.ADMIN_EMAIL
-                
-                email_msg = EmailMessage(
+                email_msg_company = EmailMessage(
                     subject,
-                    message,
+                    message_to_company,
                     settings.DEFAULT_FROM_EMAIL,
-                    [recipient_email]
+                    [company_email]
                 )
-                
+                email_msg_company.content_subtype = "html"
                 if cv_file:
                     try:
                         cv_file.seek(0)
                         file_content = cv_file.read()
-                        email_msg.attach(
+                        email_msg_company.attach(
                             cv_file.name, 
                             file_content, 
                             cv_file.content_type or 'application/octet-stream'
@@ -457,10 +473,34 @@ def submit_cv(request, job_id):
                             'success': False,
                             'message': 'CV ფაილის მიმაგრებისას მოხდა შეცდომა. გთხოვთ სცადოთ თავიდან.'
                         })
+                email_msg_company.send(fail_silently=False)
                 
-                email_msg.send(fail_silently=False)
-                logger.info(f"CV application email sent successfully for {first_name} {last_name}")
+                # 2. Confirmation email to applicant (HTML)
+                subject_user = f"თქვენი CV გაიგზავნა - {job.title} - {now_str} (ID: {random_suffix})"
+                message_to_user = f"""
+                <div style='font-family:Arial,sans-serif;max-width:500px;margin:auto;border:1px solid #eee;padding:24px;'>
+                  <div style='text-align:center;margin-bottom:24px;'>
+                    <img src='{logo_url}' alt='HRCP Logo' style='max-width:120px;'>
+                  </div>
+                  <h2 style='color:#36B37E;margin-bottom:8px;'>თქვენი CV გაიგზავნა</h2>
+                  <p style='margin:0 0 16px 0;'>ვაკანსია: <a href='{job_url}' style='color:#0052cc;text-decoration:none;font-weight:600;'>{job.title}</a></p>
+                  <p style='margin:0 0 16px 0;'>კომპანია: <b>{job.company.name}</b></p>
+                  <hr style='margin:24px 0;'>
+                  <p style='margin:0 0 16px 0;'>თქვენი CV წარმატებით გაიგზავნა შემდეგ ვაკანსიაზე.</p>
+                  <p style='margin:0 0 16px 0;'>გაგზავნის თარიღი: <b>{now_str}</b></p>
+                  <div style='margin-top:32px;font-size:13px;color:#888;'>მადლობა, რომ იყენებთ <a href='{scheme + domain}' style='color:#36B37E;text-decoration:none;'>HRCP.GE</a>!</div>
+                </div>
+                """
+                email_msg_user = EmailMessage(
+                    subject_user,
+                    message_to_user,
+                    settings.DEFAULT_FROM_EMAIL,
+                    [email_address]
+                )
+                email_msg_user.content_subtype = "html"
+                email_msg_user.send(fail_silently=False)
                 
+                # Save to database after successful emails
                 cv_application = form.save(commit=False)
                 cv_application.job = job
                 cv_application.save()
