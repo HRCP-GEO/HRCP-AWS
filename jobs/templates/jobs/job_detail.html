@@ -537,12 +537,8 @@
 
                     <div class="job-detail-apply-section"> {# Changed: job-actions -> job-detail-apply-section #}
                         <p>დაინტერესდით? გაუგზავნეთ CV დამსაქმებელს</p>
-                        <a href="mailto:{{ job.company.email }}?subject={{ job.title|urlencode }}">
-                            <button class="job-detail-apply-button">გაგზავნა</button>
-                            {# Changed: send-cv-btn -> job-detail-apply-button #}
-                        </a>
                         {% if job.show_cv_button %}
-                            <button class="send-cv-btn" onclick="openCVModal()">CV გაგზავნა</button>
+                            <button class="job-detail-apply-button" onclick="openCVModal()">CV გაგზავნა</button>
                         {% endif %}
                     </div>
                 </div>

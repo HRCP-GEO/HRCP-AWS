@@ -141,7 +141,7 @@ class Job(models.Model):
     company_page_small_job_description = models.TextField(blank=True, null=True)
     has_salary = models.BooleanField(blank=True, default=False)
     is_foreign_language = models.BooleanField(blank=True, default=False)
-    show_cv_button = models.BooleanField(default=False, verbose_name="Show CV Button")
+    show_cv_button = models.BooleanField(default=True, verbose_name="Show CV Button")
 
     salary_amount = models.DecimalField(max_digits=10, decimal_places=0, blank=True, null=True)
     salary_currency = models.CharField(max_length=3, choices=[
