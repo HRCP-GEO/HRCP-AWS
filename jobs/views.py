@@ -449,12 +449,22 @@ def submit_cv(request, job_id):
                   <div style='margin-top:32px;font-size:13px;color:#888;'>ეს ვაკანსია და განაცხადი გამოგზავნილია ვებ-გვერდიდან <a href='{scheme + domain}' style='color:#36B37E;text-decoration:none;'>HRCP.GE</a></div>
                 </div>
                 """
-                
+                from django.core.mail import get_connection
+                custom_connection = get_connection(
+                    host=settings.CUSTOM_EMAIL_HOST,
+                    port=settings.CUSTOM_EMAIL_PORT,
+                    username=settings.CUSTOM_EMAIL_HOST_USER,
+                    password=settings.CUSTOM_EMAIL_HOST_PASSWORD,
+                    use_tls=settings.CUSTOM_EMAIL_USE_TLS,
+                    fail_silently=False
+                )
+
                 email_msg_company = EmailMessage(
                     subject,
                     message_to_company,
-                    settings.DEFAULT_FROM_EMAIL,
-                    [company_email]
+                    settings.CUSTOM_EMAIL_HOST_USER,  # from_email
+                    [company_email],
+                    connection=custom_connection
                 )
                 email_msg_company.content_subtype = "html"
                 if cv_file:
@@ -494,8 +504,9 @@ def submit_cv(request, job_id):
                 email_msg_user = EmailMessage(
                     subject_user,
                     message_to_user,
-                    settings.DEFAULT_FROM_EMAIL,
-                    [email_address]
+                    settings.CUSTOM_EMAIL_HOST_USER,  # from_email (custom sender)
+                    [email_address],
+                    connection=custom_connection  # same connection as above
                 )
                 email_msg_user.content_subtype = "html"
                 email_msg_user.send(fail_silently=False)

@@ -239,3 +239,11 @@ CSRF_TRUSTED_ORIGINS = [
     'https://hrcp.ge',
     'https://www.hrcp.ge',
 ]
+
+
+
+CUSTOM_EMAIL_HOST = os.environ.get("CUSTOM_EMAIL_HOST")
+CUSTOM_EMAIL_PORT = int(os.environ.get("CUSTOM_EMAIL_PORT", 587))
+CUSTOM_EMAIL_HOST_USER = os.environ.get("CUSTOM_EMAIL_HOST_USER")
+CUSTOM_EMAIL_HOST_PASSWORD = os.environ.get("CUSTOM_EMAIL_HOST_PASSWORD")
+CUSTOM_EMAIL_USE_TLS = os.environ.get("CUSTOM_EMAIL_USE_TLS", "True") == "True"
