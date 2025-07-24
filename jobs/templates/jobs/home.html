@@ -260,26 +260,55 @@
     <div class="header">
         <div class="section-title">
             <div class="job-filters">
-                {# Search Form - Remains the same #}
-                <form action="." method="get" class="search-box">
-                    <i class="fas fa-search search-icon" id="search-submit-icon"></i>
-                    <input type="text" name="q" placeholder="მოძებნე..." value="{{ query }}">
+                <div class="search-and-title-container" style="display: block; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+                    <h1 style="margin: 0 0 10px 0; font-size: 20px; color: white; font-weight: 600; text-align: right; white-space: nowrap;">მიმდინარე ვაკანსიები ერთ სივრცეში</h1>
 
-                    {# Hidden fields to retain other filters on search submit #}
-                    {% if selected_location and selected_location != 'all' %}
-                        <input type="hidden" name="location" value="{{ selected_location }}">{% endif %}
-                    {% if job_type and job_type != 'all' %}
-                        <input type="hidden" name="job_type" value="{{ job_type }}">{% endif %}
-                    {% if category and category != 'all' %}
-                        <input type="hidden" name="category" value="{{ category }}">{% endif %}
-                    {% if has_salary == 'true' %}<input type="hidden" name="has_salary" value="true">{% endif %}
-                    {% if is_foreign_language == 'true' %}<input type="hidden" name="is_foreign_language" value="true">{% endif %}
-                    {% for jtt_name in selected_job_time_types %}{% if jtt_name != 'all' %}
-                        <input type="hidden" name="job_time_types" value="{{ jtt_name }}">{% endif %}{% endfor %}
-                    {% if selected_min_salary and selected_min_salary != 'all' %}
-                        <input type="hidden" name="min_salary" value="{{ selected_min_salary }}">
-                    {% endif %}
-                </form>
+                    {# Search Form #}
+                    <form action="." method="get" class="search-box">
+                        <i class="fas fa-search search-icon" id="search-submit-icon"></i>
+                        <input type="text" name="q" placeholder="მოძებნე..." value="{{ query }}">
+
+                        {# Hidden fields to retain other filters on search submit #}
+                        {% if selected_location and selected_location != 'all' %}
+                            <input type="hidden" name="location" value="{{ selected_location }}">{% endif %}
+                        {% if job_type and job_type != 'all' %}
+                            <input type="hidden" name="job_type" value="{{ job_type }}">{% endif %}
+                        {% if category and category != 'all' %}
+                            <input type="hidden" name="category" value="{{ category }}">{% endif %}
+                        {% if has_salary == 'true' %}<input type="hidden" name="has_salary" value="true">{% endif %}
+                        {% if is_foreign_language == 'true' %}<input type="hidden" name="is_foreign_language" value="true">{% endif %}
+                        {% for jtt_name in selected_job_time_types %}{% if jtt_name != 'all' %}
+                            <input type="hidden" name="job_time_types" value="{{ jtt_name }}">{% endif %}{% endfor %}
+                        {% if selected_min_salary and selected_min_salary != 'all' %}
+                            <input type="hidden" name="min_salary" value="{{ selected_min_salary }}">
+                        {% endif %}
+                    </form>
+                    
+                    {# H1 Title on the right side #}
+                </div>
+
+                {# Add responsive CSS for the H1 #}
+                <style>
+                    @media (max-width: 768px) {
+                        .search-and-title-container {
+                            flex-direction: column !important;
+                            align-items: flex-start !important;
+                            gap: 15px;
+                        }
+                        .search-and-title-container h1 {
+                            margin-left: 0 !important;
+                            text-align: left !important;
+                            font-size: 20px !important;
+                            white-space: normal !important;
+                        }
+                    }
+                    
+                    @media (max-width: 480px) {
+                        .search-and-title-container h1 {
+                            font-size: 18px !important;
+                        }
+                    }
+                </style>
 
                 <div class="filter-group">  {# Start group JUST for dropdowns #}
 
