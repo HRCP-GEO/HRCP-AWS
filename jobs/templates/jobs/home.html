@@ -261,7 +261,7 @@
         <div class="section-title">
             <div class="job-filters">
                 <div class="search-and-title-container" style="display: block; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h1 style="margin: 0 0 10px 0; font-size: 20px; color: white; font-weight: 600; text-align: right; white-space: nowrap;">მიმდინარე ვაკანსიები ერთ სივრცეში</h1>
+                    <h1 style="margin: 0 0 10px 0; font-size: 20px; color: white; font-weight: 600; text-align: right; white-space: nowrap;"><span class="mimdinare-hidden">მიმდინარე</span> ვაკანსიები ერთ სივრცეში</h1>
 
                     {# Search Form #}
                     <form action="." method="get" class="search-box">
@@ -298,14 +298,17 @@
                         .search-and-title-container h1 {
                             margin-left: 0 !important;
                             text-align: left !important;
-                            font-size: 20px !important;
+                            font-size: 18px !important;
                             white-space: normal !important;
                         }
                     }
                     
                     @media (max-width: 480px) {
                         .search-and-title-container h1 {
-                            font-size: 18px !important;
+                            font-size: 15px !important;
+                        }
+                        .mimdinare-hidden{
+                            display: none;
                         }
                     }
                 </style>
@@ -473,7 +476,7 @@
     {# VIP Job Listings - Update display #}
     {% if vip_jobs %}
         <div class="job-list vip-jobs">
-            <h2>VIP განცხადებები</h2>
+            <h2>VIP ვაკანსიები</h2>
             {% for job in vip_jobs %}
                 <div class="job-card" data-category="{{ job.category.name|default:'' }}">
                     <span class="vip-label">VIP</span>
@@ -531,7 +534,7 @@
     {# Regular Job Listings - Update display #}
     <div class="job-list regular-jobs" id="regular-jobs-container">
         {% if vip_jobs %} {# Only show heading if there were VIP jobs #}
-            <h2>განცხადებები</h2>
+            <h2>ვაკანსიები</h2>
         {% endif %}
 
         {% for job in regular_jobs %}
