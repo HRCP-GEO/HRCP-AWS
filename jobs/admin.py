@@ -45,9 +45,30 @@ class JobAdmin(admin.ModelAdmin):
 
 @admin.register(Company)
 class CompanyAdmin(admin.ModelAdmin):
-    search_fields = ['name']
+    search_fields = ['name', 'email', 'mobile_number']
     ordering = ['name']  # 👈 alphabetically ordered
-    list_display = ('name', 'email', 'is_vip')
+    list_display = ('name', 'email', 'mobile_number', 'is_vip')
+    
+    fieldsets = (
+        ('ძირითადი ინფორმაცია', {
+            'fields': ('name', 'identification_number', 'description', 'logo')
+        }),
+        ('კონტაქტის ინფორმაცია', {
+            'fields': ('email', 'mobile_number')
+        }),
+        ('სოციალური მედია', {
+            'fields': ('fb_social', 'insta_social', 'linkedin_social'),
+            'classes': ('collapse',)
+        }),
+        ('VIP სტატუსი', {
+            'fields': ('is_vip', 'vip_expiration_date'),
+            'classes': ('collapse',)
+        }),
+        ('გვერდზე გამოქვეყნება', {
+            'fields': ('publish_on_job_page', 'job_page_publish_expiration_date'),
+            'classes': ('collapse',)
+        }),
+    )
 
     change_list_template = "jobs/job_change_list.html"
 

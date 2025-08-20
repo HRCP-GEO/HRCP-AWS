@@ -19,6 +19,7 @@ class Company(models.Model):
     insta_social = models.URLField(blank=True, null=True)
     linkedin_social = models.URLField(blank=True, null=True)
     email = models.EmailField(blank=True, null=True)
+    mobile_number = models.CharField(max_length=20, blank=True, null=True, verbose_name="Mobile Number")
     is_vip = models.BooleanField(default=False)  # Add VIP status field
     vip_expiration_date = models.DateTimeField(blank=True, null=True)  # Add expiration date
 
