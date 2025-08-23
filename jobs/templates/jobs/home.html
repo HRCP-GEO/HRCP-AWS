@@ -10,7 +10,7 @@
             {% if selected_location and selected_location != 'all' %}{{ selected_location_obj.name }}-ში{% endif %} |
             HRCP
         {% else %}
-            HRCP - ვაკანსიები, ტენდერები და დასაქმება
+ვაკანსიები საქართველოში - ახალი სამსახური | HRCP
         {% endif %}
     {% endspaceless %}
 {% endblock %}{% endblock %}{% endblock %}
@@ -23,8 +23,7 @@
             ტრენინგები, რეალური დასაქმება ჩვენთან – HRCP-ში!.
         {% else %}
             {# Default Description (No Filters Active) #}
-            ახალი და დღევანდელი ვაკანსიები თბილისში, ბათუმში, ქუთაისში,ონლაინ
-            სამსახურები, ტენდერები, სტაჟირება, ტრენინგები, დასაქმება ჩვენთან – HRCP-ში!
+            იპოვეთ ვაკანსიები საქართველოში - თბილისი, ბათუმი, ქუთაისი. ახალი სამსახური, ტენდერები, სტაჟირება. მარტივი CV გაგზავნა და სწრაფი დასაქმება HRCP-ზე.
         {% endif %}
     {% endspaceless %}
 {% endblock %}{% endblock %}{% endblock %}
@@ -36,6 +35,7 @@
 {% block head_extra %}
     {% compress css %}<link rel="stylesheet" href="{% static 'home.css' %}">{% endcompress %}
 
+    {# Styles moved to home.css for better text/HTML ratio #}
     {# Your existing styles are fine #}
     <style>
         .salary-filter-box {
@@ -75,181 +75,144 @@
 
         /* --- End VIP Label Style --- */
 
-    </style>
-
-    {# Added LD+JSON for Job Search Results Page #}
+    </style>    {# Add structured data back inline for SEO - but simplified #}
     <script type="application/ld+json">
-        {
-          "@context": "https://schema.org",
-          "@type": "SearchResultsPage",
-        {# Name matches the logic in page_title block #}
-        "name": "{% filter escapejs %}{% spaceless %}{% block page_title_ld %}
-          {% if selected_category_obj or selected_location_obj %}
-        ვაკანსია -{% if selected_category_obj %} {{ selected_category_obj.name }}{% endif %}
-    {% if selected_location_obj %} {{ selected_location_obj.name }}-ში{% endif %} | HRCP
-    {% else %}
-        მოიძიე ვაკანსიები | HRCP
-    {% endif %}
-      {% endblock %}{% endspaceless %}{% endfilter %}",
-        {# Description matches the logic in meta_description block #}
-        "description": "{% filter escapejs %}{% spaceless %}{% block meta_description_ld %}
-          {% if selected_category_obj or selected_location_obj %}
-        მოიძიეთ{% if selected_category_obj %} {{ selected_category_obj.name }}{% endif %} ვაკანსია
-        {% if selected_location_obj %} {{ selected_location_obj.name }}-ში{% endif %}
-        . ვაკანსიები, ტენდერები, სტაჟირება, ტრენინგები, რეალური დასაქმება ჩვენთან – HRCP-ში!.
-    {% else %}
-        ახალი და დღევანდელი ვაკანსიები თბილისში, ბათუმში, ქუთაისში,ონლაინ სამსახურები, ტენდერები, სტაჟირება, ტრენინგები, დასაქმება ჩვენთან – HRCP-ში!
-    {% endif %}
-      {% endblock %}{% endspaceless %}{% endfilter %}",
-        {# URL of the current page including filters #}
-        "url": "{{ request.build_absolute_uri|escapejs }}",
+    {
+      "@context": "https://schema.org",
+      "@type": "SearchResultsPage",
+      "name": "{% spaceless %}{% if selected_category_obj or selected_location_obj %}ვაკანსია -{% if selected_category_obj %} {{ selected_category_obj.name }}{% endif %}{% if selected_location_obj %} {{ selected_location_obj.name }}-ში{% endif %} | HRCP{% else %}ვაკანსიები საქართველოში - ახალი სამსახური | HRCP{% endif %}{% endspaceless %}",
+      "description": "{% spaceless %}{% if selected_category_obj or selected_location_obj %}მოიძიეთ{% if selected_category_obj %} {{ selected_category_obj.name }}{% endif %} ვაკანსია{% if selected_location_obj %} {{ selected_location_obj.name }}-ში{% endif %}. ვაკანსიები, ტენდერები, სტაჟირება, ტრენინგები, რეალური დასაქმება ჩვენთან – HRCP-ში!.{% else %}იპოვეთ ვაკანსიები საქართველოში - თბილისი, ბათუმი, ქუთაისი. ახალი სამსახური, ტენდერები, სტაჟირება. მარტივი CV გაგზავნა და სწრაფი დასაქმება HRCP-ზე.{% endif %}{% endspaceless %}",
+      "url": "{{ request.build_absolute_uri }}",
       "mainEntity": {
         "@type": "ItemList",
-        {# Optionally add numberOfItems if you pass the total count from the view #}
-        {# "numberOfItems": total_job_count, #}
         "itemListElement": [
-        {# Loop through VIP jobs first #}
           {% for job in vip_jobs %}
-        {
-          "@type": "ListItem",
-          "position": {{ forloop.counter }}, {# Position starts from 1 #}
-        "item": {
-          "@type": "JobPosting",
-        {# Use absolute URL for the specific job posting #}
-        "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'job_detail' id=job.id job_slug=job.slug %}",
-              "title": "{{ job.title|escapejs }}",
-        {# Provide a concise description, e.g., first 30 words #}
-        "description": "{{ job.description|striptags|truncatewords:30|escapejs }}",
-              "identifier": {
-                "@type": "PropertyValue",
-                "name": "HRCP Job ID",
-                "value": "{{ job.id }}"
-              },
-              "datePosted": "{{ job.created_at|date:"c" }}", {# ISO 8601 format #}
-        "validThrough": "{{ job.expired_jobs|date:"c" }}", {# ISO 8601 format #}
-        "employmentType": [
-        {# Map your JobTimeType names to Schema.org standards #}
-                {% for jtt in job.job_time_types.all %}
-                  {% if jtt.name == 'სრული განაკვეთი' %}"FULL_TIME"{% elif jtt.name == 'ნახევარი განაკვეთი' %}
-            "PART_TIME"{% else %}"OTHER"{% endif %}{% if not forloop.last %}, {% endif %}
-                {% empty %}"OTHER"{% endfor %} {# Default if none specified #}
-        ],
-        "hiringOrganization": {
-          "@type": "Organization",
-          "name": "{{ job.company.name|escapejs }}",
-        {# Link to company page on your site #}
-        "sameAs": "{{ request.scheme }}://{{ request.get_host }}{% url 'jobs_by_company' job.company.slug %}"
-        {% if job.company.logo %}
-            ,"logo": "{{ request.scheme }}://{{ request.get_host }}{{ job.company.logo.url }}"
-        {% endif %}
-        },
-        "jobLocation": {
-          "@type": "Place",
-          "address": {
-            "@type": "PostalAddress",
-            "addressLocality": "
-        {% if job.exact_cities %}{{ job.exact_cities|escapejs }}{% else %}{% for loc in job.locations.all %}
-            {{ loc.name|escapejs }}{% if not forloop.last %}, {% endif %}{% endfor %}{% endif %}",
-                  "addressCountry": "GE"
-                }
-              }
-        {% if job.has_salary and job.salary_amount and job.salary_currency %}
-            ,"baseSalary": {
-              "@type": "MonetaryAmount",
-              "currency": "{{ job.salary_currency|escapejs }}",
-                  "value": {
-                    "@type": "QuantitativeValue",
-                    "value": "{{ job.salary_amount }}",
-            {# Adjust unitText based on your salary period #}
-            "unitText": "MONTH"
-          }
-        }
-        {% endif %}
-              {# Add directApply if applicable #}
-              {# ,"directApply": false #}
-        }
-      }{% if not forloop.last or regular_jobs %},{% endif %} {# Comma if not last VIP OR if regular jobs exist #}
-          {% endfor %}
-
-          {# Loop through Regular jobs shown on the current page #}
-          {% for job in regular_jobs %}
-        {
-          "@type": "ListItem",
-        {# Continue numbering from VIP jobs #}
-        "position": {{ forloop.counter|add:vip_jobs|length }},
+          {
+            "@type": "ListItem",
+            "position": {{ forloop.counter }},
             "item": {
               "@type": "JobPosting",
               "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'job_detail' id=job.id job_slug=job.slug %}",
               "title": "{{ job.title|escapejs }}",
-              "description": "{{ job.description|striptags|truncatewords:30|escapejs }}",
-              "identifier": {
-                "@type": "PropertyValue",
-                "name": "HRCP Job ID",
-                "value": "{{ job.id }}"
-              },
+              "description": "{{ job.description|striptags|truncatewords:20|escapejs }}",
               "datePosted": "{{ job.created_at|date:"c" }}",
               "validThrough": "{{ job.expired_jobs|date:"c" }}",
-              "employmentType": [
-        {% for jtt in job.job_time_types.all %}
-                  {% if jtt.name == 'Full-Time' %}"FULL_TIME"{% elif jtt.name == 'Part-Time' %}"PART_TIME"
-        {% elif jtt.name == 'Hybrid' %}"Hybrid"{% elif jtt.name == 'On-Site' %}"Hybrid"{% else %}"OTHER"{% endif %}
-        {% if not forloop.last %}, {% endif %}
-                {% empty %}"OTHER"{% endfor %}
-        ],
-        "hiringOrganization": {
-          "@type": "Organization",
-          "name": "{{ job.company.name|escapejs }}",
-                "sameAs": "{{ request.scheme }}://{{ request.get_host }}{% url 'jobs_by_company' job.company.slug %}"
-        {% if job.company.logo %}
-            ,"logo": "{{ request.scheme }}://{{ request.get_host }}{{ job.company.logo.url }}"
-        {% endif %}
-        },
-        "jobLocation": {
-          "@type": "Place",
-          "address": {
-            "@type": "PostalAddress",
-            "addressLocality": "
-        {% if job.exact_cities %}{{ job.exact_cities|escapejs }}{% else %}{% for loc in job.locations.all %}
-            {{ loc.name|escapejs }}{% if not forloop.last %}, {% endif %}{% endfor %}{% endif %}",
+              "hiringOrganization": {
+                "@type": "Organization",
+                "name": "{{ job.company.name|escapejs }}"
+              },
+              "jobLocation": {
+                "@type": "Place",
+                "address": {
+                  "@type": "PostalAddress",
+                  "addressLocality": "{% if job.exact_cities %}{{ job.exact_cities|escapejs }}{% else %}{% for loc in job.locations.all %}{{ loc.name|escapejs }}{% if not forloop.last %}, {% endif %}{% endfor %}{% endif %}",
                   "addressCountry": "GE"
                 }
               }
-        {% if job.has_salary and job.salary_amount and job.salary_currency %}
-            ,"baseSalary": {
-              "@type": "MonetaryAmount",
-              "currency": "{{ job.salary_currency|escapejs }}",
-                  "value": {
-                    "@type": "QuantitativeValue",
-                    "value": "{{ job.salary_amount }}",
-                    "unitText": "MONTH"
-                  }
+            }
+          }{% if not forloop.last or regular_jobs %},{% endif %}
+          {% endfor %}
+          {% for job in regular_jobs %}
+          {
+            "@type": "ListItem",
+            "position": {{ forloop.counter|add:vip_jobs|length }},
+            "item": {
+              "@type": "JobPosting",
+              "url": "{{ request.scheme }}://{{ request.get_host }}{% url 'job_detail' id=job.id job_slug=job.slug %}",
+              "title": "{{ job.title|escapejs }}",
+              "description": "{{ job.description|striptags|truncatewords:20|escapejs }}",
+              "datePosted": "{{ job.created_at|date:"c" }}",
+              "validThrough": "{{ job.expired_jobs|date:"c" }}",
+              "hiringOrganization": {
+                "@type": "Organization",
+                "name": "{{ job.company.name|escapejs }}"
+              },
+              "jobLocation": {
+                "@type": "Place",
+                "address": {
+                  "@type": "PostalAddress",
+                  "addressLocality": "{% if job.exact_cities %}{{ job.exact_cities|escapejs }}{% else %}{% for loc in job.locations.all %}{{ loc.name|escapejs }}{% if not forloop.last %}, {% endif %}{% endfor %}{% endif %}",
+                  "addressCountry": "GE"
                 }
-        {% endif %}
-              {# ,"directApply": false #}
-        }
-      }{% if not forloop.last %},{% endif %} {# Comma between regular job items #}
+              }
+            }
+          }{% if not forloop.last %},{% endif %}
           {% endfor %}
         ]
       }
     }
     </script>
 
-    {# === LD+JSON Schema for the Organization (HRCP) === #}
-    {# !!! IMPORTANT: Update placeholder values below (url, logo, sameAs, telephone) !!! #}
     <script type="application/ld+json">
-        {
-          "@context": "https://schema.org",
-          "@type": "Organization",
-          "name": "HRCP",
-          "url": "{{ request.build_absolute_uri|escapejs }}", {# <<< UPDATE THIS #}
-        "sameAs": [
-           "https://www.facebook.com/profile.php?id=61575518013356", {# <<< UPDATE or REMOVE #}
-        "https://www.linkedin.com/company/hr-cp/" {# <<< UPDATE or REMOVE #}
-        ],
-       "contactPoint": {
-         "@type": "ContactPoint",
-         "telephone": "+995 593 953 509", {# <<< UPDATE THIS #}
+    {
+      "@context": "https://schema.org",
+      "@type": "Organization",
+      "name": "HRCP",
+      "url": "{{ request.scheme }}://{{ request.get_host }}",
+      "sameAs": [
+        "https://www.facebook.com/profile.php?id=61575518013356",
+        "https://www.linkedin.com/company/hr-cp/"
+      ],
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "telephone": "+995 593 953 509",
         "contactType": "Customer Service"
+      }
+    }
+    </script>
+
+    {# FAQ Schema for rich snippets and keyword targeting #}
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "FAQPage",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "რა არის ვაკანსია?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "ვაკანსია არის ღია სამუშაო პოზიცია კომპანიაში, სადაც ეძებენ ახალ თანამშრომელს. HRCP-ზე ნახავთ ყველაზე ახალ ვაკანსიებს საქართველოში."
+          }
+        },
+        {
+          "@type": "Question", 
+          "name": "სად ვიპოვო ვაკანსიები საქართველოში?",
+          "acceptedAnswer": {
+            "@type": "Answer",
+            "text": "ვაკანსიები საქართველოში მოძებნეთ HRCP-ზე. ჩვენ გვაქვს ვაკანსიები თბილისში, ბათუმში, ქუთაისში და მთელს საქართველოში."
+          }
+        },
+        {
+          "@type": "Question",
+          "name": "როგორ გავგზავნო CV ვაკანსიაზე?",
+          "acceptedAnswer": {
+            "@type": "Answer", 
+            "text": "ყოველ ვაკანსიის გვერდზე არის 'CV გაგზავნა' ღილაკი. დააჭირეთ და ატვირთეთ თქვენი CV ვაკანსიისთვის."
+          }
+        }
+      ]
+    }
+    </script>
+
+    {# Advanced Website Schema #}
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "HRCP - ვაკანსიები საქართველოში",
+      "url": "{{ request.scheme }}://{{ request.get_host }}",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": {
+          "@type": "EntryPoint",
+          "urlTemplate": "{{ request.scheme }}://{{ request.get_host }}/?q={search_term_string}"
+        },
+        "query-input": "required name=search_term_string"
+      },
+      "about": {
+        "@type": "Thing",
+        "name": "ვაკანსიები და დასაქმება საქართველოში"
       }
     }
     </script>
@@ -261,7 +224,7 @@
         <div class="section-title">
             <div class="job-filters">
                 <div class="search-and-title-container" style="display: block; justify-content: space-between; align-items: center; margin-bottom: 20px;">
-                    <h1 style="margin: 0 0 10px 0; font-size: 20px; color: white; font-weight: 600; text-align: right; white-space: nowrap;"><span class="mimdinare-hidden">მიმდინარე</span> ვაკანსიები ერთ სივრცეში</h1>
+                    <h1 style="margin: 0 0 10px 0; font-size: 20px; color: white; font-weight: 600; text-align: right; white-space: nowrap;">ვაკანსიები საქართველოში</h1>
 
                     {# Search Form #}
                     <form action="." method="get" class="search-box">
@@ -287,31 +250,7 @@
                     {# H1 Title on the right side #}
                 </div>
 
-                {# Add responsive CSS for the H1 #}
-                <style>
-                    @media (max-width: 768px) {
-                        .search-and-title-container {
-                            flex-direction: column !important;
-                            align-items: flex-start !important;
-                            gap: 15px;
-                        }
-                        .search-and-title-container h1 {
-                            margin-left: 0 !important;
-                            text-align: left !important;
-                            font-size: 18px !important;
-                            white-space: normal !important;
-                        }
-                    }
-                    
-                    @media (max-width: 480px) {
-                        .search-and-title-container h1 {
-                            font-size: 18px !important;
-                        }
-                        .mimdinare-hidden{
-                            display: none;
-                        }
-                    }
-                </style>
+                {# Responsive CSS moved to home.css #}
 
                 <div class="filter-group">  {# Start group JUST for dropdowns #}
 
@@ -484,7 +423,7 @@
                     <div class="job-primary-info">
                         {# ... job title, location, etc. ... #}
                         <a href="{% url 'job_detail' id=job.id job_slug=job.slug %}"
-                           class="job-title"><h3
+                           class="job-title" title="ვაკანსია: {{ job.title }}"><h3
                                 style="text-decoration: none;font-size: unset;font-weight: unset;">{{ job.title }}</h3>
                         </a>
 {#                        <div class="job-secondary-info">#}
@@ -501,11 +440,11 @@
                          {% if not job.company.has_logo or not job.post_with_logo %}style="padding-left: 100px !important;"{% endif %}>
                         <div class="company-logo">
                             {% if job.company.has_logo and job.post_with_logo %}
-                                <img src="{{ job.company.logo.url }}" alt="{{ job.company.name }} logo">
+                                <img src="{{ job.company.logo.url }}" alt="{{ job.company.name }} ვაკანსიები - სამუშაო ლოგო">
                             {% endif %}
                         </div>
                         <div class="company-name">
-                            <a href="{% url 'jobs_by_company' job.company.slug %}">{{ job.company.name }}</a>
+                            <a href="{% url 'jobs_by_company' job.company.slug %}" title="{{ job.company.name }}-ის ვაკანსიები">{{ job.company.name }}</a>
                         </div>
                     </div>
                     {# END MODIFIED Company Details #}
@@ -540,7 +479,7 @@
         {% for job in regular_jobs %}
             <div class="job-card" data-category="{{ job.category.name|default:'' }}">
                 <div class="job-title-location">
-                    <a href="{% url 'job_detail' id=job.id job_slug=job.slug %}" class="job-title"><h3
+                    <a href="{% url 'job_detail' id=job.id job_slug=job.slug %}" class="job-title" title="ვაკანსია: {{ job.title }}"><h3
                             style="text-decoration: none;font-size: unset;font-weight: unset;">{{ job.title }}</h3></a>
                     <div class="job-location-time">
                         <span class="job-location">
@@ -554,11 +493,11 @@
                      {% if not job.company.has_logo or not job.post_with_logo %}style="padding-left: 100px !important;"{% endif %}>
                     <div class="company-logo">
                         {% if job.company.has_logo and job.post_with_logo %}
-                            <img src="{{ job.company.logo.url }}" alt="{{ job.company.name }} logo">
+                            <img src="{{ job.company.logo.url }}" alt="{{ job.company.name }} ვაკანსიები - სამუშაო ლოგო">
                         {% endif %}
                     </div>
                     <div class="company-name">
-                        <a href="{% url 'jobs_by_company' job.company.slug %}">{{ job.company.name }}</a>
+                        <a href="{% url 'jobs_by_company' job.company.slug %}" title="{{ job.company.name }}-ის ვაკანსიები">{{ job.company.name }}</a>
                     </div>
                 </div>
 
@@ -591,13 +530,7 @@
         </div>
     {% endif %}
 
-    <style>
-        @keyframes spin {
-            to {
-                transform: rotate(360deg);
-            }
-        }
-    </style>
+    {# Spinner CSS moved to home.css #}
 {% endblock %}
 
 {% block scripts_extra %}

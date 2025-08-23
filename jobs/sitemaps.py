@@ -7,7 +7,7 @@ from django.urls import reverse
 
 class JobSitemap(Sitemap):
     changefreq = "daily"  # How often job postings might change
-    # priority = 0.8       # Higher priority than static pages
+    priority = 0.9       # High priority for individual job pages
     protocol = "https"
 
     def items(self):
@@ -45,9 +45,15 @@ class CompanySitemap(Sitemap):
 
 
 class StaticViewSitemap(Sitemap):
-    # priority = 0.5
+    priority = 1.0  # Homepage gets highest priority
     changefreq = 'daily'
     protocol = "https"
+    
+    def priority(self, item):
+        # Homepage gets highest priority for keyword ranking
+        if item == 'home':
+            return 1.0
+        return 0.7
 
     def items(self):
         # List the names of your static views

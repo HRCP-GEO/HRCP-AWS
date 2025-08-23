@@ -34,6 +34,10 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    {# Core Web Vitals optimizations #}
+    <link rel="preload" href="{% static 'base.css' %}" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="{% static 'base.css' %}"></noscript>
     {% compress css %}<link rel="stylesheet" href="{% static 'base.css' %}">{% endcompress %}
     {% block head_extra %}{% endblock %}
 
@@ -69,7 +73,7 @@
 
     <div class="base-mobile-menu"> {# Renamed #}
         <ul class="base-nav-menu"> {# Renamed - This is the MOBILE menu list #}
-            <li><a href="{% url 'home' %}" class="base-nav-link {% if active_nav == 'home' %}active{% endif %}">მთავარი</a></li> {# Renamed #}
+            <li><a href="{% url 'home' %}" class="base-nav-link {% if active_nav == 'home' %}active{% endif %}">ვაკანსიები</a></li> {# Renamed #}
             <li><a href="{% url 'post_job_ad' %}" class="base-nav-link {% if active_nav == 'post_job_ad' %}active{% endif %}">განცხადების დამატება</a></li> {# Renamed #}
             <li><a href="{% url 'banner_page' %}" class="base-nav-link {% if active_nav == 'advertise' %}active{% endif %}">პროდუქტები და ფასები</a></li> {# Renamed #}
             <li><a href="{% url 'faq_page' %}" class="base-nav-link {% if active_nav == 'faq' %}active{% endif %}">FAQ</a></li> {# Renamed #}
@@ -108,7 +112,7 @@
         <div class="base-footer-section links"> {# Renamed #}
             <h2 style="font-size: unset;font-weight: unset;text-decoration: unset;">სწრაფი ბმულები</h2>
             <ul> {# Lists/links scoped by parent class in CSS #}
-                <li><a href="{% url 'home' %}"><h3 style="font-size: unset;font-weight: unset;text-decoration: unset;">მთავარი</h3></a></li>
+                <li><a href="{% url 'home' %}"><h3 style="font-size: unset;font-weight: unset;text-decoration: unset;">ვაკანსიები</h3></a></li>
                 <li><a href="{% url 'post_job_ad' %}"><h3 style="font-size: unset;font-weight: unset;text-decoration: unset;">განცხადების დამატება</h3></a></li>
                 <li><a href="{% url 'banner_page' %}"><h3 style="font-size: unset;font-weight: unset;text-decoration: unset;">პროდუქტები და ფასები</h3></a></li>
                 <li><a href="{% url 'faq_page' %}"><h3 style="font-size: unset;font-weight: unset;text-decoration: unset;">FAQ</h3></a></li>
