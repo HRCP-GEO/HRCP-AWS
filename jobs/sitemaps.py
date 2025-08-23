@@ -2,7 +2,7 @@
 from django.contrib.sitemaps import Sitemap
 from django.utils import timezone
 
-from .models import Job, Company, JobCategory, Location # Import your models
+from .models import Job, Company # Import your models
 from django.urls import reverse
 
 class JobSitemap(Sitemap):
@@ -55,23 +55,3 @@ class StaticViewSitemap(Sitemap):
 
     def location(self, item):
         return reverse(item)
-
-class CategorySitemap(Sitemap):
-    changefreq = "weekly"
-    protocol = "https"
-    
-    def items(self):
-        return JobCategory.objects.all()
-    
-    def location(self, obj):
-        return f"/?category={obj.slug}"
-
-class LocationSitemap(Sitemap):
-    changefreq = "weekly" 
-    protocol = "https"
-    
-    def items(self):
-        return Location.objects.all()
-    
-    def location(self, obj):
-        return f"/?location={obj.slug}"
