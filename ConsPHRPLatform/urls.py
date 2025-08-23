@@ -6,12 +6,14 @@ from django.conf.urls.static import static
 from django.contrib.sitemaps.views import sitemap
 from django.views.generic import TemplateView
 
-from jobs.sitemaps import JobSitemap, CompanySitemap, StaticViewSitemap
+from jobs.sitemaps import JobSitemap, CompanySitemap, StaticViewSitemap, CategorySitemap, LocationSitemap
 handler404 = 'jobs.views.custom_404'
 sitemaps = {
     'jobs': JobSitemap,
     'companies': CompanySitemap,
     'static': StaticViewSitemap,
+    'categories': CategorySitemap,
+    'locations': LocationSitemap,
 }
 urlpatterns = [
 

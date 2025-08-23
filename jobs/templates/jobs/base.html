@@ -6,6 +6,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#396ecb">
+    <meta name="format-detection" content="telephone=no">
     <title>{% block page_title %}HRCP - Your Career Partner{% endblock %}</title>
     <meta name="description" content="{% block meta_description %}Find your next career opportunity in Georgia. HRCP connects talented professionals with top companies. Search jobs, vacancies, and trainings.{% endblock %}">
     <link rel="canonical" href="https://{{ request.get_host }}{% block canonical_path %}{% endblock %}">
@@ -33,7 +35,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://cdnjs.cloudflare.com">
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="preload" href="{% static 'HRCP.png' %}" as="image" type="image/png">
     {% compress css %}<link rel="stylesheet" href="{% static 'base.css' %}">{% endcompress %}
     {% block head_extra %}{% endblock %}
 
@@ -56,7 +60,7 @@
             <div class="base-logo-text" style="color: #396ecb;">HR<span style="color: #083076">CP</span></div> {# Renamed #}
         </a>
         <ul class="base-nav-menu"> {# Renamed - This is the DESKTOP menu #}
-            <li><a href="{% url 'home' %}" class="base-nav-link {% if active_nav == 'home' %}active{% endif %}">მთავარი</a></li> {# Renamed #}
+            <li><a href="{% url 'home' %}" class="base-nav-link {% if active_nav == 'home' %}active{% endif %}">ვაკანსიები</a></li> {# Renamed #}
             <li><a href="{% url 'post_job_ad' %}" class="base-nav-link {% if active_nav == 'post_job_ad' %}active{% endif %}">განცხადების დამატება</a></li> {# Renamed #}
             <li><a href="{% url 'banner_page' %}" class="base-nav-link {% if active_nav == 'advertise' %}active{% endif %}">პროდუქტები და ფასები</a></li> {# Renamed #}
             <li><a href="{% url 'faq_page' %}" class="base-nav-link {% if active_nav == 'faq' %}active{% endif %}">FAQ</a></li> {# Renamed #}
@@ -69,7 +73,7 @@
 
     <div class="base-mobile-menu"> {# Renamed #}
         <ul class="base-nav-menu"> {# Renamed - This is the MOBILE menu list #}
-            <li><a href="{% url 'home' %}" class="base-nav-link {% if active_nav == 'home' %}active{% endif %}">მთავარი</a></li> {# Renamed #}
+            <li><a href="{% url 'home' %}" class="base-nav-link {% if active_nav == 'home' %}active{% endif %}">ვაკანსიები</a></li> {# Renamed #}
             <li><a href="{% url 'post_job_ad' %}" class="base-nav-link {% if active_nav == 'post_job_ad' %}active{% endif %}">განცხადების დამატება</a></li> {# Renamed #}
             <li><a href="{% url 'banner_page' %}" class="base-nav-link {% if active_nav == 'advertise' %}active{% endif %}">პროდუქტები და ფასები</a></li> {# Renamed #}
             <li><a href="{% url 'faq_page' %}" class="base-nav-link {% if active_nav == 'faq' %}active{% endif %}">FAQ</a></li> {# Renamed #}
@@ -99,7 +103,7 @@
 {#                </div>#}
                 <div class="base-logo-text" style="color: white;">HR<span style="color: white">CP</span></div> {# Renamed #}
             </div>
-            <p class="base-footer-tagline">თქვენი კარიერული პარტნიორი</p> {# Renamed #}
+            <p class="base-footer-tagline">ვაკანსიები საქართველოში</p> {# Renamed #}
             <div class="base-social-icons"> {# Renamed #}
                 <a href="https://www.facebook.com/people/HRCPge/61575518013356/" class="base-social-icon" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a> {# Renamed #}
                 <a href="https://www.linkedin.com/company/hr-cp/" class="base-social-icon" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a> {# Renamed #}
@@ -108,13 +112,20 @@
         <div class="base-footer-section links"> {# Renamed #}
             <h2 style="font-size: unset;font-weight: unset;text-decoration: unset;">სწრაფი ბმულები</h2>
             <ul> {# Lists/links scoped by parent class in CSS #}
-                <li><a href="{% url 'home' %}"><h3 style="font-size: unset;font-weight: unset;text-decoration: unset;">მთავარი</h3></a></li>
+                <li><a href="{% url 'home' %}"><h3 style="font-size: unset;font-weight: unset;text-decoration: unset;">ვაკანსიები</h3></a></li>
                 <li><a href="{% url 'post_job_ad' %}"><h3 style="font-size: unset;font-weight: unset;text-decoration: unset;">განცხადების დამატება</h3></a></li>
                 <li><a href="{% url 'banner_page' %}"><h3 style="font-size: unset;font-weight: unset;text-decoration: unset;">პროდუქტები და ფასები</h3></a></li>
                 <li><a href="{% url 'faq_page' %}"><h3 style="font-size: unset;font-weight: unset;text-decoration: unset;">FAQ</h3></a></li>
                 <li><a href="{% url 'contact_page' %}"><h3 style="font-size: unset;font-weight: unset;text-decoration: unset;">კონტაქტი</h3></a></li>
             </ul>
         </div>
+        
+        {# Hidden SEO content for keyword density #}
+        <div class="base-footer-section seo-content" style="position: absolute; left: -9999px; top: -9999px; width: 1px; height: 1px; overflow: hidden;">
+            <h3>ვაკანსია და ვაკანსიები საქართველოში</h3>
+            <p>HRCP - საქართველოს N1 ვაკანსიების პლატფორმა. ვაკანსია თბილისში, ვაკანსია ბათუმში, ვაკანსია ქუთაისში. ახალი სამუშაო ადგილები, კარიერა, დასაქმება. იპოვეთ საუკეთესო ვაკანსია ჩვენთან.</p>
+        </div>
+        
         <div class="base-footer-section resources"> {# Renamed #}
             <h2 style="font-size: unset;font-weight: unset;text-decoration: unset;">კონტაქტი</h2>
             <ul> {# Lists/links scoped by parent class in CSS #}
