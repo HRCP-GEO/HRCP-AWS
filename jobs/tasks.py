@@ -3,6 +3,9 @@ from jobs.models import Job, Company
 from django.utils import timezone
 
 import logging # Import logging
+import os
+import requests
+from django.conf import settings
 
 logger = logging.getLogger(__name__) # Setup logger
 
@@ -69,3 +72,46 @@ def check_company_job_page_publish_status():
     # Return count or a descriptive string
     return f"Checked and updated {count} companies' job page publish status."
 # --- END NEW TASK ---
+
+@shared_task
+def post_jobs_to_facebook():
+    """
+    Fetch the latest 5 jobs from the JSON API endpoint and post them to Facebook page.
+    """
+    facebook_page_id = os.getenv('FACEBOOK_PAGE_ID', getattr(settings, 'FACEBOOK_PAGE_ID', None))
+    facebook_access_token = os.getenv('FACEBOOK_ACCESS_TOKEN', getattr(settings, 'FACEBOOK_ACCESS_TOKEN', None))
+    api_url = os.getenv('JOBS_API_URL', getattr(settings, 'JOBS_API_URL', None))
+    if not api_url:
+        from django.urls import reverse
+        api_url = settings.SITE_URL.rstrip('/') + reverse('latest_jobs_api')
+
+    if not (facebook_page_id and facebook_access_token and api_url):
+        logger.error('Facebook or API configuration not found.')
+        return 'Missing configuration.'
+
+    try:
+        resp = requests.get(api_url, timeout=20)
+        jobs = resp.json()
+        assert isinstance(jobs, list)
+    except Exception as e:
+        logger.error(f"Failed to get jobs: {e}")
+        return 'API request failed.'
+
+    fb_url = f'https://graph.facebook.com/v18.0/{facebook_page_id}/feed'
+    posted, failed = 0, 0
+    for job in jobs:
+        msg = f"{job['company']} - {job['title']}\n{job['url']}"
+        data = {'message': msg, 'link': job['url'], 'access_token': facebook_access_token}
+        try:
+            response = requests.post(fb_url, data=data, timeout=20)
+            if response.status_code == 200:
+                logger.info(f"Posted job to FB: {job['title']} - {job['company']}")
+                posted += 1
+            else:
+                logger.warning(f"FB POST FAIL {response.status_code}: {response.text}")
+                failed += 1
+        except Exception as e:
+            logger.error(f"Error posting job to FB: {e}")
+            failed += 1
+    logger.info(f"FB Posting Done. Posted: {posted}, Failed: {failed}")
+    return f"FB Posted: {posted}, Failed: {failed}"

@@ -19,6 +19,7 @@ import logging
 import datetime
 from django.conf import settings
 from django.templatetags.static import static
+from django.views.decorators.http import require_GET
 logger = logging.getLogger(__name__)
 
 
@@ -537,3 +538,23 @@ def submit_cv(request, job_id):
             })
     
     return JsonResponse({'success': False, 'message': 'არასწორი მოთხოვნა.'})
+
+
+@require_GET
+def latest_jobs_api(request):
+    """
+    Return the latest 5 jobs as JSON for external bots.
+    """
+    jobs = Job.objects.order_by('-created_at')[:5]
+    data = []
+    for job in jobs:
+        data.append({
+            'id': job.id,
+            'title': job.title,
+            'company': job.company.name if hasattr(job.company, 'name') else str(job.company),
+            'locations': [loc.name for loc in job.locations.all()],
+            'description': str(job.description)[:250],
+            'posted_date': job.created_at.strftime('%Y-%m-%d'),
+            'url': request.build_absolute_uri(job.get_absolute_url()),
+        })
+    return JsonResponse(data, safe=False)

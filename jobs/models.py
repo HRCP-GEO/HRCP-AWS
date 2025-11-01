@@ -234,3 +234,12 @@ class CVApplication(models.Model):
     
     def __str__(self):
         return f"{self.first_name} {self.last_name} - {self.job.title}"
+
+
+class FacebookPost(models.Model):
+    job = models.OneToOneField(Job, on_delete=models.CASCADE, related_name='facebook_post')
+    facebook_post_id = models.CharField(max_length=255, blank=True, null=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"FB Post for Job #{self.job_id} ({self.facebook_post_id or 'pending'})"
