@@ -1,9 +1,12 @@
 import os
+import logging
 import requests
 from django.conf import settings
 from django.core.management.base import BaseCommand
 from django.urls import reverse
 from jobs.models import FacebookPost
+
+logger = logging.getLogger(__name__)
 
 
 class Command(BaseCommand):
@@ -37,24 +40,24 @@ class Command(BaseCommand):
         if not api_url:
             site_url = os.getenv("SITE_URL", getattr(settings, "SITE_URL", "")).rstrip("/")
             if not site_url:
-                self.stderr.write(self.style.ERROR("SITE_URL is not set (env or settings). Use --api-url to override."))
+            logger.error("SITE_URL is not set (env or settings). Use --api-url to override.")
                 return
             api_url = f"{site_url}{reverse('latest_jobs_api')}"
 
         if not page_id or not access_token:
-            self.stderr.write(self.style.ERROR("Missing FACEBOOK_PAGE_ID or FACEBOOK_ACCESS_TOKEN."))
+            logger.error("Missing FACEBOOK_PAGE_ID or FACEBOOK_ACCESS_TOKEN.")
             return
 
-        self.stdout.write(self.style.WARNING(f"Fetching jobs from: {api_url}"))
+        logger.info("Fetching jobs from: %s", api_url)
         try:
             resp = requests.get(api_url, timeout=20)
             resp.raise_for_status()
             jobs = resp.json()
             if not isinstance(jobs, list):
-                self.stderr.write(self.style.ERROR("API did not return a list."))
+                logger.error("API did not return a list.")
                 return
         except Exception as e:
-            self.stderr.write(self.style.ERROR(f"Failed to fetch jobs: {e}"))
+            logger.exception("Failed to fetch jobs from API: %s", e)
             return
 
         # Build set of already-posted job IDs
@@ -64,7 +67,7 @@ class Command(BaseCommand):
         new_jobs = [j for j in jobs if j.get('id') not in posted_ids]
 
         if not new_jobs:
-            self.stdout.write(self.style.SUCCESS("No new jobs to post."))
+            logger.info("No new jobs to post.")
             return
 
         fb_url = f"https://graph.facebook.com/v18.0/{page_id}/feed"
@@ -85,15 +88,15 @@ class Command(BaseCommand):
                     except Exception:
                         fb_post_id = None
                     FacebookPost.objects.get_or_create(job_id=job_id, defaults={"facebook_post_id": fb_post_id})
-                    self.stdout.write(self.style.SUCCESS(f"Posted: {title} - {company}"))
+                    logger.info("Posted job to Facebook: %s - %s", title, company)
                     posted += 1
                 else:
-                    self.stderr.write(self.style.WARNING(f"FB POST FAIL {r.status_code}: {r.text}"))
+                    logger.warning("Facebook API error %s posting %s - %s: %s", r.status_code, title, company, r.text)
                     failed += 1
             except Exception as e:
-                self.stderr.write(self.style.ERROR(f"Error posting to FB: {e}"))
+                logger.exception("Unexpected error posting job '%s' to Facebook: %s", title, e)
                 failed += 1
 
-        self.stdout.write(self.style.SUCCESS(f"Done. Posted: {posted}, Failed: {failed}"))
+        logger.info("Facebook posting complete. Posted: %s, Failed: %s", posted, failed)
 
 
