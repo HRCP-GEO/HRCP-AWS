@@ -40,7 +40,7 @@ class Command(BaseCommand):
         if not api_url:
             site_url = os.getenv("SITE_URL", getattr(settings, "SITE_URL", "")).rstrip("/")
             if not site_url:
-            logger.error("SITE_URL is not set (env or settings). Use --api-url to override.")
+                logger.error("SITE_URL is not set (env or settings). Use --api-url to override.")
                 return
             api_url = f"{site_url}{reverse('latest_jobs_api')}"
 
