@@ -1,20 +1,32 @@
 from celery import shared_task
 from jobs.models import Job, Company
 from django.utils import timezone
+from django.db import transaction
 
-import logging # Import logging
+import logging
 import os
 import requests
 from django.conf import settings
 
-logger = logging.getLogger(__name__) # Setup logger
+logger = logging.getLogger(__name__)
 
 @shared_task
 def delete_expired_jobs():
-    expired_jobs = Job.objects.filter(expired_jobs__lt=timezone.now())
-    count = expired_jobs.count()
-    expired_jobs.delete()
-    return f"Deleted {count} expired jobs."
+    from jobs.models import FacebookPost
+    try:
+        with transaction.atomic():
+            expired_jobs = Job.objects.filter(expired_jobs__lt=timezone.now())
+            count = expired_jobs.count()
+            if count == 0:
+                return "No expired jobs to delete."
+            logger.info(f"Deleting {count} expired jobs and their related records...")
+            FacebookPost.objects.filter(job__in=expired_jobs).delete()
+            expired_jobs.delete()
+            logger.info(f"Successfully deleted {count} expired jobs.")
+            return f"Deleted {count} expired jobs."
+    except Exception as e:
+        logger.error(f"Error deleting expired jobs: {e}", exc_info=True)
+        raise
 
 @shared_task
 def check_company_vip_status():
@@ -40,38 +52,26 @@ def check_job_vip_status():
         job.save()
     return f"Checked and updated {expired_job_vips.count()} jobs' VIP status."
 
-# --- NEW TASK matching the requested pattern ---
 @shared_task
 def check_company_job_page_publish_status():
-    """
-    Checks for companies whose job page publication status has expired
-    and updates them using individual .save() calls (matching user's existing pattern).
-    """
     now = timezone.now()
-    # Filter for companies needing update
     expired_companies = Company.objects.filter(
         publish_on_job_page=True,
-        job_page_publish_expiration_date__isnull=False, # Check date exists
-        job_page_publish_expiration_date__lt=now      # Check date is past
+        job_page_publish_expiration_date__isnull=False,
+        job_page_publish_expiration_date__lt=now
     )
 
-    count = 0 # Keep track of updated count
-    for company in expired_companies: # Loop through results
+    count = 0
+    for company in expired_companies:
         try:
             company.publish_on_job_page = False
             company.job_page_publish_expiration_date = None
-            company.save() # Individual save() call
+            company.save()
             count += 1
         except Exception as e:
-            # Log error if save fails for a specific company
             logger.error(f"Error updating company {company.id} job page status: {e}", exc_info=True)
 
-    if count > 0:
-        logger.info(f"Checked and updated {count} companies' job page publish status using individual saves.")
-
-    # Return count or a descriptive string
     return f"Checked and updated {count} companies' job page publish status."
-# --- END NEW TASK ---
 
 @shared_task
 def post_jobs_to_facebook():
