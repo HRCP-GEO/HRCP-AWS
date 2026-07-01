@@ -68,5 +68,5 @@ jobs:
       build_args: '{"python_version": "3.13"}'
       target_framework: python/django
       ignore_vulns: ${{ inputs.ignore_vulns }}
-      runetime_commands: >-
+      runtime_commands: >-
         sudo systemctl restart hrcp-${{ inputs.platform }}-${{ inputs.environment }}-hrcp-aws-gunicorn.service;
