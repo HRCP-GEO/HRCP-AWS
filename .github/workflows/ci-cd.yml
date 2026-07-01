@@ -1,0 +1,72 @@
+---
+name: Build & Deploy Python/Django
+
+concurrency:
+  group: ${{ github.ref_name }}
+  cancel-in-progress: false
+
+on:
+  workflow_dispatch:
+    inputs:
+      platform:
+        type: choice
+        description: Choose host infrastructure platform
+        options:
+          - prod
+      environment:
+        type: choice
+        description: Choose the environment to deploy to
+        options:
+          - production
+      ignore_vulns:
+        description: "Vulnerabilities: don't fail"
+        type: boolean
+        required: false
+        default: false
+
+jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      aws_region:  ${{ steps.out.outputs.region }}
+      aws_role_to_assume:  ${{ steps.out.outputs.role_to_assume }}
+    steps:
+      - name: Output platform name as uppercase
+        id: platform
+        run: |
+          echo "uppercase_name=$(echo '${{ inputs.platform }}' | tr '[:lower:]' '[:upper:]')" >> $GITHUB_OUTPUT
+
+      - name: Ooutput AWS role and region for OIDC
+        id: out
+        run: |
+          if [[ -z "${{ vars[format('{0}_AWS_OIDC_ROLE_ARN', steps.platform.outputs.uppercase_name)] }}" || -z "${{ vars[format('{0}_AWS_REGION', steps.platform.outputs.uppercase_name)] }}" ]]; then
+            echo "ERROR: Missing AWS_OIDC_ROLE_ARN or AWS_REGION for platform ${{ inputs.platform }}."
+            exit 1
+          else
+            echo "role_to_assume=${{ vars[format('{0}_AWS_OIDC_ROLE_ARN', steps.platform.outputs.uppercase_name)] }}" >> $GITHUB_OUTPUT
+            echo "region=${{ vars[format('{0}_AWS_REGION', steps.platform.outputs.uppercase_name)] }}" >> $GITHUB_OUTPUT
+          fi
+
+  ci:
+    needs: prepare
+    uses: systemax64/ci-workflows/.github/workflows/ec2-workflow.yml@main
+    permissions:
+      contents: read
+      packages: write
+      attestations: write
+      id-token: write
+    with:
+      project: hrcp
+      platform: ${{ inputs.platform }}
+      environment: ${{ inputs.environment }}
+      app: hrcp-aws
+      app_user: hrcp
+      enable_maintenance_mode: false
+      aws_region: ${{ needs.prepare.outputs.aws_region }}
+      aws_role_to_assume: ${{ needs.prepare.outputs.aws_role_to_assume }}
+      build_tool: pip
+      build_args: '{"python_version": "3.13"}'
+      target_framework: python/django
+      ignore_vulns: ${{ inputs.ignore_vulns }}
+      runetime_commands: >-
+        sudo systemctl restart hrcp-${{ inputs.platform }}-${{ inputs.environment }}-hrcp-aws-gunicorn.service;
