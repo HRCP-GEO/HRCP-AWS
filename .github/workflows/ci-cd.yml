@@ -70,4 +70,4 @@ jobs:
       ignore_vulns: ${{ inputs.ignore_vulns }}
       build_step: false
       runtime_commands: >-
-        sudo systemctl restart hrcp-${{ inputs.platform }}-${{ inputs.environment }}-hrcp-aws-gunicorn.service;
+        sudo systemctl restart hrcp-${{ inputs.platform }}-${{ inputs.environment }}-hrcp-aws-gunicorn.service
